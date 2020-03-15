@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="neuron:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/ConsoleErrorPrinter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/Utilities.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/NetworkTeacher.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/SingleNeuronTeacher.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Activation.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Layer.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Network.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Neuron.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/OutputLayer.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin File" />
+        <option value="Kotlin Interface" />
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="C:\Users\damia\IdeaProjects\neuron\.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1YwXFeE2iCG2pH5AIIAMWGoRS1l" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="ml.learn" />
+      <recent name="ml" />
+      <recent name="ml.spine" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\damia\IdeaProjects\neuron\src\main\kotlin\ml" />
+      <recent name="C:\Users\damia\IdeaProjects\neuron\src\main\kotlin\ml\learn" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Kotlin.ml.MainKt">
+    <configuration name="neuron [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
+      <module name="mlearn" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ml.MainKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
+      <module name="neuron.main" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="C:\Users\damia\Desktop\in.txt C:\Users\damia\Desktop\out.txt &gt; C:\Users\damia\Desktop\progress.txt" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="ml.MainKt" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
+      <module name="mlearn" />
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.neuron [jar]" />
+      <item itemvalue="Kotlin.ml.MainKt" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Kotlin.ml.MainKt" />
+        <item itemvalue="Gradle.neuron [jar]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="" />
+      <created>1583854527878</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1583854527878</updated>
+      <workItem from="1583854529268" duration="2876000" />
+      <workItem from="1583861923788" duration="227000" />
+      <workItem from="1583941408635" duration="1427000" />
+      <workItem from="1583952498075" duration="13096000" />
+      <workItem from="1584033172947" duration="17311000" />
+      <workItem from="1584092923999" duration="16998000" />
+      <workItem from="1584288935352" duration="3807000" />
+      <workItem from="1584302236841" duration="369000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584110128370">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584110128370" />
+    <state x="470" y="243" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1584037271021">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="470" y="243" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1584037271021" />
+    <state x="560" y="128" key="#com.intellij.ide.util.MemberChooser" timestamp="1584043059074">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="560" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1584043059074" />
+    <state x="499" y="196" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1584051980736">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="499" y="196" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1536.824@0.0.1536.824" timestamp="1584051980736" />
+    <state x="378" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1584093157729">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="378" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1584093157729" />
+    <state x="548" y="65" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog" timestamp="1584093126941">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="548" y="65" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584093126941" />
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1584302296370">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1584302296370" />
+    <state width="1493" height="2" key="GridCell.Tab.0.bottom" timestamp="1584292745021">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="2" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
+    <state width="1493" height="2" key="GridCell.Tab.0.center" timestamp="1584292745021">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="2" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
+    <state width="1493" height="2" key="GridCell.Tab.0.left" timestamp="1584292745021">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="2" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
+    <state width="1493" height="2" key="GridCell.Tab.0.right" timestamp="1584292745021">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="2" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
+    <state x="249" y="0" key="SettingsEditor" timestamp="1584052049934">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1584052049934" />
+    <state x="573" y="281" key="classpath-attribute-editor" timestamp="1583967212686">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="573" y="281" key="classpath-attribute-editor/0.0.1536.824@0.0.1536.824" timestamp="1583967212686" />
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1584302279565">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1584302279565" />
+    <state x="357" y="203" key="run.anything.popup" timestamp="1584092970197">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="357" y="203" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1584092970197" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1583956120744">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1583956120744" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-function">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/ml/Main.kt</url>
+          <line>12</line>
+          <properties method="parseInputData">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
