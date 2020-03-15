@@ -60,7 +60,7 @@ fun main(args: Array<String>) {
     val errorChangeData = mutableMapOf<Int, Double>()
 
     val (input, expected) = parseInputData(inputScanner)
-    val errorGoal = 0.001
+    val errorGoal = 0.01
     var i = 0
 
     val neuronFunPlotsDataMap = mutableMapOf<Int, Map<Double, Double>?>(
