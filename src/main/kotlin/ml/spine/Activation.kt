@@ -9,9 +9,9 @@ data class Activation(
     companion object {
 
         @JvmStatic
-        fun sigmoid() = Activation(
+        fun sigmoid(): Activation = Activation(
             { x -> 1.0 / (1.0 + exp(-x)) },
-            { output -> output.activation * (1 - output.activation) }
+            { (activation) -> activation * (1 - activation) }
         )
     }
 }

@@ -2,31 +2,31 @@
 
 package ml
 
-import org.knowm.xchart.BitmapEncoder
-import org.knowm.xchart.QuickChart
-import org.knowm.xchart.SwingWrapper
-import org.knowm.xchart.XYChart
+import org.knowm.xchart.*
+import org.knowm.xchart.style.markers.None
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 
-fun Map<Double, Double>.quickPlot(seriesName: String): XYChart = QuickChart.getChart(
-    "",
-    "",
-    "",
-    seriesName,
-    keys.toDoubleArray(),
-    values.toDoubleArray()
-)
+object QuickPlotSettings {
+    var width: Int = 800
+    var height: Int = 600
+    var axisTitleX = ""
+    var axsisTitleY = ""
+}
+
+fun Map<Double, Double>.quickPlot(seriesName: String): XYChart = XYChartBuilder()
+    .width(QuickPlotSettings.width)
+    .height(QuickPlotSettings.height)
+    .xAxisTitle(QuickPlotSettings.axisTitleX)
+    .yAxisTitle(QuickPlotSettings.axsisTitleY)
+    .build()
+    .apply {
+        this.addSeries(seriesName, keys.toDoubleArray(), values.toDoubleArray())
+        this.seriesMap[seriesName]?.marker = None()
+    }
 
 fun Map<Double, Double>.quickPlotSwingWrapped(seriesName: String): SwingWrapper<XYChart> = SwingWrapper(
-    QuickChart.getChart(
-        "",
-        "",
-        "",
-        seriesName,
-        keys.toDoubleArray(),
-        values.toDoubleArray()
-    )
+    this.quickPlot(seriesName)
 )
 
 fun Map<Double, Double>.quickPlotDisplay(

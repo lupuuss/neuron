@@ -2,12 +2,11 @@ package ml
 
 import ml.learn.SingleNeuronTeacher
 import ml.spine.Activation
-import ml.spine.Network
 import ml.spine.Neuron
 import org.knowm.xchart.style.markers.None
 import java.awt.Color
 import java.lang.Exception
-import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.*
 
 fun parseInputData(inputScanner: Scanner): Pair<Array<DoubleArray>, DoubleArray> {
@@ -48,7 +47,7 @@ fun main(args: Array<String>) {
 
     val (inputScanner, outputWriter) = try {
 
-        Scanner(Path.of(args[0]).toFile().inputStream()) to Path.of(args[1]).toFile().outputStream().bufferedWriter()
+        Scanner(Paths.get(args[0]).toFile().inputStream()) to Paths.get(args[1]).toFile().outputStream().bufferedWriter()
 
     } catch (e: Exception) {
 
@@ -97,7 +96,7 @@ fun main(args: Array<String>) {
 
     neuronFunPlotsDataMap[i] = getNeuronActivationPoints(neuron, -2.0..2.0 step 0.01)
 
-    neuronFunPlotsDataMap.firstValue()!!.quickPlot("Before learning").also { chart ->
+    neuronFunPlotsDataMap.firstValue()!!.quickPlotSave("Before learning", "progress.png") { chart ->
 
         chart.title = "Learning progress"
         chart.yAxisTitle = "f(x)"
@@ -117,9 +116,9 @@ fun main(args: Array<String>) {
 
         chart.seriesMap.entries.forEach { it.value.marker = None() }
 
-    }.saveAs("progress.png")
+    }
 
-    neuronFunPlotsDataMap.firstValue()!!.quickPlot("Before learning").also { chart ->
+    neuronFunPlotsDataMap.firstValue()!!.quickPlotSave("Before learning", "result.png") { chart ->
 
         val afterLearningData = neuronFunPlotsDataMap.entries.last().value!!
         chart.addSeries(
@@ -143,7 +142,7 @@ fun main(args: Array<String>) {
             this.lineColor = Color(0, 0, 0, 0)
             this.markerColor = Color.BLACK
         }
-    }.saveAs("result.png")
+    }
 
     errorChangeData
         .map { it.key.toDouble() to it.value }
