@@ -1,18 +1,18 @@
 package ml
 
-import ml.learn.SingleNeuronTeacher
+import ml.freeze.NetworkFreezer
+import ml.learn.OnlineNetworkTeacher
 import ml.spine.Activation
+import ml.spine.Network
 import ml.spine.Neuron
-import org.knowm.xchart.style.markers.None
 import java.awt.Color
 import java.lang.Exception
 import java.nio.file.Paths
 import java.util.*
 
-fun parseInputData(inputScanner: Scanner): Pair<List<List<Double>>, List<Double>> {
+fun parseInputData(inputScanner: Scanner): List<Pair<List<Double>, List<Double>>> {
 
-    val inputData = mutableListOf<Double>()
-    val expectedData = mutableListOf<Double>()
+    val data = mutableListOf<Pair<List<Double>, List<Double>>>()
 
     while (inputScanner.hasNextLine()) {
 
@@ -21,13 +21,12 @@ fun parseInputData(inputScanner: Scanner): Pair<List<List<Double>>, List<Double>
         val inDouble = values[0].toDouble()
         val outDouble = values[1].toDouble()
 
-        inputData.add(inDouble)
-        expectedData.add(outDouble)
+        data.add(listOf(inDouble) to listOf(outDouble))
     }
 
     inputScanner.close()
 
-    return inputData.map { listOf(it) }.toList() to expectedData
+    return data
 }
 
 fun getNeuronActivationPoints(neuron: Neuron, range: Iterator<Double>): Map<Double, Double> {
@@ -45,113 +44,51 @@ fun main(args: Array<String>) {
 
     // Preparation
 
-    val (inputScanner, outputWriter) = try {
+    val (inputScanner, _) = try {
 
-        Scanner(Paths.get(args[0]).toFile().inputStream()) to Paths.get(args[1]).toFile().outputStream().bufferedWriter()
+        Scanner(Paths.get(args[0]).toFile().inputStream()) to
+                Paths.get(args[1]).toFile().outputStream().bufferedWriter()
 
     } catch (e: Exception) {
 
         throw e
     }
 
-    val teacher = SingleNeuronTeacher(0.5, Activation.sigmoid())
-    val neuron = Neuron(1, Activation.sigmoid().function)
-    val errorChangeData = mutableMapOf<Int, Double>()
+    val trainingData = parseInputData(inputScanner)
 
-    val (input, expected) = parseInputData(inputScanner)
-    val errorGoal = 0.005
+    val teacher = OnlineNetworkTeacher(0.1)
+    val network = Network.Builder()
+        .name("cw3")
+        .inputs(1)
+        .setDefaultActivation(Activation.Sigmoid)
+        .hiddenLayer(3, true)
+        .outputLayer(1, true)
+
+    teacher.trainingSet = trainingData
+    teacher.verificationSet = trainingData
+
     var i = 0
-
-    val neuronFunPlotsDataMap = mutableMapOf<Int, Map<Double, Double>?>(
-        0 to null,
-        50 to null,
-        100 to null,
-        250 to null,
-        1_000 to null,
-        5_000 to null,
-        25_000 to null,
-        50_000 to null,
-        100_000 to null
-    )
-
-    // Learning process
-
-    val time = System.currentTimeMillis()
-
     do {
 
-        if (neuronFunPlotsDataMap.containsKey(i)) {
-            neuronFunPlotsDataMap[i] = getNeuronActivationPoints(neuron, -2.0..2.0 step 0.01)
-        }
+        teacher.teach(network)
+        val errorVector = teacher.verify(network)
+        i++
+    } while (errorVector.stream().allMatch { it > 0.001 })
 
-        teacher.teach(neuron, input, expected)
-        errorChangeData[i] = teacher.verify(neuron, input, expected)
-        println("${neuron.bias} ${neuron.weights[0]} ${errorChangeData[i]}")
+    println("Iterations: $i")
 
-    } while (errorChangeData[i++] ?: 0.0 > errorGoal)
+    val plotData = mutableMapOf<Double, Double>()
 
-    println("Elapsed time: ${System.currentTimeMillis() - time}ms")
-
-    outputWriter.write("${neuron.bias}\n${neuron.weights[0]}")
-    outputWriter.close()
-
-    // Plots
-
-    neuronFunPlotsDataMap[i] = getNeuronActivationPoints(neuron, -2.0..2.0 step 0.01)
-
-    neuronFunPlotsDataMap.firstValue()!!.quickPlotSave("Before learning", "progress.png") {
-        title = "Learning progress"
-        yAxisTitle = "f(x)"
-        xAxisTitle = "x"
-
-        neuronFunPlotsDataMap
-            .entries
-            .stream()
-            .skip(1)
-            .forEach { chartData ->
-                addSeries(
-                    "${chartData.key} iterations",
-                    chartData.value!!.keys.toDoubleArray(),
-                    chartData.value!!.values.toDoubleArray()
-                )
-            }
-
-        seriesMap.entries.forEach { it.value.marker = None() }
+    for (x in -1.0..3.0 step 0.1) {
+        plotData[x] = network.answer(listOf(x)).first()
     }
 
-    neuronFunPlotsDataMap.firstValue()!!.quickPlotSave("Before learning", "result.png") {
-
-        title = "Result"
-        xAxisTitle = "x"
-        yAxisTitle = "f(x)"
-
-        val afterLearningData = neuronFunPlotsDataMap.entries.last().value!!
-        addSeries(
-            "After learning",
-            afterLearningData.keys.toDoubleArray(),
-            afterLearningData.values.toDoubleArray()
-        )
-
-        seriesMap["Before learning"]?.apply { lineColor = Color.RED }
-
-        seriesMap["After learning"]?.apply { marker = None(); lineColor = Color.GREEN }
-
-        addSeries("Training data", input.map { it.first() }.toDoubleArray(), expected.toDoubleArray())
-
-        seriesMap["Training data"]?.apply {
-            lineColor = Color(0, 0, 0, 0)
-            markerColor = Color.BLACK
-        }
+    plotData.quickPlotDisplay("Result") { _ ->
+        title = "ML"
+        addSeries("training points", trainingData.map { it.first.first() }, trainingData.map { it.second.first() })
+        seriesMap["training points"]!!.lineColor = Color(0, 0, 0, 0)
     }
 
-    errorChangeData
-        .map { it.key.toDouble() to it.value }
-        .toMap()
-        .quickPlotSave("Error change", "error.png") {
-            title = "Error"
-            xAxisTitle = "Iterations"
-            yAxisTitle = "Error value"
-            styler.yAxisDecimalPattern = "0.00"
-            styler.xAxisDecimalPattern = "###,###,###,##0"
-        }
+    NetworkFreezer.freeze(network)
+
 }

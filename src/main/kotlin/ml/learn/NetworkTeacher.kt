@@ -1,14 +1,17 @@
 package ml.learn
 
-import ml.spine.Layer
-import ml.spine.OutputLayer
+import ml.spine.Network
 
 abstract class NetworkTeacher {
 
-    var trainingSet: List<Pair<DoubleArray, DoubleArray>> = emptyList()
-    var verificationSet: List<Pair<DoubleArray, DoubleArray>> = emptyList()
+    enum class Mode {
+        Online, Offline
+    }
 
-    abstract fun teach(hiddenLayer: List<Layer>, outputLayer: OutputLayer)
+    var trainingSet: List<Pair<List<Double>, List<Double>>> = emptyList()
+    var verificationSet: List<Pair<List<Double>, List<Double>>> = emptyList()
 
-    abstract fun verify(hiddenLayer: List<Layer>, outputLayer: OutputLayer)
+    abstract fun teach(network: Network)
+
+    abstract fun verify(network: Network): List<Double>
 }

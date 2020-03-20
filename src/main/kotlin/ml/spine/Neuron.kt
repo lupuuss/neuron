@@ -5,7 +5,7 @@ import kotlin.random.Random
 
 class Neuron(
     val inputs: Int,
-    val activationFunction: (Double) -> Double,
+    val activation: Activation,
     val hasBias: Boolean = true
 ) {
     data class Out(
@@ -15,7 +15,10 @@ class Neuron(
 
     val weights = MutableList(inputs) { Random.nextDouble(-1.0, 1.0) }
 
-    var bias: Double = Random.nextDouble(-1.0, 1.0)
+    @Transient
+    var previousWeights = weights.toList() // copy of weights
+
+    var bias: Double = if (hasBias) Random.nextDouble(-1.0, 1.0) else 0.0
 
     fun activate(input: List<Double>): Out {
 
@@ -31,6 +34,8 @@ class Neuron(
 
         x += bias
 
-        return Out(activationFunction(x), x)
+        return Out(activation.function(x), x)
     }
+
+    fun weightsBackup(): MutableList<Double> = weights.toMutableList()
 }

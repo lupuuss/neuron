@@ -7,15 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/PlotUtilites.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/freeze/NetworkFreezer.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/OnlineNetworkTeacher.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/Utilities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/Utilities.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/learn/SingleNeuronTeacher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/SingleNeuronTeacher.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/learn/NetworkTeacher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/NetworkTeacher.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Activation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Activation.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Layer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Layer.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Network.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Network.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Neuron.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Neuron.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/spine/OutputLayer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/OutputLayer.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -282,7 +285,7 @@
       <workItem from="1584315360833" duration="154000" />
       <workItem from="1584376917984" duration="225000" />
       <workItem from="1584534269253" duration="101000" />
-      <workItem from="1584703012994" duration="5576000" />
+      <workItem from="1584703012994" duration="29123000" />
     </task>
     <task id="LOCAL-00001" summary="Removes unnecessary file">
       <created>1584303904234</created>
@@ -298,7 +301,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584309784753</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Changes every array to list">
+      <created>1584712667715</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1584712667715</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -320,7 +330,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Removes unnecessary file" />
     <MESSAGE value="jar config; code improvements;" />
-    <option name="LAST_COMMIT_MESSAGE" value="jar config; code improvements;" />
+    <MESSAGE value="Changes every array to list" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes every array to list" />
   </component>
   <component name="WindowStateProjectService">
     <state x="279" y="85" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584309165550">
@@ -333,10 +344,11 @@
     </state>
     <state x="470" y="243" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1584037271021" />
     <state x="588" y="307" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1584309696969" />
-    <state x="560" y="128" key="#com.intellij.ide.util.MemberChooser" timestamp="1584043059074">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="700" y="162" key="#com.intellij.ide.util.MemberChooser" timestamp="1584723612756">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="560" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1584043059074" />
+    <state x="700" y="162" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1584723612756" />
     <state x="624" y="247" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1584306343564">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -358,35 +370,51 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="548" y="65" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584093126941" />
-    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1584314241497">
+    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1584743858453">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584314241497" />
+    <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584743858453" />
     <state x="686" y="211" key="FileChooserDialogImpl" timestamp="1584306309611">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1584302296370" />
     <state x="686" y="211" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1584306309611" />
-    <state width="1877" height="244" key="GridCell.Tab.0.bottom" timestamp="1584712637297">
+    <state width="1877" height="460" key="GridCell.Tab.0.bottom" timestamp="1584743794224">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1493" height="2" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
-    <state width="1877" height="244" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1584712637297" />
-    <state width="1877" height="244" key="GridCell.Tab.0.center" timestamp="1584712637297">
+    <state width="1877" height="460" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1584743794224" />
+    <state width="1877" height="460" key="GridCell.Tab.0.center" timestamp="1584743794224">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1493" height="2" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
-    <state width="1877" height="244" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1584712637297" />
-    <state width="1877" height="244" key="GridCell.Tab.0.left" timestamp="1584712637297">
+    <state width="1877" height="460" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1584743794224" />
+    <state width="1877" height="460" key="GridCell.Tab.0.left" timestamp="1584743794224">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1493" height="2" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
-    <state width="1877" height="244" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1584712637297" />
-    <state width="1877" height="244" key="GridCell.Tab.0.right" timestamp="1584712637297">
+    <state width="1877" height="460" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1584743794224" />
+    <state width="1877" height="460" key="GridCell.Tab.0.right" timestamp="1584743794224">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1493" height="2" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
-    <state width="1877" height="244" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1584712637297" />
+    <state width="1877" height="460" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1584743794224" />
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1584739204731">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1584739204731" />
+    <state width="1877" height="348" key="GridCell.Tab.1.center" timestamp="1584739204730">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1584739204730" />
+    <state width="1877" height="348" key="GridCell.Tab.1.left" timestamp="1584739204730">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1584739204730" />
+    <state width="1877" height="348" key="GridCell.Tab.1.right" timestamp="1584739204730">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1584739204730" />
     <state x="311" y="0" key="SettingsEditor" timestamp="1584306360388">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
