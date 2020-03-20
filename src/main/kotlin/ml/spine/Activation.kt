@@ -9,6 +9,10 @@ enum class Activation(
     Sigmoid(
         { x -> 1.0 / (1.0 + exp(-x)) },
         { (activation) -> activation * (1 - activation) }
+    ),
+    Identity(
+        { x -> x },
+        { _ -> 1.0 }
     );
 
     operator fun component1(): (Double) -> Double = function
