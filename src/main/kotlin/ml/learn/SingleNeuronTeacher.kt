@@ -5,24 +5,24 @@ import ml.spine.Neuron
 
 class SingleNeuronTeacher(private val alpha: Double, private val activation: Activation) {
 
-    fun teach(neuron: Neuron, inputArray: Array<DoubleArray>, expectedOutput: DoubleArray) {
+    fun teach(neuron: Neuron, input: List<List<Double>>, expectedOutput: List<Double>) {
 
-        val outputDifferences = DoubleArray(inputArray.size)
-        val neuronOutputs = ArrayList<Neuron.Out>(inputArray.size)
-        val n = inputArray.size
-        
-        for (i in inputArray.indices) {
+        val outputDifferences = MutableList(input.size) { 0.0 }
+        val neuronOutputs = ArrayList<Neuron.Out>(input.size)
+        val n = input.size
 
-            neuronOutputs.add(neuron.activate(inputArray[i]))
+        for (i in input.indices) {
+
+            neuronOutputs.add(neuron.activate(input[i]))
             outputDifferences[i] = neuronOutputs[i].activation - expectedOutput[i]
         }
 
         for (i in neuron.weights.indices) {
 
             var derivativeValue = 0.0
-            for (j in inputArray.indices) {
+            for (j in input.indices) {
 
-                derivativeValue += outputDifferences[j] * activation.derivative(neuronOutputs[j]) * inputArray[j][i]
+                derivativeValue += outputDifferences[j] * activation.derivative(neuronOutputs[j]) * input[j][i]
 
             }
 
@@ -35,7 +35,7 @@ class SingleNeuronTeacher(private val alpha: Double, private val activation: Act
 
         var derivativeValue = 0.0
 
-        for (j in inputArray.indices) {
+        for (j in input.indices) {
 
             derivativeValue += outputDifferences[j] * activation.derivative(neuronOutputs[j])
 
@@ -46,7 +46,7 @@ class SingleNeuronTeacher(private val alpha: Double, private val activation: Act
         neuron.bias = neuron.bias - alpha * derivativeValue
     }
 
-    fun verify(neuron: Neuron, inputArray: Array<DoubleArray>, expectedOutput: DoubleArray): Double {
+    fun verify(neuron: Neuron, inputArray: List<List<Double>>, expectedOutput: List<Double>): Double {
 
         var error = 0.0
         for (i in inputArray.indices) {

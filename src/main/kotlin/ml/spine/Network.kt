@@ -17,16 +17,16 @@ class Network private constructor(
         teacher.teach(hiddenLayers, outputLayer)
     }
 
-    fun answer(input: DoubleArray): DoubleArray {
+    fun answer(input: List<Double>): List<Double> {
 
         var lastOutput = input
 
         for (hiddenLayer in hiddenLayers) {
 
-            lastOutput = hiddenLayer.activate(lastOutput).map { it.activation }.toDoubleArray()
+            lastOutput = hiddenLayer.activate(lastOutput).map { it.activation }
         }
 
-        return outputLayer.activate(lastOutput).map { it.activation }.toDoubleArray()
+        return outputLayer.activate(lastOutput).map { it.activation }
     }
 
     class Builder(

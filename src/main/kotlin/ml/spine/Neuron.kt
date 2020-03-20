@@ -5,17 +5,19 @@ import kotlin.random.Random
 
 class Neuron(
     val inputs: Int,
-    val activationFunction: (Double) -> Double
+    val activationFunction: (Double) -> Double,
+    val hasBias: Boolean = true
 ) {
     data class Out(
         val activation: Double,
         val rawValue: Double
     )
 
-    val weights = DoubleArray(inputs) { Random.nextDouble(-1.0, 1.0) }
-    var bias = Random.nextDouble(-1.0, 1.0)
+    val weights = MutableList(inputs) { Random.nextDouble(-1.0, 1.0) }
 
-    fun activate(input: DoubleArray): Out {
+    var bias: Double = Random.nextDouble(-1.0, 1.0)
+
+    fun activate(input: List<Double>): Out {
 
         if (input.size != inputs) {
             throw IllegalArgumentException("Neuron requires $inputs values on input! Passed ${input.size} values.")
@@ -28,6 +30,7 @@ class Neuron(
         }
 
         x += bias
+
         return Out(activationFunction(x), x)
     }
 }

@@ -9,7 +9,7 @@ import java.lang.Exception
 import java.nio.file.Paths
 import java.util.*
 
-fun parseInputData(inputScanner: Scanner): Pair<Array<DoubleArray>, DoubleArray> {
+fun parseInputData(inputScanner: Scanner): Pair<List<List<Double>>, List<Double>> {
 
     val inputData = mutableListOf<Double>()
     val expectedData = mutableListOf<Double>()
@@ -27,7 +27,7 @@ fun parseInputData(inputScanner: Scanner): Pair<Array<DoubleArray>, DoubleArray>
 
     inputScanner.close()
 
-    return inputData.map { doubleArrayOf(it) }.toTypedArray() to expectedData.toDoubleArray()
+    return inputData.map { listOf(it) }.toList() to expectedData
 }
 
 fun getNeuronActivationPoints(neuron: Neuron, range: Iterator<Double>): Map<Double, Double> {
@@ -35,7 +35,7 @@ fun getNeuronActivationPoints(neuron: Neuron, range: Iterator<Double>): Map<Doub
     val values = mutableMapOf<Double, Double>()
 
     for (i in range) {
-        values[i] = neuron.activate(doubleArrayOf(i)).activation
+        values[i] = neuron.activate(listOf(i)).activation
     }
 
     return values
@@ -54,13 +54,12 @@ fun main(args: Array<String>) {
         throw e
     }
 
-
-    val teacher = SingleNeuronTeacher(0.1, Activation.sigmoid())
+    val teacher = SingleNeuronTeacher(0.5, Activation.sigmoid())
     val neuron = Neuron(1, Activation.sigmoid().function)
     val errorChangeData = mutableMapOf<Int, Double>()
 
     val (input, expected) = parseInputData(inputScanner)
-    val errorGoal = 0.01
+    val errorGoal = 0.005
     var i = 0
 
     val neuronFunPlotsDataMap = mutableMapOf<Int, Map<Double, Double>?>(
@@ -77,6 +76,8 @@ fun main(args: Array<String>) {
 
     // Learning process
 
+    val time = System.currentTimeMillis()
+
     do {
 
         if (neuronFunPlotsDataMap.containsKey(i)) {
@@ -85,73 +86,72 @@ fun main(args: Array<String>) {
 
         teacher.teach(neuron, input, expected)
         errorChangeData[i] = teacher.verify(neuron, input, expected)
-        println("${neuron.weights[0]} ${neuron.bias} ${errorChangeData[i]}")
+        println("${neuron.bias} ${neuron.weights[0]} ${errorChangeData[i]}")
 
     } while (errorChangeData[i++] ?: 0.0 > errorGoal)
 
-    outputWriter.write("${neuron.weights[0]} ${neuron.bias}")
+    println("Elapsed time: ${System.currentTimeMillis() - time}ms")
+
+    outputWriter.write("${neuron.bias}\n${neuron.weights[0]}")
     outputWriter.close()
 
     // Plots
 
     neuronFunPlotsDataMap[i] = getNeuronActivationPoints(neuron, -2.0..2.0 step 0.01)
 
-    neuronFunPlotsDataMap.firstValue()!!.quickPlotSave("Before learning", "progress.png") { chart ->
-
-        chart.title = "Learning progress"
-        chart.yAxisTitle = "f(x)"
-        chart.xAxisTitle = "x"
+    neuronFunPlotsDataMap.firstValue()!!.quickPlotSave("Before learning", "progress.png") {
+        title = "Learning progress"
+        yAxisTitle = "f(x)"
+        xAxisTitle = "x"
 
         neuronFunPlotsDataMap
             .entries
             .stream()
             .skip(1)
             .forEach { chartData ->
-                chart.addSeries(
+                addSeries(
                     "${chartData.key} iterations",
                     chartData.value!!.keys.toDoubleArray(),
                     chartData.value!!.values.toDoubleArray()
                 )
             }
 
-        chart.seriesMap.entries.forEach { it.value.marker = None() }
-
+        seriesMap.entries.forEach { it.value.marker = None() }
     }
 
-    neuronFunPlotsDataMap.firstValue()!!.quickPlotSave("Before learning", "result.png") { chart ->
+    neuronFunPlotsDataMap.firstValue()!!.quickPlotSave("Before learning", "result.png") {
+
+        title = "Result"
+        xAxisTitle = "x"
+        yAxisTitle = "f(x)"
 
         val afterLearningData = neuronFunPlotsDataMap.entries.last().value!!
-        chart.addSeries(
+        addSeries(
             "After learning",
             afterLearningData.keys.toDoubleArray(),
             afterLearningData.values.toDoubleArray()
         )
 
-        chart.seriesMap["Before learning"]?.apply {
-            this.lineColor = Color.RED
-        }
+        seriesMap["Before learning"]?.apply { lineColor = Color.RED }
 
-        chart.seriesMap["After learning"]?.apply {
-            this.marker = None()
-            this.lineColor = Color.GREEN
-        }
+        seriesMap["After learning"]?.apply { marker = None(); lineColor = Color.GREEN }
 
-        chart.addSeries("Training data", input.map { it.first() }.toDoubleArray(), expected)
+        addSeries("Training data", input.map { it.first() }.toDoubleArray(), expected.toDoubleArray())
 
-        chart.seriesMap["Training data"]?.apply {
-            this.lineColor = Color(0, 0, 0, 0)
-            this.markerColor = Color.BLACK
+        seriesMap["Training data"]?.apply {
+            lineColor = Color(0, 0, 0, 0)
+            markerColor = Color.BLACK
         }
     }
 
     errorChangeData
         .map { it.key.toDouble() to it.value }
         .toMap()
-        .quickPlotSave("Error change", "error.png") { chart ->
-            chart.title = "Quaility"
-            chart.xAxisTitle = "Iterations"
-            chart.yAxisTitle = "Error value"
-            chart.styler.yAxisDecimalPattern = "0.00"
-            chart.styler.xAxisDecimalPattern = "###,###,###,##0"
+        .quickPlotSave("Error change", "error.png") {
+            title = "Error"
+            xAxisTitle = "Iterations"
+            yAxisTitle = "Error value"
+            styler.yAxisDecimalPattern = "0.00"
+            styler.xAxisDecimalPattern = "###,###,###,##0"
         }
 }

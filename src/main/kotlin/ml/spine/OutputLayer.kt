@@ -8,10 +8,10 @@ class OutputLayer(
     hasBias: Boolean = true
 ) : Layer(neuronsCount, inputsCount, activation, hasBias) {
 
-    fun activateAndCompare(input: DoubleArray, expected: DoubleArray): Pair<Array<Neuron.Out>, DoubleArray> {
+    fun activateAndCompare(input: List<Double>, expected: List<Double>): Pair<List<Neuron.Out>, List<Double>> {
 
         val result = this.activate(input)
-        val differences = DoubleArray(input.size)
+        val differences = ArrayList<Double>(input.size)
 
         for (i in result.indices) {
             differences[i] = result[i].activation - expected[i]

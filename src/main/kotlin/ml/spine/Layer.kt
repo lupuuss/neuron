@@ -14,15 +14,15 @@ open class Layer(
         MutableList(neuronsCount) { Neuron(inputsCount, activation.function).also { it.bias = 0.0 } }
     }
 
-    fun activate(input: DoubleArray): Array<Neuron.Out> {
+    fun activate(input: List<Double>): List<Neuron.Out> {
 
-        val result = ArrayList<Neuron.Out>(neurons.size)
+        val result = ArrayList<Neuron.Out>(input.size)
 
         for (i in neurons.indices) {
 
             result.add(neurons[i].activate(input))
         }
 
-        return result.toTypedArray()
+        return result
     }
 }
