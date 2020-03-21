@@ -3,7 +3,7 @@ package ml.learn
 import ml.difference
 import ml.spine.*
 
-class OnlineNetworkTeacher(val alpha: Double) : NetworkTeacher() {
+class OnlineNetworkTeacher(alpha: Double) : NetworkTeacher(alpha) {
 
     private fun teachSingleNeuron(neuron: Neuron, input: List<Double>, error: Double) {
 

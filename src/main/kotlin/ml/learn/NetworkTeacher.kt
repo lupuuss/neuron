@@ -2,7 +2,9 @@ package ml.learn
 
 import ml.spine.Network
 
-abstract class NetworkTeacher {
+abstract class NetworkTeacher(
+    val alpha: Double
+) {
 
     enum class Mode {
         Online, Offline
