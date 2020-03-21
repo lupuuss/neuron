@@ -20,6 +20,9 @@ class Neuron(
 
     var bias: Double = if (hasBias) Random.nextDouble(-1.0, 1.0) else 0.0
 
+    @Transient
+    var previousBias = bias // copy of bias
+
     fun activate(input: List<Double>): Out {
 
         if (input.size != inputs) {
@@ -37,5 +40,11 @@ class Neuron(
         return Out(activation.function(x), x)
     }
 
-    fun weightsBackup(): MutableList<Double> = weights.toMutableList()
+    fun weightsAndBiasBackup(): Pair<MutableList<Double>, Double> = weights.toMutableList() to bias
+
+    fun setPrevious(backup: Pair<MutableList<Double>, Double>) {
+
+        previousWeights = backup.first
+        previousBias = backup.second
+    }
 }

@@ -14,7 +14,8 @@ class OnlineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha, 
         }
 
         if (neuron.hasBias) {
-            neuron.bias = neuron.bias - alpha * error
+            val biasMomentum = neuron.bias - neuron.previousBias
+            neuron.bias = neuron.bias - alpha * error + beta * biasMomentum
         }
     }
 
@@ -37,7 +38,7 @@ class OnlineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha, 
                 errorSum += followingLayerErrors[j] * followingLayer[j].previousWeights[i]
             }
 
-            val weightsBackup = layer[i].weightsBackup()
+            val backup = layer[i].weightsAndBiasBackup()
 
             teachSingleNeuron(
                 layer[i],
@@ -45,7 +46,7 @@ class OnlineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha, 
                 (errorSum * derivative(layer.lastOutput[i])).also { layerErrors.add(it) }
             )
 
-            layer[i].previousWeights = weightsBackup
+            layer[i].setPrevious(backup)
         }
 
         return layerErrors
@@ -62,7 +63,7 @@ class OnlineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha, 
 
         for (i in outputLayer.indices) {
 
-            val weightsBackup = outputLayer[i].weightsBackup()
+            val backup = outputLayer[i].weightsAndBiasBackup()
 
             teachSingleNeuron(
                 outputLayer[i],
@@ -70,7 +71,7 @@ class OnlineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha, 
                 (differences[i] * derivative(outputLayer.lastOutput[i])).also { layerErrors.add(it) }
             )
 
-            outputLayer[i].previousWeights = weightsBackup
+            outputLayer[i].setPrevious(backup)
         }
 
         return layerErrors
