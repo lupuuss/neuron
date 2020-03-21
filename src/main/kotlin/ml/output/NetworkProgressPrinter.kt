@@ -27,7 +27,7 @@ class NetworkProgressPrinter(private val outputStream: OutputStream) {
         }
 
     var formatter: ProgressFormatter =
-        { error, steps, metric -> "Error: $error | $steps: $metric" }
+        { error, steps, metric -> "Error: $error | $metric: $steps" }
 
     private var consolePrinter: ConsolePrinter = resolveMode(mode)
 
