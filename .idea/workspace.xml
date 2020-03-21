@@ -6,14 +6,14 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/OfflineNetworkTeacher.kt" afterDir="false" />
+    <list default="true" id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="Code">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/output/AsyncConsolePrinter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/output/ConsolePrinter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/output/NetworkProgressPrinter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/output/SyncConsolePrinter.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/Utilities.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/Utilities.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/learn/OnlineNetworkTeacher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/OnlineNetworkTeacher.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/learn/SingleNeuronTeacher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/SingleNeuronTeacher.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Network.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Network.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -283,7 +283,7 @@
       <workItem from="1584703012994" duration="29339000" />
       <workItem from="1584744256694" duration="2278000" />
       <workItem from="1584787485651" duration="6731000" />
-      <workItem from="1584805605313" duration="491000" />
+      <workItem from="1584805605313" duration="8130000" />
     </task>
     <task id="LOCAL-00001" summary="Removes unnecessary file">
       <created>1584303904234</created>
@@ -320,7 +320,21 @@
       <option name="project" value="LOCAL" />
       <updated>1584746634283</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Code adjustments">
+      <created>1584806115769</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1584806115770</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Initialize OfflineNetworkTeacher; Moves alpha factor to NetworkTeacher">
+      <created>1584806293579</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1584806293579</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -351,7 +365,9 @@
     <MESSAGE value="Changes every array to list" />
     <MESSAGE value="Implements OnlineNetworkTeacher; Adds NetworkFreezer" />
     <MESSAGE value="Adds Activation.Identity" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adds Activation.Identity" />
+    <MESSAGE value="Code adjustments" />
+    <MESSAGE value="Initialize OfflineNetworkTeacher; Moves alpha factor to NetworkTeacher" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initialize OfflineNetworkTeacher; Moves alpha factor to NetworkTeacher" />
   </component>
   <component name="WindowStateProjectService">
     <state x="279" y="85" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584309165550">
@@ -364,11 +380,11 @@
     </state>
     <state x="470" y="243" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1584037271021" />
     <state x="588" y="307" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1584309696969" />
-    <state x="700" y="162" key="#com.intellij.ide.util.MemberChooser" timestamp="1584723612756">
+    <state x="700" y="162" key="#com.intellij.ide.util.MemberChooser" timestamp="1584812370074">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="560" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1584043059074" />
-    <state x="700" y="162" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1584723612756" />
+    <state x="700" y="162" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1584812370074" />
     <state x="624" y="247" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1584306343564">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -390,10 +406,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="548" y="65" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584093126941" />
-    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1584806101921">
+    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1584806292943">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584806101921" />
+    <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584806292943" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1584790148803">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -403,26 +419,26 @@
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1584302296370" />
     <state x="686" y="211" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1584306309611" />
-    <state width="1877" height="302" key="GridCell.Tab.0.bottom" timestamp="1584806090100">
+    <state width="1877" height="374" key="GridCell.Tab.0.bottom" timestamp="1584813948205">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1493" height="2" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
-    <state width="1877" height="302" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1584806090100" />
-    <state width="1877" height="302" key="GridCell.Tab.0.center" timestamp="1584806090100">
+    <state width="1877" height="374" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1584813948205" />
+    <state width="1877" height="374" key="GridCell.Tab.0.center" timestamp="1584813948205">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1493" height="2" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
-    <state width="1877" height="302" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1584806090100" />
-    <state width="1877" height="302" key="GridCell.Tab.0.left" timestamp="1584806090100">
+    <state width="1877" height="374" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1584813948205" />
+    <state width="1877" height="374" key="GridCell.Tab.0.left" timestamp="1584813948205">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1493" height="2" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
-    <state width="1877" height="302" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1584806090100" />
-    <state width="1877" height="302" key="GridCell.Tab.0.right" timestamp="1584806090100">
+    <state width="1877" height="374" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1584813948205" />
+    <state width="1877" height="374" key="GridCell.Tab.0.right" timestamp="1584813948205">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1493" height="2" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
-    <state width="1877" height="302" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1584806090100" />
+    <state width="1877" height="374" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1584813948205" />
     <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1584743905793">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -469,6 +485,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="342" y="140" key="new project wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1584377140714" />
+    <state x="701" y="163" key="refactoring.ChangeSignatureDialog" timestamp="1584813792985">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="701" y="163" key="refactoring.ChangeSignatureDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1584813792985" />
     <state x="357" y="203" key="run.anything.popup" timestamp="1584092970197">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

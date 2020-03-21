@@ -2,6 +2,7 @@ package ml
 
 import ml.freeze.NetworkFreezer
 import ml.learn.OnlineNetworkTeacher
+import ml.output.NetworkProgressPrinter
 import ml.spine.Activation
 import ml.spine.Network
 import ml.spine.Neuron
@@ -68,19 +69,31 @@ fun main(args: Array<String>) {
     teacher.verificationSet = trainingData
 
     var i = 0
+
+    val networkPrinter = NetworkProgressPrinter(System.out)
+    networkPrinter.stepMetric = "Epochs"
+    networkPrinter.type = NetworkProgressPrinter.Type.InPlace
+
+    val time = System.currentTimeMillis()
+
     do {
 
         teacher.teach(network)
         val errorVector = teacher.verify(network)
         i++
 
-    } while (errorVector.stream().allMatch { it > 0.01 })
+        networkPrinter.updateData(errorVector.first(), i)
 
-    println("Epochs: $i")
+    } while (errorVector.stream().allMatch { it > 0.001 })
+
+    networkPrinter.close()
+
+    println()
+    println("Elapsed time: ${System.currentTimeMillis() - time}")
 
     val plotData = mutableMapOf<Double, Double>()
 
-    for (x in -10.0..10.0 step 0.1) {
+    for (x in -1.0..3.0 step 0.1) {
         plotData[x] = network.answer(listOf(x)).first()
     }
 
