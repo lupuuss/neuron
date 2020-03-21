@@ -1,5 +1,6 @@
 package ml.learn
 
+import ml.difference
 import ml.spine.Network
 import java.lang.IllegalArgumentException
 
@@ -23,5 +24,28 @@ abstract class NetworkTeacher(
 
     abstract fun teach(network: Network)
 
-    abstract fun verify(network: Network): List<Double>
+    fun verify(network: Network): List<Double> {
+
+        val errors = mutableListOf<List<Double>>()
+
+        for ((input, expected) in verificationSet) {
+            errors.add(network.answer(input) difference expected)
+        }
+
+        val errorVector = ArrayList<Double>(errors.first().size)
+
+        for (i in errors.first().indices) {
+
+            var sum = 0.0
+
+            for (j in errors.indices) {
+
+                sum += errors[j][i].let { it * it }
+            }
+
+            errorVector.add(sum / errors.first().size)
+        }
+
+        return errorVector
+    }
 }
