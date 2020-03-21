@@ -1,6 +1,8 @@
 package ml
 
 import ml.freeze.NetworkFreezer
+import ml.learn.NetworkTeacher
+import ml.learn.OfflineNetworkTeacher
 import ml.learn.OnlineNetworkTeacher
 import ml.output.NetworkProgressPrinter
 import ml.spine.Activation
@@ -57,11 +59,13 @@ fun main(args: Array<String>) {
 
     val trainingData = parseInputData(inputScanner)
 
-    val teacher = OnlineNetworkTeacher(0.1, 0.9)
+    val teacher = NetworkTeacher.get(NetworkTeacher.Mode.Offline, 0.5, 0.9)
     val network = Network.Builder()
         .name("cw3")
         .inputs(1)
         .setDefaultActivation(Activation.Sigmoid)
+        .hiddenLayer(4, true)
+        .hiddenLayer(3, true)
         .hiddenLayer(2, true)
         .outputLayer(1, true)
 

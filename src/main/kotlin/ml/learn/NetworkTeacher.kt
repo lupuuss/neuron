@@ -48,4 +48,13 @@ abstract class NetworkTeacher(
 
         return errorVector
     }
+
+    companion object {
+
+        @JvmStatic
+        fun get(mode: Mode, alpha: Double, beta: Double): NetworkTeacher = when (mode) {
+            Mode.Online -> OnlineNetworkTeacher(alpha, beta)
+            Mode.Offline -> OfflineNetworkTeacher(alpha, beta)
+        }
+    }
 }
