@@ -26,7 +26,7 @@ class SingleNeuronTeacher(private val alpha: Double, private val activation: Act
 
             }
 
-            derivativeValue *= 1.0 / n.toDouble()
+            derivativeValue *= 1.0 / n
 
             neuron.weights[i] = neuron.weights[i] - alpha * derivativeValue
         }

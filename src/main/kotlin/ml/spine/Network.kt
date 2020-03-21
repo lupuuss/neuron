@@ -11,7 +11,7 @@ class NoActivationFunctionException() : Exception(
 
 class Network private constructor(
     val name: String,
-    val hiddenLayers: MutableList<Layer> = mutableListOf(),
+    val hiddenLayers: MutableList<Layer>,
     val outputLayer: OutputLayer
 ) {
 
@@ -27,7 +27,7 @@ class Network private constructor(
         return outputLayer.activate(lastOutput).map { it.activation }
     }
 
-    class Builder() {
+    class Builder {
 
         private var inputsCount: Int? = null
         private var name: String? = null

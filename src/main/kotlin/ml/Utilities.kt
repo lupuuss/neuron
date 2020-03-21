@@ -46,7 +46,7 @@ infix fun ClosedFloatingPointRange<Double>.step(step: Double): Iterator<Double> 
 }
 
 infix fun List<Double>.difference(expected: List<Double>): List<Double> {
-    val result = MutableList<Double>(this.size) { 0.0 }
+    val result = MutableList(this.size) { 0.0 }
 
     for (i in this.indices) {
         result[i] = this[i] - expected[i]

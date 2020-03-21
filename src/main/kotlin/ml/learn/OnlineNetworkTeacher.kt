@@ -28,11 +28,11 @@ class OnlineNetworkTeacher(val alpha: Double) : NetworkTeacher() {
 
         val layerErrors = ArrayList<Double>(layer.size)
 
-        for (i in layer.neurons.indices) {
+        for (i in layer.indices) {
 
             var errorSum = 0.0
 
-            for (j in followingLayer.neurons.indices) {
+            for (j in followingLayer.indices) {
                 errorSum += followingLayerErrors[j] * followingLayer[j].previousWeights[i]
             }
 
@@ -56,7 +56,7 @@ class OnlineNetworkTeacher(val alpha: Double) : NetworkTeacher() {
         differences: List<Double>
     ): MutableList<Double> {
 
-        val (_, derivative) = outputLayer.activation
+        val derivative = outputLayer.activation.derivative
         val layerErrors = ArrayList<Double>(outputLayer.size)
 
         for (i in outputLayer.indices) {

@@ -56,13 +56,13 @@ fun main(args: Array<String>) {
 
     val trainingData = parseInputData(inputScanner)
 
-    val teacher = OnlineNetworkTeacher(0.001)
+    val teacher = OnlineNetworkTeacher(0.1)
     val network = Network.Builder()
         .name("cw3")
         .inputs(1)
         .setDefaultActivation(Activation.Sigmoid)
-        .hiddenLayer(20, true)
-        .outputLayer(1, true, Activation.Identity)
+        .hiddenLayer(2, true)
+        .outputLayer(1, true)
 
     teacher.trainingSet = trainingData
     teacher.verificationSet = trainingData
@@ -74,7 +74,7 @@ fun main(args: Array<String>) {
         val errorVector = teacher.verify(network)
         i++
 
-    } while (errorVector.stream().allMatch { it > 1.0 })
+    } while (errorVector.stream().allMatch { it > 0.01 })
 
     println("Epochs: $i")
 
