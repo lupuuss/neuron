@@ -57,7 +57,7 @@ fun main(args: Array<String>) {
 
     val trainingData = parseInputData(inputScanner)
 
-    val teacher = OnlineNetworkTeacher(0.1)
+    val teacher = OnlineNetworkTeacher(0.1, 0.9)
     val network = Network.Builder()
         .name("cw3")
         .inputs(1)
@@ -72,7 +72,6 @@ fun main(args: Array<String>) {
 
     val networkPrinter = NetworkProgressPrinter(System.out)
     networkPrinter.stepMetric = "Epochs"
-    networkPrinter.type = NetworkProgressPrinter.Type.InPlace
 
     val time = System.currentTimeMillis()
 
@@ -84,16 +83,16 @@ fun main(args: Array<String>) {
 
         networkPrinter.updateData(errorVector.first(), i)
 
-    } while (errorVector.stream().allMatch { it > 0.001 })
+    } while (errorVector.stream().allMatch { it > 0.0001 })
 
     networkPrinter.close()
 
     println()
-    println("Elapsed time: ${System.currentTimeMillis() - time}")
+    println("Elapsed time: ${System.currentTimeMillis() - time} ms")
 
     val plotData = mutableMapOf<Double, Double>()
 
-    for (x in -1.0..3.0 step 0.1) {
+    for (x in -1.0..3.0 step 0.01) {
         plotData[x] = network.answer(listOf(x)).first()
     }
 

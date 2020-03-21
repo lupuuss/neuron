@@ -3,13 +3,14 @@ package ml.learn
 import ml.difference
 import ml.spine.*
 
-class OnlineNetworkTeacher(alpha: Double) : NetworkTeacher(alpha) {
+class OnlineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha, beta) {
 
     private fun teachSingleNeuron(neuron: Neuron, input: List<Double>, error: Double) {
 
         for (i in neuron.weights.indices) {
 
-            neuron.weights[i] = neuron.weights[i] - alpha * error * input[i]
+            val momentumValue = neuron.weights[i] - neuron.previousWeights[i]
+            neuron.weights[i] = neuron.weights[i] - alpha * error * input[i] + beta * momentumValue
         }
 
         if (neuron.hasBias) {
