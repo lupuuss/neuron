@@ -53,7 +53,7 @@ class OnlineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha, 
     }
 
     private fun teachOutputLayer(
-        outputLayer: OutputLayer,
+        outputLayer: Layer,
         outputLayerInput: List<Double>,
         differences: List<Double>
     ): MutableList<Double> {

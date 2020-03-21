@@ -12,7 +12,7 @@ class NoActivationFunctionException() : Exception(
 class Network private constructor(
     val name: String,
     val hiddenLayers: MutableList<Layer>,
-    val outputLayer: OutputLayer
+    val outputLayer: Layer
 ) {
 
     fun answer(input: List<Double>): List<Double> {
@@ -74,7 +74,7 @@ class Network private constructor(
             return Network(
                 name ?: throw IllegalStateException("You have to set name for the network!"),
                 hiddenLayers,
-                OutputLayer(
+                Layer(
                     neurons,
                     hiddenLayers.lastOrNull()?.neurons?.size ?: inputsCount!!,
                     activation ?: defaultActivation ?: throw NoActivationFunctionException(),
