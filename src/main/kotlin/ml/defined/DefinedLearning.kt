@@ -7,6 +7,7 @@ import ml.spine.Network
 /**
  * Implements standard learning process for multiple neural networks.
  */
+@Suppress("MemberVisibilityCanBePrivate")
 abstract class DefinedLearning(
     protected val config: Config
 ) {

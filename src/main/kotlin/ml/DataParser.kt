@@ -3,9 +3,9 @@ package ml
 import java.util.*
 
 class DataParser(
-    var separator: String,
-    var inputs: Int,
-    var expected: Int
+    private var separator: String,
+    private var inputs: Int,
+    private var expected: Int
 ) {
 
     fun parse(scanner: Scanner): List<Pair<List<Double>, List<Double>>> {

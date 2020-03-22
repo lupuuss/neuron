@@ -2,6 +2,7 @@ package ml.spine
 
 import kotlin.math.exp
 
+@Suppress("unused")
 enum class Activation(
     val function: (Double) -> Double,
     val derivative: (Neuron.Out) -> Double
@@ -12,7 +13,7 @@ enum class Activation(
     ),
     Identity(
         { x -> x },
-        { _ -> 1.0 }
+        { 1.0 }
     );
 
     operator fun component1(): (Double) -> Double = function

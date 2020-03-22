@@ -7,13 +7,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/defined/Config.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/defined/Config.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/DataParser.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/DataParser.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/defined/DefinedLearning.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/defined/DefinedLearning.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/defined/Exercise3.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/defined/Exercise3.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/learn/NetworkTeacher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/NetworkTeacher.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/freeze/NetworkFreezer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/freeze/NetworkFreezer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/output/NetworkProgressPrinter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/output/NetworkProgressPrinter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Neuron.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/spine/Neuron.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +90,7 @@
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
   </component>
   <component name="RecentsManager">
@@ -289,7 +289,7 @@
       <workItem from="1584885790157" duration="3464000" />
       <workItem from="1584894470388" duration="84000" />
       <workItem from="1584894689771" duration="6480000" />
-      <workItem from="1584901199032" duration="5572000" />
+      <workItem from="1584901199032" duration="5884000" />
     </task>
     <task id="LOCAL-00001" summary="Removes unnecessary file">
       <created>1584303904234</created>
@@ -417,7 +417,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584901168681</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Now DefinedLearning can handle many neural networks; Adds more options and arguments">
+      <created>1584906860549</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1584906860549</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -461,7 +468,8 @@
     <MESSAGE value="Removes SingleNeuronTeacher" />
     <MESSAGE value="Now NetworkProgressPrinter can print error vector" />
     <MESSAGE value="Creates defined learning process to make future exercises easier" />
-    <option name="LAST_COMMIT_MESSAGE" value="Creates defined learning process to make future exercises easier" />
+    <MESSAGE value="Now DefinedLearning can handle many neural networks; Adds more options and arguments" />
+    <option name="LAST_COMMIT_MESSAGE" value="Now DefinedLearning can handle many neural networks; Adds more options and arguments" />
   </component>
   <component name="WindowStateProjectService">
     <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584906452983">
@@ -500,10 +508,14 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="548" y="65" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584898868680" />
-    <state x="468" y="14" key="CommitChangelistDialog2" timestamp="1584901168076">
+    <state x="516" y="268" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1584907246162">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="468" y="14" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1584901168076" />
+    <state x="516" y="268" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1536.824@0.0.1536.824" timestamp="1584907246162" />
+    <state x="468" y="14" key="CommitChangelistDialog2" timestamp="1584906859880">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="468" y="14" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1584906859880" />
     <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584832138986" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1584790148803">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -563,9 +575,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="807" y="436" key="VCS.ChangelistChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1584314251302" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1584826185347">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="442" y="200" key="Vcs.Push.Dialog.v2" timestamp="1584906863726">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
+    <state x="442" y="200" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1584906863726" />
     <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1584826185347" />
     <state x="573" y="281" key="classpath-attribute-editor" timestamp="1583967212686">
       <screen x="0" y="0" width="1536" height="824" />

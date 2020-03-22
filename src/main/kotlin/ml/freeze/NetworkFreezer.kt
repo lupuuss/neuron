@@ -1,11 +1,10 @@
+@file:Suppress("unused")
+
 package ml.freeze
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import ml.spine.Network
 import java.io.File
-import java.lang.Exception
-import java.lang.IllegalArgumentException
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Path
@@ -19,9 +18,9 @@ object NetworkFreezer {
         .setPrettyPrinting()
         .create()
 
-    private val defaultPath = ".\\freezer"
-    private val extension = ".frz"
-    private var rootDirectory: Path = Paths.get(defaultPath).also { validatePathAsRoot(it) }
+    private const val defaultPath = ".\\freezer"
+    private const val extension = ".frz"
+    private var rootDirectory = Paths.get(defaultPath).also { validatePathAsRoot(it) }
 
     private fun validatePathAsRoot(path: Path) {
 

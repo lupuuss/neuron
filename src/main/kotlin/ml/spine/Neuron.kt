@@ -4,7 +4,7 @@ import java.lang.IllegalArgumentException
 import kotlin.random.Random
 
 class Neuron(
-    val inputs: Int,
+    private val inputs: Int,
     val activation: Activation,
     val hasBias: Boolean = true
 ) {
@@ -13,15 +13,15 @@ class Neuron(
         val rawValue: Double
     )
 
-    val weights = MutableList(inputs) { Random.nextDouble(-1.0, 1.0) }
+    val weights: MutableList<Double> = MutableList(inputs) { Random.nextDouble(-1.0, 1.0) }
 
     @Transient
-    var previousWeights = weights.toList() // copy of weights
+    var previousWeights: List<Double> = weights.toList() // copy of weights
 
     var bias: Double = if (hasBias) Random.nextDouble(-1.0, 1.0) else 0.0
 
     @Transient
-    var previousBias = bias // copy of bias
+    var previousBias: Double = bias // copy of bias
 
     fun activate(input: List<Double>): Out {
 

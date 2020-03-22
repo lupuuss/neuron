@@ -10,9 +10,9 @@ open class Layer(
 
     val neurons: MutableList<Neuron> = MutableList(neuronsCount) { Neuron(inputsCount, activation, hasBias) }
 
-    val indices get() = neurons.indices
+    val indices: IntRange get() = neurons.indices
 
-    val size = neurons.size
+    val size: Int = neurons.size
 
     @Transient
     lateinit var lastOutput: List<Neuron.Out>

@@ -1,11 +1,6 @@
 package ml.spine
 
-import ml.learn.NetworkTeacher
-import java.lang.Exception
-import java.lang.IllegalStateException
-import java.util.stream.Stream
-
-class NoActivationFunctionException() : Exception(
+class NoActivationFunctionException : Exception(
     "Activation function not chosen! Use setDefaultActivation or pass as argument to function."
 )
 

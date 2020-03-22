@@ -9,8 +9,8 @@ import java.lang.Exception
 object QuickPlotSettings {
     var width: Int = 800
     var height: Int = 600
-    var axisTitleX = ""
-    var axsisTitleY = ""
+    var axisTitleX: String = ""
+    var axsisTitleY: String = ""
 }
 
 fun XYChart.saveAs(path: String) {

@@ -37,9 +37,9 @@ class NetworkProgressPrinter(private val outputStream: OutputStream) {
             updateOutput()
         }
 
-    var stepCounter: Int = 0
+    private var stepCounter: Int = 0
 
-    var currentError: List<Double>? = null
+    private var currentError: List<Double>? = null
 
     private var output: String? = null
         set(value) {
