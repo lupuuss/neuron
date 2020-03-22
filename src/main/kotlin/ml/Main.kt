@@ -6,73 +6,55 @@ import com.github.ajalt.clikt.parameters.arguments.default
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
-import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.file
-import com.github.ajalt.clikt.parameters.types.int
 import ml.defined.Config
 import ml.defined.DefinedLearning
-import ml.defined.Exercise3
-import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter
 import ml.output.ProgressFormatter
-import ml.spine.Activation
-import ml.spine.Network
-import org.knowm.xchart.style.markers.None
-import java.awt.Color
-import java.util.*
 
 class Main : CliktCommand() {
 
-    private val inputFile by argument(help = "Destination of training data set.").file(
-        mustExist = true,
-        mustBeReadable = true
-    )
+    private val input by argument(help = Help.input).file(mustExist = true, mustBeReadable = true)
 
-    private val mode by argument(help = "Learning mode [online/offline]. Default value = 'online'")
+    private val mode by argument(help = Help.teacherMode)
         .enum<NetworkTeacher.Mode>(ignoreCase = true)
         .default(NetworkTeacher.Mode.Online)
 
-    private val definedSet by argument(help = "Chosen set of neural networks. Default value = Exercise3")
+    private val definedNetworks by argument(help = Help.definedNetworks)
         .enum<DefinedLearning.Type>()
         .default(DefinedLearning.Type.Exercise3)
 
-    private val separator: String by option(
-        "--separator",
-        "-s",
-        help = "Sets data separator. Default value = ';'"
-    ).default(";")
+    private val separator: String by option("--separator", "-s", help = Help.separator).default(";")
 
-    private val freeze by option(help = "If set neural networks will be freezed after program end.")
-        .flag("-f", default = false)
+    private val freeze by option("--freeze", "-f", help = Help.freeze).flag(default = false)
 
-    private val alwaysFresh by option(help = "If set, neural networks will be taught even if freezed version is available.")
-        .flag("-af", default = true)
+    private val unfreeze by option("--unfreeze", "-u", help = Help.unfreeze).flag(default = false)
 
-    private val printMode by option(help = "Sets print mode. Default value = Sync")
-        .enum<NetworkProgressPrinter.Mode>()
-        .default(NetworkProgressPrinter.Mode.Sync)
+    private val async by option(help = Help.async).flag("--sync", default = false)
 
-    private val printType by option(help = "Sets print type. Default value = Sequential")
-        .enum<NetworkProgressPrinter.Type>()
-        .default(NetworkProgressPrinter.Type.Sequential)
+    private val inPlace by option("--in-place", help = Help.inPlace).flag("--seq", default = false)
 
-    private val formatter by option(help = "Sets print formatter. Default value = ErrorOnly")
-        .choice("ErrorOnly", "Full")
-        .default("ErrorOnly")
+    private val fullFormatter by option("--full", help = Help.formatter).flag("--error-only", default = false)
 
     override fun run() {
 
-        val printFormatter: ProgressFormatter = when (formatter) {
-            "ErrorOnly" -> { errorStr, _, _ -> errorStr ?: "null" }
-            "Full" -> { errorStr, steps, metric -> "Error: $errorStr | $metric : $steps"}
-            else -> throw IllegalAccessException("Formatter not found!")
+        val printFormatter: ProgressFormatter = if (fullFormatter) {
+            { errorStr, steps, metric -> "Error: $errorStr | $metric : $steps" }
+        } else {
+            { errorStr, _, _ -> errorStr ?: "null" }
         }
 
+        val printMode =
+            if (async) NetworkProgressPrinter.Mode.Async else NetworkProgressPrinter.Mode.Sync
+
+        val printType =
+            if (inPlace) NetworkProgressPrinter.Type.InPlace else NetworkProgressPrinter.Type.Sequential
+
         val config = Config(
-            input = inputFile,
-            alwaysFresh = alwaysFresh,
+            input = input,
+            alwaysFresh = !unfreeze,
             freeze = freeze,
             teacherMode = mode,
             printMode = printMode,
@@ -83,8 +65,32 @@ class Main : CliktCommand() {
 
         // For now just starts exercise 3 process.
         // More details in DefinedLearning and Exercise3 classes
-        DefinedLearning.get(definedSet, config).run()
+        DefinedLearning.get(definedNetworks, config).run()
     }
 }
 
 fun main(args: Array<String>): Unit = Main().main(args)
+
+object Help {
+
+    const val input: String = "Destination of training data set."
+
+    const val teacherMode: String = "Learning mode [online/offline]. Default value = online"
+
+    const val definedNetworks: String = "Set of neural networks to run. Default value = Exercise3"
+
+    const val separator: String = "Sets data separator. Default value = ';'"
+
+    const val freeze: String = "If set neural networks will be freezed after program end."
+
+    const val unfreeze: String = "If set, neural networks will be unfreezed if available instead of learning."
+
+    const val async: String = "Switches between asynchronous and synchronous printing." +
+            " The first one may omit some results, but it doesn't block learning." +
+            " Synchronous, on the other hand, blocks learning but prints every result."
+    const val inPlace: String = "Switches between in place and sequential printing." +
+            " The first one prints every result updating a single line." +
+            " Sequential printing puts every result in a new line."
+
+    const val formatter: String = "Switches between full progress and only error printing."
+}
