@@ -2,7 +2,7 @@ package ml.output
 
 import java.io.OutputStream
 
-typealias ProgressFormatter = (Double?, Int, String?) -> String
+typealias ProgressFormatter = (String?, Int, String?) -> String
 
 class NetworkProgressPrinter(private val outputStream: OutputStream) {
 
@@ -39,7 +39,7 @@ class NetworkProgressPrinter(private val outputStream: OutputStream) {
 
     var stepCounter: Int = 0
 
-    var currentError: Double? = null
+    var currentError: List<Double>? = null
 
     private var output: String? = null
         set(value) {
@@ -57,10 +57,10 @@ class NetworkProgressPrinter(private val outputStream: OutputStream) {
     }
 
     private fun updateOutput() {
-        output = formatter(currentError, stepCounter, stepMetric)
+        output = formatter(currentError?.joinToString(separator = " "), stepCounter, stepMetric)
     }
 
-    fun updateData(error: Double?, steps: Int) {
+    fun updateData(error: List<Double>?, steps: Int) {
         this.currentError = error
         this.stepCounter = steps
 
