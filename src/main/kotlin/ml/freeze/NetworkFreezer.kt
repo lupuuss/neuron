@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import ml.spine.Network
 import java.io.File
+import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.nio.charset.Charset
 import java.nio.file.Files
@@ -44,10 +45,16 @@ object NetworkFreezer {
         file.outputStream().write(gson.toJson(network).toByteArray(charset))
     }
 
-    fun unfreezeFile(networkName: String): Network {
-        val fileName = if (networkName.endsWith(extension)) networkName else "$networkName$extension"
-        val file = File(rootDirectory.toFile(), fileName)
+    fun unfreezeFile(networkName: String): Network? {
+        return try {
 
-        return gson.fromJson(String(file.inputStream().readAllBytes(), charset), Network::class.java)
+            val fileName = if (networkName.endsWith(extension)) networkName else "$networkName$extension"
+            val file = File(rootDirectory.toFile(), fileName)
+
+            gson.fromJson(String(file.inputStream().readAllBytes(), charset), Network::class.java)
+
+        } catch (e: Exception) {
+            null
+        }
     }
 }

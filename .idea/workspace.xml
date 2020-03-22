@@ -6,7 +6,14 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="" />
+    <list default="true" id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/defined/Config.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/defined/DefinedLearning.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/defined/Exercise3.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/freeze/NetworkFreezer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/freeze/NetworkFreezer.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -87,6 +94,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="ml.defined" />
       <recent name="ml.learn" />
       <recent name="ml" />
       <recent name="ml.spine" />
@@ -176,7 +184,7 @@
     <configuration name="MainKt" type="JetRunConfigurationType" factoryName="Kotlin" nameIsGenerated="true">
       <module name="neuron.main" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="C:\Users\damia\Desktop\in.txt" />
+      <option name="PROGRAM_PARAMETERS" value="C:\Users\damia\Desktop\in.txt online" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PASS_PARENT_ENVS" value="true" />
@@ -278,6 +286,8 @@
       <workItem from="1584821794739" duration="11743000" />
       <workItem from="1584874930248" duration="3915000" />
       <workItem from="1584885790157" duration="3464000" />
+      <workItem from="1584894470388" duration="84000" />
+      <workItem from="1584894689771" duration="6427000" />
     </task>
     <task id="LOCAL-00001" summary="Removes unnecessary file">
       <created>1584303904234</created>
@@ -384,7 +394,21 @@
       <option name="project" value="LOCAL" />
       <updated>1584832140804</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Removes SingleNeuronTeacher">
+      <created>1584892896119</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1584892896119</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Now NetworkProgressPrinter can print error vector">
+      <created>1584897414306</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1584897414306</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -425,23 +449,25 @@
     <MESSAGE value="Fix default formatter in NetworkProgressPrinter" />
     <MESSAGE value="Adds first implementation of offline teaching" />
     <MESSAGE value="Now offline and online teacher can be created with static method" />
-    <option name="LAST_COMMIT_MESSAGE" value="Now offline and online teacher can be created with static method" />
+    <MESSAGE value="Removes SingleNeuronTeacher" />
+    <MESSAGE value="Now NetworkProgressPrinter can print error vector" />
+    <option name="LAST_COMMIT_MESSAGE" value="Now NetworkProgressPrinter can print error vector" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="279" y="85" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584887602280">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584895525988">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584110128370" />
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584895525988" />
     <state x="279" y="85" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1584887602280" />
     <state x="588" y="307" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1584309696969">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="470" y="243" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1584037271021" />
     <state x="588" y="307" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1584309696969" />
-    <state x="700" y="162" key="#com.intellij.ide.util.MemberChooser" timestamp="1584886217239">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="560" y="128" key="#com.intellij.ide.util.MemberChooser" timestamp="1584900416877">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="560" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1584043059074" />
+    <state x="560" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1584900416877" />
     <state x="700" y="162" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1584886217239" />
     <state x="624" y="247" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1584306343564">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -460,13 +486,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1584309207343" />
-    <state x="548" y="65" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog" timestamp="1584093126941">
+    <state x="548" y="65" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog" timestamp="1584898868680">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="548" y="65" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584093126941" />
-    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1584832138986">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="548" y="65" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584898868680" />
+    <state x="468" y="14" key="CommitChangelistDialog2" timestamp="1584897413394">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
+    <state x="468" y="14" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1584897413394" />
     <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584832138986" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1584790148803">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -477,25 +504,25 @@
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1584302296370" />
     <state x="686" y="211" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1584306309611" />
-    <state width="1877" height="17" key="GridCell.Tab.0.bottom" timestamp="1584892414381">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1493" height="94" key="GridCell.Tab.0.bottom" timestamp="1584901120206">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
+    <state width="1493" height="94" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584901120206" />
     <state width="1877" height="17" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1584892414381" />
-    <state width="1877" height="17" key="GridCell.Tab.0.center" timestamp="1584892414381">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1493" height="94" key="GridCell.Tab.0.center" timestamp="1584901120206">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
+    <state width="1493" height="94" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1584901120206" />
     <state width="1877" height="17" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1584892414381" />
-    <state width="1877" height="17" key="GridCell.Tab.0.left" timestamp="1584892414381">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1493" height="94" key="GridCell.Tab.0.left" timestamp="1584901120206">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
+    <state width="1493" height="94" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1584901120206" />
     <state width="1877" height="17" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1584892414381" />
-    <state width="1877" height="17" key="GridCell.Tab.0.right" timestamp="1584892414381">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1493" height="94" key="GridCell.Tab.0.right" timestamp="1584901120206">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="2" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1584292745021" />
+    <state width="1493" height="94" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1584901120206" />
     <state width="1877" height="17" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1584892414381" />
     <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1584887772544">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -534,10 +561,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="573" y="281" key="classpath-attribute-editor/0.0.1536.824@0.0.1536.824" timestamp="1583967212686" />
-    <state x="581" y="298" key="com.intellij.ide.util.TipDialog" timestamp="1584885800772">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1584894694373">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1584302279565" />
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1584894694373" />
     <state x="581" y="298" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1584885800772" />
     <state x="342" y="140" key="new project wizard" timestamp="1584377140714">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -556,19 +583,5 @@
     </state>
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1583956120744" />
     <state x="539" y="183" width="840" height="856" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1584706324818" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="kotlin-function">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/ml/learn/SingleNeuronTeacher.kt</url>
-          <line>48</line>
-          <properties class="ml.learn.SingleNeuronTeacher">
-            <option name="EMULATED" value="true" />
-          </properties>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
