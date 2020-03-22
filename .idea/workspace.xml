@@ -6,15 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ml/DataParser.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/learn/NetworkTeacher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/NetworkTeacher.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/learn/OfflineNetworkTeacher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/OfflineNetworkTeacher.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/learn/OnlineNetworkTeacher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/learn/OnlineNetworkTeacher.kt" afterDir="false" />
-    </list>
+    <list default="true" id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -571,7 +563,7 @@
         <line-breakpoint enabled="true" type="kotlin-function">
           <url>file://$PROJECT_DIR$/src/main/kotlin/ml/learn/SingleNeuronTeacher.kt</url>
           <line>48</line>
-          <properties class="ml.learn.SingleNeuronTeacher" method="verify">
+          <properties class="ml.learn.SingleNeuronTeacher">
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="2" />
