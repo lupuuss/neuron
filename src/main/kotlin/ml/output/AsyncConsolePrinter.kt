@@ -45,5 +45,6 @@ class AsyncConsolePrinter(output: OutputStream) : ConsolePrinter(output) {
 
     override fun close() {
         coroutine.cancel()
+        outputStream.write('\n'.toInt())
     }
 }

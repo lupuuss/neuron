@@ -23,8 +23,8 @@ class Exercise3(
 
     override var errorGoal: Double = 0.001
 
-    private val alpha = if (config.teacherMode == NetworkTeacher.Mode.Online) 0.3 else 0.9
-    private val beta = if (config.teacherMode == NetworkTeacher.Mode.Online) 0.2 else 0.9
+    private val alpha = 0.3
+    private val beta = 0.3
 
     override val teacher: NetworkTeacher = NetworkTeacher.get(config.teacherMode, alpha, beta)
 

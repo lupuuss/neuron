@@ -105,12 +105,17 @@ abstract class DefinedLearning(
 
             networks.addAll(buildNetworks())
 
+            val time = System.currentTimeMillis()
             for (network in networks) {
 
                 beforeLearning(network)
+                val networkTime = System.currentTimeMillis()
                 val (errorVector, steps) = learningProcess(network)
+                println("Network '${network.name}' learning time: ${System.currentTimeMillis() - networkTime}")
                 afterLearning(network, errorVector, steps, false)
             }
+
+            println("Total elapsed time: ${System.currentTimeMillis() - time}")
 
         } else {
 
@@ -120,6 +125,7 @@ abstract class DefinedLearning(
                 afterLearning(network, null, null, true)
             }
         }
+
 
         allNetworksReady()
     }
