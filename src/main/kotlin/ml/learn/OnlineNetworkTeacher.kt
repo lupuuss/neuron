@@ -5,6 +5,8 @@ import ml.spine.*
 
 class OnlineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha, beta) {
 
+    override val metric: String = "Epochs"
+
     private fun teachSingleNeuron(neuron: Neuron, input: List<Double>, error: Double) {
 
         for (i in neuron.weights.indices) {

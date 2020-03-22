@@ -5,9 +5,14 @@ import ml.spine.*
 
 class OfflineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha, beta) {
 
+    override val metric: String = "Iterations"
+
     private fun collectAnswers(network: Network): List<List<List<Neuron.Out>>> {
 
-        val result = MutableList<MutableList<List<Neuron.Out>>>(network.hiddenLayers.size + 1) { mutableListOf() }
+        val result = MutableList(network.hiddenLayers.size + 1) {
+            MutableList(trainingSet.size) { listOf<Neuron.Out>() }
+        }
+
         for (i in trainingSet.indices) {
 
             val (input, _) = trainingSet[i]
@@ -15,10 +20,10 @@ class OfflineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha,
             network.answer(input)
 
             for (j in network.hiddenLayers.indices) {
-                result[j].add(network.hiddenLayers[j].lastOutput)
+                result[j][i] = network.hiddenLayers[j].lastOutput
             }
 
-            result.last().add(network.outputLayer.lastOutput)
+            result.last()[i] = network.outputLayer.lastOutput
         }
 
         return result
@@ -33,20 +38,20 @@ class OfflineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha,
 
         val n = inputs.size
 
-        for (i in neuron.weights.indices) {
+        for (weightIndex in neuron.weights.indices) {
 
             var derivativeValue = 0.0
-            for (j in inputs.indices) {
+            for (inputIndex in inputs.indices) {
 
-                derivativeValue += errors[j][neuronIndex] * inputs[j][i]
+                derivativeValue += errors[inputIndex][neuronIndex] * inputs[inputIndex][weightIndex]
 
             }
 
             derivativeValue *= 1.0 / n
 
-            val momentumValue = neuron.weights[i] - neuron.previousWeights[i]
+            val momentumValue = neuron.weights[weightIndex] - neuron.previousWeights[weightIndex]
 
-            neuron.weights[i] = neuron.weights[i] - alpha * derivativeValue + beta * momentumValue
+            neuron.weights[weightIndex] = neuron.weights[weightIndex] - alpha * derivativeValue + beta * momentumValue
         }
 
         if (!neuron.hasBias) return
@@ -94,16 +99,16 @@ class OfflineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha,
     }
 
     private fun multiplyErrorsByDerivative(
+        errors: MutableList<MutableList<Double>>,
         layer: Layer,
-        outputs: List<List<Neuron.Out>>,
-        errors: MutableList<MutableList<Double>>
+        outputs: List<List<Neuron.Out>>
     ) {
 
         for (i in errors.indices) {
 
             for (j in errors.first().indices) {
 
-                val (_, derivative) = layer[j].activation
+                val derivative = layer[j].activation.derivative
 
                 errors[i][j] *= derivative(outputs[i][j])
             }
@@ -117,7 +122,7 @@ class OfflineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha,
         inputs: List<List<Double>>
     ) {
 
-        multiplyErrorsByDerivative(layer, outputs, errors)
+        multiplyErrorsByDerivative(errors, layer, outputs)
 
         for (i in layer.indices) {
 
@@ -150,16 +155,9 @@ class OfflineNetworkTeacher(alpha: Double, beta: Double) : NetworkTeacher(alpha,
 
         for (i in network.hiddenLayers.size - 1 downTo 0) {
 
-            val errors = calcErrorPropagation(
-                network.hiddenLayers[i],
-                followingLayer,
-                followingLayerErrors
-            )
+            val errors = calcErrorPropagation(network.hiddenLayers[i], followingLayer, followingLayerErrors)
 
-            val layerInput = answers.getOrNull(i - 1)
-                ?.map { list ->
-                    list.map { it.activation }
-                } ?: inputs
+            val layerInput = answers.getOrNull(i - 1)?.map { list -> list.map { it.activation } } ?: inputs
 
             teachLayer(
                 network.hiddenLayers[i],

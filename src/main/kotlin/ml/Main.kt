@@ -1,111 +1,102 @@
 package ml
 
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.arguments.default
+import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.file
+import com.github.ajalt.clikt.parameters.types.int
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
-import ml.learn.OfflineNetworkTeacher
-import ml.learn.OnlineNetworkTeacher
 import ml.output.NetworkProgressPrinter
 import ml.spine.Activation
 import ml.spine.Network
-import ml.spine.Neuron
 import java.awt.Color
 import java.lang.Exception
 import java.nio.file.Paths
 import java.util.*
 
-fun parseInputData(inputScanner: Scanner): List<Pair<List<Double>, List<Double>>> {
+class Main : CliktCommand() {
 
-    val data = mutableListOf<Pair<List<Double>, List<Double>>>()
+    private val inputFile by argument(help = "Destination of training data set.").file(
+        mustExist = true,
+        mustBeReadable = true
+    )
 
-    while (inputScanner.hasNextLine()) {
+    private val mode: String by argument(help = "Learning mode [online/offline]. Default value = 'online'").default("online")
 
-        val values = inputScanner.nextLine().split(";")
+    private val separator: String by option("--separator", "-s", help = "Sets data separator. Default value = ';'").default(";")
 
-        val inDouble = values[0].toDouble()
-        val outDouble = values[1].toDouble()
+    private val inputs: Int by option("--inputs", "-i", help = "Sets number of inputs in training data. Default value = 1")
+        .int()
+        .default(1)
 
-        data.add(listOf(inDouble) to listOf(outDouble))
+    private val expected: Int by option("--expected", "-e", help = "Sets number of expected output values. Default value = 1")
+        .int()
+        .default(1)
+
+    override fun run() {
+
+        val mode = NetworkTeacher.Mode.valueOf(
+            mode
+                .replace("-", "")
+                .replace("_", "")
+                .toLowerCase()
+                .capitalize()
+        )
+        val trainingData = DataParser(separator, inputs, expected).parse(Scanner(inputFile.inputStream()))
+
+        val teacher = NetworkTeacher.get(mode, 0.5, 0.9)
+        val network = Network.Builder()
+            .name("ćwiczenie3")
+            .inputs(1)
+            .setDefaultActivation(Activation.Sigmoid)
+            .hiddenLayer(2, true)
+            .outputLayer(1, true)
+
+        teacher.trainingSet = trainingData
+        teacher.verificationSet = trainingData
+
+        var i = 0
+
+        val networkPrinter = NetworkProgressPrinter(System.out)
+        networkPrinter.mode = NetworkProgressPrinter.Mode.Async
+        networkPrinter.type = NetworkProgressPrinter.Type.InPlace
+        networkPrinter.stepMetric = teacher.metric
+        networkPrinter.formatter = { error, _, _ -> "$error" }
+
+        val time = System.currentTimeMillis()
+
+        do {
+
+            teacher.teach(network)
+            val errorVector = teacher.verify(network)
+            i++
+
+            networkPrinter.updateData(errorVector.first(), i)
+
+        } while (errorVector.stream().allMatch { it > 0.00001 })
+
+        networkPrinter.close()
+
+        println()
+        println("Elapsed time: ${System.currentTimeMillis() - time} ms")
+
+        val plotData = mutableMapOf<Double, Double>()
+
+        for (x in -1.0..3.0 step 0.01) {
+            plotData[x] = network.answer(listOf(x)).first()
+        }
+
+        plotData.quickPlotDisplay("Result") { _ ->
+            title = "ML"
+            addSeries("training points", trainingData.map { it.first.first() }, trainingData.map { it.second.first() })
+            seriesMap["training points"]!!.lineColor = Color(0, 0, 0, 0)
+        }
+
+        NetworkFreezer.freeze(network)
     }
-
-    inputScanner.close()
-
-    return data
 }
 
-fun getNeuronActivationPoints(neuron: Neuron, range: Iterator<Double>): Map<Double, Double> {
-
-    val values = mutableMapOf<Double, Double>()
-
-    for (i in range) {
-        values[i] = neuron.activate(listOf(i)).activation
-    }
-
-    return values
-}
-
-fun main(args: Array<String>) {
-
-    // Preparation
-
-    val (inputScanner, _) = try {
-
-        Scanner(Paths.get(args[0]).toFile().inputStream()) to
-                Paths.get(args[1]).toFile().outputStream().bufferedWriter()
-
-    } catch (e: Exception) {
-
-        throw e
-    }
-
-    val trainingData = parseInputData(inputScanner)
-
-    val teacher = NetworkTeacher.get(NetworkTeacher.Mode.Offline, 0.5, 0.9)
-    val network = Network.Builder()
-        .name("cw3")
-        .inputs(1)
-        .setDefaultActivation(Activation.Sigmoid)
-        .hiddenLayer(4, true)
-        .hiddenLayer(3, true)
-        .hiddenLayer(2, true)
-        .outputLayer(1, true)
-
-    teacher.trainingSet = trainingData
-    teacher.verificationSet = trainingData
-
-    var i = 0
-
-    val networkPrinter = NetworkProgressPrinter(System.out)
-    networkPrinter.stepMetric = "Epochs"
-
-    val time = System.currentTimeMillis()
-
-    do {
-
-        teacher.teach(network)
-        val errorVector = teacher.verify(network)
-        i++
-
-        networkPrinter.updateData(errorVector.first(), i)
-
-    } while (errorVector.stream().allMatch { it > 0.0001 })
-
-    networkPrinter.close()
-
-    println()
-    println("Elapsed time: ${System.currentTimeMillis() - time} ms")
-
-    val plotData = mutableMapOf<Double, Double>()
-
-    for (x in -1.0..3.0 step 0.01) {
-        plotData[x] = network.answer(listOf(x)).first()
-    }
-
-    plotData.quickPlotDisplay("Result") { _ ->
-        title = "ML"
-        addSeries("training points", trainingData.map { it.first.first() }, trainingData.map { it.second.first() })
-        seriesMap["training points"]!!.lineColor = Color(0, 0, 0, 0)
-    }
-
-    NetworkFreezer.freeze(network)
-
-}
+fun main(args: Array<String>): Unit = Main().main(args)

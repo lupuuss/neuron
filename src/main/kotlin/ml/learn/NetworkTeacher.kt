@@ -22,6 +22,8 @@ abstract class NetworkTeacher(
     var trainingSet: List<Pair<List<Double>, List<Double>>> = emptyList()
     var verificationSet: List<Pair<List<Double>, List<Double>>> = emptyList()
 
+    abstract val metric: String
+
     abstract fun teach(network: Network)
 
     fun verify(network: Network): List<Double> {
