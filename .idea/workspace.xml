@@ -8,9 +8,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7f0be59e-66f0-43e7-b69e-a9c9376533b4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/defined/DefinedLearning.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/defined/DefinedLearning.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/defined/Exercise3.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/defined/Exercise3.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/output/AsyncConsolePrinter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/output/AsyncConsolePrinter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ml/output/NetworkProgressPrinter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ml/output/NetworkProgressPrinter.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +103,7 @@
       <recent name="C:\Users\damia\IdeaProjects\neuron\src\main\kotlin\ml\learn" />
     </key>
   </component>
-  <component name="RunManager" selected="Kotlin.ml.MainKt">
+  <component name="RunManager" selected="Gradle.neuron [jar]">
     <configuration name="neuron [buildDependents]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -288,7 +287,7 @@
       <workItem from="1584885790157" duration="3464000" />
       <workItem from="1584894470388" duration="84000" />
       <workItem from="1584894689771" duration="6480000" />
-      <workItem from="1584901199032" duration="7262000" />
+      <workItem from="1584901199032" duration="7652000" />
     </task>
     <task id="LOCAL-00001" summary="Removes unnecessary file">
       <created>1584303904234</created>
@@ -430,7 +429,21 @@
       <option name="project" value="LOCAL" />
       <updated>1584907279208</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Adds time logs">
+      <created>1584908574099</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1584908574099</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Small formatting changes">
+      <created>1584908635980</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1584908635980</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -476,7 +489,9 @@
     <MESSAGE value="Creates defined learning process to make future exercises easier" />
     <MESSAGE value="Now DefinedLearning can handle many neural networks; Adds more options and arguments" />
     <MESSAGE value="Code cleanup" />
-    <option name="LAST_COMMIT_MESSAGE" value="Code cleanup" />
+    <MESSAGE value="Adds time logs" />
+    <MESSAGE value="Small formatting changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Small formatting changes" />
   </component>
   <component name="WindowStateProjectService">
     <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584906452983">
@@ -519,10 +534,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="516" y="268" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1536.824@0.0.1536.824" timestamp="1584907246162" />
-    <state x="468" y="14" key="CommitChangelistDialog2" timestamp="1584908573502">
+    <state x="468" y="14" key="CommitChangelistDialog2" timestamp="1584908635361">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="468" y="14" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1584908573502" />
+    <state x="468" y="14" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1584908635361" />
     <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584832138986" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1584790148803">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -533,25 +548,25 @@
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1584302296370" />
     <state x="686" y="211" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1584306309611" />
-    <state width="1493" height="213" key="GridCell.Tab.0.bottom" timestamp="1584908554360">
+    <state width="1493" height="213" key="GridCell.Tab.0.bottom" timestamp="1584908860510">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="213" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584908554360" />
+    <state width="1493" height="213" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584908860510" />
     <state width="1877" height="17" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1584892414381" />
-    <state width="1493" height="213" key="GridCell.Tab.0.center" timestamp="1584908554360">
+    <state width="1493" height="213" key="GridCell.Tab.0.center" timestamp="1584908860510">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="213" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1584908554360" />
+    <state width="1493" height="213" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1584908860510" />
     <state width="1877" height="17" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1584892414381" />
-    <state width="1493" height="213" key="GridCell.Tab.0.left" timestamp="1584908554360">
+    <state width="1493" height="213" key="GridCell.Tab.0.left" timestamp="1584908860510">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="213" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1584908554360" />
+    <state width="1493" height="213" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1584908860510" />
     <state width="1877" height="17" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1584892414381" />
-    <state width="1493" height="213" key="GridCell.Tab.0.right" timestamp="1584908554360">
+    <state width="1493" height="213" key="GridCell.Tab.0.right" timestamp="1584908860510">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="213" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1584908554360" />
+    <state width="1493" height="213" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1584908860510" />
     <state width="1877" height="17" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1584892414381" />
     <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1584887772544">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -582,10 +597,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="807" y="436" key="VCS.ChangelistChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1584314251302" />
-    <state x="442" y="200" key="Vcs.Push.Dialog.v2" timestamp="1584908576222">
+    <state x="442" y="200" key="Vcs.Push.Dialog.v2" timestamp="1584908638677">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="442" y="200" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1584908576222" />
+    <state x="442" y="200" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1584908638677" />
     <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1584826185347" />
     <state x="573" y="281" key="classpath-attribute-editor" timestamp="1583967212686">
       <screen x="0" y="0" width="1536" height="824" />

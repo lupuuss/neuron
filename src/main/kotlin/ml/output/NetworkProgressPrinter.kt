@@ -69,5 +69,9 @@ class NetworkProgressPrinter(private val outputStream: OutputStream) {
 
     fun close() {
         consolePrinter.close()
+
+        if (type == Type.InPlace) {
+            outputStream.write('\n'.toInt())
+        }
     }
 }
