@@ -5,8 +5,8 @@ import ml.spine.Network
 import java.lang.IllegalArgumentException
 
 abstract class NetworkTeacher(
-    val alpha: Double,
-    val beta: Double
+    var alpha: Double,
+    var beta: Double
 ) {
 
     init {

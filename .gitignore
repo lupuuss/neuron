@@ -1,8 +1,6 @@
 /src/main/kotlin/META-INF/
 /build/
 /out/
-/result.png
-/progress.png
-/error.png
 /.gradle/
 /freezer/*
+*.png

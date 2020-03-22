@@ -1,26 +1,50 @@
 package ml.defined
 
-import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter
 import ml.spine.Network
 
+/**
+ * Implements standard learning process for multiple neural networks.
+ */
 abstract class DefinedLearning(
     protected val config: Config
 ) {
 
-    lateinit var network: Network
-    protected val teacher: NetworkTeacher = NetworkTeacher.get(config.teacherMode, config.alpha, config.beta)
+    enum class Type {
+        Exercise3
+    }
 
-    protected abstract fun dataSetup()
+    protected val networks: MutableList<Network> = mutableListOf()
+    protected abstract val teacher: NetworkTeacher
+    protected abstract var errorGoal: Double
 
-    protected abstract fun buildNetwork(): Network
+    /**
+     * Should load all necessary data for learning. It is called only once on start.
+     */
+    protected abstract fun dataLoading()
 
-    protected abstract fun unfreezing(): Network?
+    /**
+     * Should build all neural networks that will be used. It is called only once on start.
+     */
+    protected abstract fun buildNetworks(): MutableList<Network>
 
-    protected open fun beforeLearning() {}
+    /**
+     * Should load neural networks from disk. It is called only once on start.
+     */
+    protected abstract fun unfreezing(): MutableList<Network>
 
-    private fun learningProcess(): Pair<List<Double>, Int> {
+    /**
+     * It is called before learning process for each network. On this step network is unlearned.
+     * It might be not called if a neural network was unfreezed.
+     */
+    protected open fun beforeLearning(network: Network) {}
+
+    /**
+     * Performs standard learning process for each network.
+     * It might be not called if a neural network was unfreezed.
+     */
+    private fun learningProcess(network: Network): Pair<List<Double>, Int> {
 
         var i = 0
 
@@ -37,42 +61,73 @@ abstract class DefinedLearning(
             teacher.teach(network)
             errorVector = teacher.verify(network)
             i++
-            eachLearningStep(progressPrinter, errorVector, i)
+            eachLearningStep(network, progressPrinter, errorVector, i)
 
-        } while (errorVector.stream().allMatch { it > config.errorGoal })
+        } while (errorVector.stream().allMatch { it > errorGoal })
 
         progressPrinter.close()
 
         return errorVector to i
     }
 
+    /**
+     * It's called after every step of learning.
+     */
     protected open fun eachLearningStep(
+        network: Network,
         progressPrinter: NetworkProgressPrinter,
         errorVector: List<Double>,
         steps: Int
     ) {
     }
 
-    protected open fun afterLearning(errorVector: List<Double>?, steps: Int?, restored: Boolean) {}
+    /**
+     * It's called for each network after its learning process is done.
+     */
+    protected open fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?, restored: Boolean) {}
 
+    /**
+     * It's called when every network is learned.
+     */
+    protected open fun allNetworksReady() {}
+
+    /**
+     * Initializes whole learning process.
+     */
     fun run() {
 
-        dataSetup()
+        dataLoading()
 
         val restoredNetwork = unfreezing()
 
-        if (config.alwaysFresh || restoredNetwork == null) {
+        if (config.alwaysFresh || restoredNetwork.isEmpty()) {
 
-            network = buildNetwork()
+            networks.addAll(buildNetworks())
 
-            beforeLearning()
-            val (errorVector, steps) = learningProcess()
-            afterLearning(errorVector, steps, false)
+            for (network in networks) {
+
+                beforeLearning(network)
+                val (errorVector, steps) = learningProcess(network)
+                afterLearning(network, errorVector, steps, false)
+            }
 
         } else {
 
-            network = restoredNetwork
-            afterLearning(null, null, true)
+            networks.addAll(restoredNetwork)
+
+            for (network in networks) {
+                afterLearning(network, null, null, true)
+            }
+        }
+
+        allNetworksReady()
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun get(type: Type, config: Config): DefinedLearning = when (type) {
+            Type.Exercise3 -> Exercise3(config)
         }
     }
 }

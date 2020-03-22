@@ -9,12 +9,9 @@ data class Config(
     val input: File,
     val alwaysFresh: Boolean,
     val freeze: Boolean,
-    val alpha: Double,
-    val beta: Double,
     val teacherMode: NetworkTeacher.Mode,
     val printMode: NetworkProgressPrinter.Mode,
     val printType: NetworkProgressPrinter.Type,
     val printFormatter: ProgressFormatter,
-    val errorGoal: Double,
     val separator: String
 )
