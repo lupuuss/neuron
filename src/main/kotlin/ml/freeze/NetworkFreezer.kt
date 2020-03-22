@@ -39,9 +39,13 @@ object NetworkFreezer {
         this.rootDirectory = Paths.get(path)
     }
 
-    fun freeze(network: Network) {
+    fun freeze(network: Network, silent: Boolean = true) {
         val file = File(rootDirectory.toFile(), "${network.name}$extension")
         file.outputStream().write(gson.toJson(network).toByteArray(charset))
+
+        if (!silent) {
+            println("${network.name} saved successfully in ${file.absolutePath}")
+        }
     }
 
     fun unfreezeFile(networkName: String): Network? {

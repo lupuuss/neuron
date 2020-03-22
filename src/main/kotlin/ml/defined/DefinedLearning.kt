@@ -1,5 +1,6 @@
 package ml.defined
 
+import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter
 import ml.spine.Network
@@ -121,6 +122,12 @@ abstract class DefinedLearning(
 
             println("Total elapsed time: ${System.currentTimeMillis() - time}")
 
+            if (config.freeze) {
+                networks.forEach {
+                    NetworkFreezer.freeze(it, false)
+                }
+            }
+
         } else {
 
             networks.addAll(restoredNetwork)
@@ -129,7 +136,6 @@ abstract class DefinedLearning(
                 afterLearning(network, null, null, true)
             }
         }
-
 
         allNetworksReady()
     }
