@@ -76,20 +76,19 @@ class Exercise3(
 
     override fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?, restored: Boolean) {
         afterLearningData = getDataPlotXY(network, -1.0..3.0 step 0.1)
-    }
-
-    override fun allNetworksReady() {
 
         val type = config.teacherMode.toString().toLowerCase()
 
-        errorChange.map { it.key.toDouble() to it.value }.toMap().quickPlotDisplay("Error change") { _ ->
-            title = "Quality for $type. Momentum = $beta Alpha = $alpha."
-            xAxisTitle = "Iterations"
-            yAxisTitle = "Error value"
-            styler.yAxisDecimalPattern = "0.000"
-            styler.xAxisDecimalPattern = "###,###,###,###"
+        if (!restored) {
+            errorChange.map { it.key.toDouble() to it.value }.toMap().quickPlotDisplay("Error change") { _ ->
+                title = "Quality for $type. Momentum = $beta Alpha = $alpha."
+                xAxisTitle = "Iterations"
+                yAxisTitle = "Error value"
+                styler.yAxisDecimalPattern = "0.000"
+                styler.xAxisDecimalPattern = "###,###,###,###"
 
-            saveAs("error_$type.png")
+                saveAs("error_$type.png")
+            }
         }
 
         beforeLearningData.quickPlotDisplay("Before learning") { _ ->
@@ -97,14 +96,14 @@ class Exercise3(
             xAxisTitle = "x"
             yAxisTitle = "Network answer"
 
-            seriesMap["Before learning"]!!.lineColor = Color.RED
+            seriesMap["Before learning"]?.lineColor = Color.RED
 
             addSeries(
                 "After learning",
                 afterLearningData.keys.toDoubleArray(),
                 afterLearningData.values.toDoubleArray()
             )
-            seriesMap["After learning"]!!.apply {
+            seriesMap["After learning"]?.apply {
                 lineColor = Color.GREEN
                 marker = None()
             }
@@ -114,11 +113,12 @@ class Exercise3(
                 teacher.trainingSet.map { it.first.first() },
                 teacher.trainingSet.map { it.second.first() }
             )
-            seriesMap["Training points"]!!.apply {
+            seriesMap["Training points"]?.apply {
                 lineColor = Color(0, 0, 0, 0)
                 markerColor = Color.BLACK
             }
             saveAs("result_$type.png")
         }
     }
+
 }

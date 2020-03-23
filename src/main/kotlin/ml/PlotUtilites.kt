@@ -36,8 +36,12 @@ fun Map<Double, Double>.quickPlot(seriesName: String): XYChart = XYChartBuilder(
     .yAxisTitle(QuickPlotSettings.axsisTitleY)
     .build()
     .apply {
-        this.addSeries(seriesName, keys.toDoubleArray(), values.toDoubleArray())
-        this.seriesMap[seriesName]?.marker = None()
+
+        if (isNotEmpty()) {
+
+            this.addSeries(seriesName, keys.toDoubleArray(), values.toDoubleArray())
+            this.seriesMap[seriesName]?.marker = None()
+        }
     }
 
 fun Map<Double, Double>.quickPlotSwingWrapped(seriesName: String): SwingWrapper<XYChart> = SwingWrapper(
