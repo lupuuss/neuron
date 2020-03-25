@@ -19,7 +19,6 @@ class Exercise3(
 
     private var beforeLearningData: MutableMap<Double, Double> = mutableMapOf()
     private var afterLearningData: MutableMap<Double, Double> = mutableMapOf()
-    private val errorChange: MutableMap<Int, Double> = mutableMapOf()
 
     override val errorGoal: Double = 0.001
     override val stepsLimit: Int = 5_000_000
@@ -78,20 +77,24 @@ class Exercise3(
         steps: Int
     ) {
         progressPrinter?.updateData(errorVector, steps)
-        errorChange[steps] = errorVector.first()
+        errorCollector.collect(network, errorVector, steps)
     }
 
-    override fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?, restored: Boolean) {
+    override fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?) {
 
         progressPrinter?.close()
         progressPrinter = null
 
         afterLearningData = getDataPlotXY(network, -1.0..3.0 step 0.1)
+    }
+
+    override fun allNetworksReady(restored: Boolean) {
 
         val type = config.teacherMode.toString().toLowerCase()
+        val errorChange = errorCollector.getAveragePlotableErrorMap().first().second
 
         if (!restored) {
-            errorChange.map { it.key.toDouble() to it.value }.toMap().quickPlotDisplay("Error change") { _ ->
+            errorChange.quickPlotDisplay("Error change") { _ ->
                 title = "Quality for $type. Momentum = $beta Alpha = $alpha."
                 xAxisTitle = "Iterations"
                 yAxisTitle = "Error value"

@@ -6,6 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
+import ml.output.ErrorCollector
 import ml.output.NetworkProgressPrinter
 import ml.spine.Network
 
@@ -18,15 +19,16 @@ abstract class DefinedLearning(
 ) {
 
     enum class Type {
-        Exercise3
+        Exercise3, Transformation
     }
 
-    protected var asyncRunner = false
+    protected var asyncRunner: Boolean = false
 
     protected val networks: MutableList<Network> = mutableListOf()
 
     protected val teachers: MutableList<NetworkTeacher> = mutableListOf()
 
+    protected val errorCollector = ErrorCollector()
     protected abstract val errorGoal: Double
     protected abstract val stepsLimit: Int
 
@@ -104,12 +106,12 @@ abstract class DefinedLearning(
     /**
      * It's called for each network after its learning process is done.
      */
-    protected open fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?, restored: Boolean) {}
+    protected open fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?) {}
 
     /**
      * It's called when every network is learned.
      */
-    protected open fun allNetworksReady() {}
+    protected open fun allNetworksReady(restored: Boolean) {}
 
     private fun singleNetworkLog(network: Network, errors: List<Double>, steps: Int, startTime: Long) {
 
@@ -132,7 +134,7 @@ abstract class DefinedLearning(
 
             singleNetworkLog(network, errorVector, steps, networkTime)
 
-            afterLearning(network, errorVector, steps, false)
+            afterLearning(network, errorVector, steps)
         }
     }
 
@@ -167,7 +169,7 @@ abstract class DefinedLearning(
 
                     singleNetworkLog(network, errorVector, steps, time)
 
-                    afterLearning(network, errorVector, steps, false)
+                    afterLearning(network, errorVector, steps)
                 }
 
                 delay(100)
@@ -185,7 +187,8 @@ abstract class DefinedLearning(
 
         val restoredNetwork = unfreezing()
 
-        if (config.alwaysFresh || restoredNetwork.isEmpty()) {
+
+        val restored = if (config.alwaysFresh || restoredNetwork.isEmpty()) {
 
             networks.addAll(buildNetworks())
             teachers.addAll(buildTeachers())
@@ -206,16 +209,20 @@ abstract class DefinedLearning(
                 }
             }
 
+            true
+
         } else {
 
             networks.addAll(restoredNetwork)
 
             for (network in networks) {
-                afterLearning(network, null, null, true)
+                afterLearning(network, null, null)
             }
+
+            false
         }
 
-        allNetworksReady()
+        allNetworksReady(restored)
     }
 
     companion object {
@@ -223,6 +230,7 @@ abstract class DefinedLearning(
         @JvmStatic
         fun get(type: Type, config: Config): DefinedLearning = when (type) {
             Type.Exercise3 -> Exercise3(config)
+            Type.Transformation -> Transformation(config)
         }
     }
 }
