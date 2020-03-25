@@ -21,28 +21,33 @@ class Exercise3(
     private var afterLearningData: MutableMap<Double, Double> = mutableMapOf()
     private val errorChange: MutableMap<Int, Double> = mutableMapOf()
 
-    override var errorGoal: Double = 0.001
+    override val errorGoal: Double = 0.001
+    override val stepsLimit: Int = 5_000_000
 
     private val alpha = 0.3
     private val beta = 0.3
-
-    override val teacher: NetworkTeacher = NetworkTeacher.get(config.teacherMode, alpha, beta)
+    private val data: MutableList<Pair<List<Double>, List<Double>>> = mutableListOf()
+    private var progressPrinter: NetworkProgressPrinter? = null
 
     override fun dataLoading() {
         val parser = DataParser(config.separator, 1, 1)
-        val data = parser.parse(Scanner(config.input))
-
-        teacher.trainingSet = data
-        teacher.verificationSet = data
+        data.addAll(parser.parse(Scanner(config.input)))
     }
 
-    override fun buildNetworks(): MutableList<Network> = mutableListOf(
+    override fun buildNetworks(): List<Network> = listOf(
         Network.Builder()
             .name("exercise3")
             .setDefaultActivation(Activation.Sigmoid)
             .inputs(1)
             .hiddenLayer(2, true)
             .outputLayer(1, true)
+    )
+
+    override fun buildTeachers(): List<NetworkTeacher> = listOf(
+        NetworkTeacher.get(config.teacherMode, alpha, beta).apply {
+            trainingSet = data
+            verificationSet = data
+        }
     )
 
     override fun unfreezing(): MutableList<Network> {
@@ -60,21 +65,27 @@ class Exercise3(
         return plotData
     }
 
-    override fun beforeLearning(network: Network) {
+    override fun beforeLearning(network: Network, teacher: NetworkTeacher) {
         beforeLearningData = getDataPlotXY(network, -1.0..3.0 step 0.1)
+        progressPrinter = requiresProgressPrinter().apply {
+            stepMetric = teacher.metric
+        }
     }
 
     override fun eachLearningStep(
         network: Network,
-        progressPrinter: NetworkProgressPrinter,
         errorVector: List<Double>,
         steps: Int
     ) {
-        progressPrinter.updateData(errorVector, steps)
+        progressPrinter?.updateData(errorVector, steps)
         errorChange[steps] = errorVector.first()
     }
 
     override fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?, restored: Boolean) {
+
+        progressPrinter?.close()
+        progressPrinter = null
+
         afterLearningData = getDataPlotXY(network, -1.0..3.0 step 0.1)
 
         val type = config.teacherMode.toString().toLowerCase()
@@ -110,8 +121,8 @@ class Exercise3(
 
             addSeries(
                 "Training points",
-                teacher.trainingSet.map { it.first.first() },
-                teacher.trainingSet.map { it.second.first() }
+                teachers.first().trainingSet.map { it.first.first() },
+                teachers.first().trainingSet.map { it.second.first() }
             )
             seriesMap["Training points"]?.apply {
                 lineColor = Color(0, 0, 0, 0)

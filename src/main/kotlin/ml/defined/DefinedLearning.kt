@@ -1,5 +1,9 @@
 package ml.defined
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter
@@ -17,9 +21,27 @@ abstract class DefinedLearning(
         Exercise3
     }
 
+    protected var asyncRunner = false
+
     protected val networks: MutableList<Network> = mutableListOf()
-    protected abstract val teacher: NetworkTeacher
-    protected abstract var errorGoal: Double
+
+    protected val teachers: MutableList<NetworkTeacher> = mutableListOf()
+
+    protected abstract val errorGoal: Double
+    protected abstract val stepsLimit: Int
+
+    protected fun requiresProgressPrinter(): NetworkProgressPrinter {
+
+        if (asyncRunner) {
+            println("[WARNING] Its not required to print progress while asynchronous learning!")
+        }
+
+        return NetworkProgressPrinter(System.out).apply {
+            formatter = config.printFormatter
+            mode = config.printMode
+            type = config.printType
+        }
+    }
 
     /**
      * Should load all necessary data for learning. It is called only once on start.
@@ -29,46 +51,43 @@ abstract class DefinedLearning(
     /**
      * Should build all neural networks that will be used. It is called only once on start.
      */
-    protected abstract fun buildNetworks(): MutableList<Network>
+    protected abstract fun buildNetworks(): List<Network>
+
+    /**
+     * Should build all teachers that will be used. It is called only once on start.
+     * Amount of teachers must be the same as networks.
+     */
+    protected abstract fun buildTeachers(): List<NetworkTeacher>
 
     /**
      * Should load neural networks from disk. It is called only once on start.
      */
-    protected abstract fun unfreezing(): MutableList<Network>
+    protected abstract fun unfreezing(): List<Network>
 
     /**
      * It is called before learning process for each network. On this step network is unlearned.
      * It might be not called if a neural network was unfreezed.
      */
-    protected open fun beforeLearning(network: Network) {}
+    protected open fun beforeLearning(network: Network, teacher: NetworkTeacher) {}
 
     /**
      * Performs standard learning process for each network.
      * It might be not called if a neural network was unfreezed.
      */
-    private fun learningProcess(network: Network): Pair<List<Double>, Int> {
+    private fun learningProcess(network: Network, teacher: NetworkTeacher): Pair<List<Double>, Int> {
 
         var i = 0
 
         var errorVector: List<Double>
-        val progressPrinter = NetworkProgressPrinter(System.out)
-
-        progressPrinter.stepMetric = teacher.metric
-        progressPrinter.formatter = config.printFormatter
-        progressPrinter.mode = config.printMode
-        progressPrinter.type = config.printType
 
         do {
 
             teacher.teach(network)
             errorVector = teacher.verify(network)
             i++
-            eachLearningStep(network, progressPrinter, errorVector, i)
+            eachLearningStep(network, errorVector, i)
 
-        } while (errorVector.stream().allMatch { it > errorGoal })
-
-        progressPrinter.close()
-
+        } while (!errorVector.stream().allMatch { it < errorGoal } && i < stepsLimit)
         return errorVector to i
     }
 
@@ -77,7 +96,6 @@ abstract class DefinedLearning(
      */
     protected open fun eachLearningStep(
         network: Network,
-        progressPrinter: NetworkProgressPrinter,
         errorVector: List<Double>,
         steps: Int
     ) {
@@ -93,6 +111,71 @@ abstract class DefinedLearning(
      */
     protected open fun allNetworksReady() {}
 
+    private fun singleNetworkLog(network: Network, errors: List<Double>, steps: Int, startTime: Long) {
+
+        println(
+            "Network '${network.name}' learning time: ${System.currentTimeMillis() - startTime} ms " +
+                    "| steps: $steps | Error: $errors" +
+                    if (steps == stepsLimit) " | [Warning] Network reached steps limit!" else ""
+        )
+    }
+
+    private fun syncRunner() {
+
+        for ((index, network) in networks.withIndex()) {
+
+            beforeLearning(network, teachers[index])
+
+            val networkTime = System.currentTimeMillis()
+
+            val (errorVector, steps) = learningProcess(network, teachers[index])
+
+            singleNetworkLog(network, errorVector, steps, networkTime)
+
+            afterLearning(network, errorVector, steps, false)
+        }
+    }
+
+    private fun asyncRunner() {
+
+        val awaits = networks.mapIndexed { index, network ->
+
+            val teacher = teachers[index]
+
+            beforeLearning(network, teacher)
+
+            GlobalScope.async {
+
+                val time = System.currentTimeMillis()
+                val (errorVector, steps) = learningProcess(network, teacher)
+
+                network to Triple(errorVector, steps, time)
+            }
+        }.toMutableList()
+
+        runBlocking {
+
+            while (awaits.size != 0) {
+
+                val finished = awaits.filter { it.isCompleted }
+                awaits.removeAll(finished)
+
+                finished.forEach {
+
+                    val (network, result) = it.await()
+                    val (errorVector, steps, time) = result
+
+                    singleNetworkLog(network, errorVector, steps, time)
+
+                    afterLearning(network, errorVector, steps, false)
+                }
+
+                delay(100)
+            }
+
+        }
+    }
+
     /**
      * Initializes whole learning process.
      */
@@ -105,19 +188,14 @@ abstract class DefinedLearning(
         if (config.alwaysFresh || restoredNetwork.isEmpty()) {
 
             networks.addAll(buildNetworks())
+            teachers.addAll(buildTeachers())
 
             val time = System.currentTimeMillis()
-            for (network in networks) {
 
-                beforeLearning(network)
-
-                val networkTime = System.currentTimeMillis()
-
-                val (errorVector, steps) = learningProcess(network)
-
-                println("Network '${network.name}' learning time: ${System.currentTimeMillis() - networkTime}")
-
-                afterLearning(network, errorVector, steps, false)
+            if (asyncRunner) {
+                asyncRunner()
+            } else {
+                syncRunner()
             }
 
             println("Total elapsed time: ${System.currentTimeMillis() - time}")
