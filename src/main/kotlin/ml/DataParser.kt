@@ -12,12 +12,17 @@ class DataParser(
 
         val result = mutableListOf<Pair<List<Double>, List<Double>>>()
 
-        scanner.forEach { line ->
+        while (scanner.hasNextLine()) {
+
+            val line = scanner.nextLine()
+
             val values = line.split(separator).map { it.toDouble() }
 
             result.add(values.subList(0, inputs) to values.subList(inputs, inputs + expected))
         }
 
-        return result
+        return result.also {
+            println("Parsing succeed!")
+        }
     }
 }
