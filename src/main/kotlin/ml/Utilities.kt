@@ -3,6 +3,8 @@
 package ml
 
 import java.lang.IllegalArgumentException
+import kotlin.math.pow
+import kotlin.math.round
 
 fun Pair<DoubleArray, DoubleArray>.meanSquaredError(): Double {
     if (first.size != second.size) {
@@ -54,3 +56,5 @@ infix fun List<Double>.difference(expected: List<Double>): List<Double> {
 
     return result
 }
+
+fun Double.round(n: Int): Double = 10.0.pow(n).let { round(this * it) / it }
