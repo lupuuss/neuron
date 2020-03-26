@@ -1,8 +1,10 @@
 package ml
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.context
+import com.github.ajalt.clikt.output.CliktHelpFormatter
 import com.github.ajalt.clikt.parameters.arguments.argument
-import com.github.ajalt.clikt.parameters.arguments.default
+import com.github.ajalt.clikt.parameters.arguments.multiple
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
@@ -13,16 +15,27 @@ import ml.defined.DefinedLearning
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter
 import ml.output.ProgressFormatter
+import java.lang.Exception
 
-class Main : CliktCommand() {
+class Main : CliktCommand(
+    printHelpOnEmptyArgs = true
+) {
 
-    private val input by argument(help = Help.input).file(mustExist = true, mustBeReadable = true)
+    init {
+        context {
+            helpFormatter = CliktHelpFormatter(showDefaultValues = true)
+        }
+    }
 
-    private val mode by argument(help = Help.teacherMode)
-        .enum<NetworkTeacher.Mode>(ignoreCase = true)
-        .default(NetworkTeacher.Mode.Online)
+    private val inputs by argument(help = Help.input)
+        .file(mustExist = true, mustBeReadable = true)
+        .multiple(required = true)
 
-    private val definedNetworks by argument(help = Help.definedNetworks)
+    private val offline by option("--off", "--offline", help = Help.offline)
+        .flag("--on", "--online", default = false)
+
+
+    private val definedNetworks by option("--def", "-d", help = Help.definedNetworks)
         .enum<DefinedLearning.Type>()
         .default(DefinedLearning.Type.Exercise3)
 
@@ -32,9 +45,9 @@ class Main : CliktCommand() {
 
     private val unfreeze by option("--unfreeze", "-u", help = Help.unfreeze).flag(default = false)
 
-    private val async by option(help = Help.async).flag("--sync", default = false)
+    private val async by option("--print-async", help = Help.async).flag("--print-sync", default = false)
 
-    private val inPlace by option("--in-place", help = Help.inPlace).flag("--seq", default = false)
+    private val inPlace by option("--print-in-place", help = Help.inPlace).flag("--print-seq", default = false)
 
     private val fullFormatter by option("--full", help = Help.formatter).flag("--error-only", default = false)
 
@@ -52,8 +65,11 @@ class Main : CliktCommand() {
         val printType =
             if (inPlace) NetworkProgressPrinter.Type.InPlace else NetworkProgressPrinter.Type.Sequential
 
+        val mode =
+            if (offline) NetworkTeacher.Mode.Offline else NetworkTeacher.Mode.Online
+
         val config = Config(
-            input = input,
+            inputs = inputs,
             alwaysFresh = !unfreeze,
             freeze = freeze,
             teacherMode = mode,
@@ -65,7 +81,11 @@ class Main : CliktCommand() {
 
         // For now just starts exercise 3 process.
         // More details in DefinedLearning and Exercise3 classes
-        DefinedLearning.get(definedNetworks, config).run()
+        try {
+            DefinedLearning.get(definedNetworks, config).run()
+        } catch (e: Exception) {
+            issueMessage(e.message ?: "No error message...")
+        }
     }
 }
 
@@ -73,13 +93,13 @@ fun main(args: Array<String>): Unit = Main().main(args)
 
 object Help {
 
-    const val input: String = "Destination of training data set."
+    const val input: String = "Destinations of training data files."
 
-    const val teacherMode: String = "Learning mode [online/offline]. Default value = online"
+    const val offline: String = "Switches between online and offline learning"
 
-    const val definedNetworks: String = "Set of neural networks to run. Default value = Exercise3"
+    const val definedNetworks: String = "Selects a set of neural networks."
 
-    const val separator: String = "Sets data separator. Default value = ';'"
+    const val separator: String = "Sets data separator."
 
     const val freeze: String = "If set neural networks will be freezed after program end."
 
