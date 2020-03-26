@@ -1,6 +1,7 @@
 package ml
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.PrintMessage
 import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.output.CliktHelpFormatter
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -17,7 +18,7 @@ import ml.output.NetworkProgressPrinter
 import ml.output.ProgressFormatter
 import java.lang.Exception
 
-class Main : CliktCommand(
+open class Main : CliktCommand(
     printHelpOnEmptyArgs = true
 ) {
 
@@ -51,6 +52,8 @@ class Main : CliktCommand(
 
     private val fullFormatter by option("--full", help = Help.formatter).flag("--error-only", default = false)
 
+    private val stackTrace by option("--stack", help = Help.stack).flag(default = false)
+
     override fun run() {
 
         val printFormatter: ProgressFormatter = if (fullFormatter) {
@@ -82,9 +85,16 @@ class Main : CliktCommand(
         // For now just starts exercise 3 process.
         // More details in DefinedLearning and Exercise3 classes
         try {
+
             DefinedLearning.get(definedNetworks, config).run()
+
         } catch (e: Exception) {
-            issueMessage(e.message ?: "No error message...")
+
+            if (stackTrace) {
+                e.printStackTrace()
+            }
+
+            throw PrintMessage("Error occurred: ${e.message}")
         }
     }
 }
@@ -113,4 +123,6 @@ object Help {
             " Sequential printing puts every result in a new line."
 
     const val formatter: String = "Switches between full progress and only error printing."
+
+    const val stack: String = "Prints stack trace when error occurs"
 }
