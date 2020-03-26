@@ -96,12 +96,7 @@ abstract class DefinedLearning(
     /**
      * It's called after every step of learning.
      */
-    protected open fun eachLearningStep(
-        network: Network,
-        errorVector: List<Double>,
-        steps: Int
-    ) {
-    }
+    protected open fun eachLearningStep(network: Network, errorVector: List<Double>, steps: Int) {}
 
     /**
      * It's called for each network after its learning process is done.
@@ -116,9 +111,11 @@ abstract class DefinedLearning(
     private fun singleNetworkLog(network: Network, errors: List<Double>, steps: Int, startTime: Long) {
 
         println(
-            "Network '${network.name}' learning time: ${System.currentTimeMillis() - startTime} ms " +
-                    "| steps: $steps | Error: $errors" +
-                    if (steps == stepsLimit) " | [Warning] Network reached steps limit!" else ""
+            "Network '${network.name}' learning time: ${System.currentTimeMillis() - startTime} ms" +
+                    "\n\tSteps: $steps" +
+                    "\n\tError: $errors" +
+                    "\n\tAvgError: ${errors.average()}" +
+                    if (steps == stepsLimit) "\n\t[Warning] Network reached steps limit!" else ""
         )
     }
 
@@ -209,7 +206,7 @@ abstract class DefinedLearning(
                 }
             }
 
-            true
+            false
 
         } else {
 
@@ -219,7 +216,7 @@ abstract class DefinedLearning(
                 afterLearning(network, null, null)
             }
 
-            false
+            true
         }
 
         allNetworksReady(restored)
