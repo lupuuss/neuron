@@ -4,6 +4,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import ml.defined.exceptions.UnfulfilledExpectationsException
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.ErrorCollector
@@ -48,7 +49,8 @@ abstract class DefinedLearning(
     /**
      * Should load all necessary data for learning. It is called only once on start.
      */
-    protected abstract fun dataLoading()
+    @Throws(UnfulfilledExpectationsException::class)
+    protected abstract fun setup()
 
     /**
      * Should build all neural networks that will be used. It is called only once on start.
@@ -129,9 +131,9 @@ abstract class DefinedLearning(
 
             val (errorVector, steps) = learningProcess(network, teachers[index])
 
-            singleNetworkLog(network, errorVector, steps, networkTime)
-
             afterLearning(network, errorVector, steps)
+
+            singleNetworkLog(network, errorVector, steps, networkTime)
         }
     }
 
@@ -164,9 +166,9 @@ abstract class DefinedLearning(
                     val (network, result) = it.await()
                     val (errorVector, steps, time) = result
 
-                    singleNetworkLog(network, errorVector, steps, time)
-
                     afterLearning(network, errorVector, steps)
+
+                    singleNetworkLog(network, errorVector, steps, time)
                 }
 
                 delay(100)
@@ -178,9 +180,10 @@ abstract class DefinedLearning(
     /**
      * Initializes whole learning process.
      */
+    @Throws(UnfulfilledExpectationsException::class)
     fun run() {
 
-        dataLoading()
+        setup()
 
         val restoredNetwork = unfreezing()
 

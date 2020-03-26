@@ -28,9 +28,9 @@ class Exercise3(
     private val data: MutableList<Pair<List<Double>, List<Double>>> = mutableListOf()
     private var progressPrinter: NetworkProgressPrinter? = null
 
-    override fun dataLoading() {
+    override fun setup() {
         val parser = DataParser(config.separator, 1, 1)
-        data.addAll(parser.parse(Scanner(config.input)))
+        data.addAll(parser.parse(Scanner(config.inputs.first())))
     }
 
     override fun buildNetworks(): List<Network> = listOf(
