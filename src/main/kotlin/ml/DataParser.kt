@@ -1,6 +1,9 @@
 package ml
 
+import java.lang.Exception
 import java.util.*
+
+class ParsingException(msg: String, cause: Throwable? = null) : Exception(msg, cause)
 
 class DataParser(
     private var separator: String,
@@ -8,21 +11,31 @@ class DataParser(
     private var expected: Int
 ) {
 
+    @Throws(ParsingException::class)
     fun parse(scanner: Scanner): List<Pair<List<Double>, List<Double>>> {
 
         val result = mutableListOf<Pair<List<Double>, List<Double>>>()
 
-        while (scanner.hasNextLine()) {
+        try {
 
-            val line = scanner.nextLine()
+            while (scanner.hasNextLine()) {
 
-            val values = line.split(separator).map { it.toDouble() }
+                val line = scanner.nextLine()
 
-            result.add(values.subList(0, inputs) to values.subList(inputs, inputs + expected))
-        }
+                val values = line.split(separator).map { it.toDouble() }
 
-        return result.also {
-            println("Parsing succeed!")
+                result.add(values.subList(0, inputs) to values.subList(inputs, inputs + expected))
+            }
+
+            return result
+
+        } catch (e: Exception) {
+
+            throw ParsingException(
+                "Parsing failed! You probably picked wrong separator or" +
+                        " this neural network requires more inputs!",
+                e
+            )
         }
     }
 }
