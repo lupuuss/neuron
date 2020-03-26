@@ -4,6 +4,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import ml.ParsingException
 import ml.defined.exceptions.UnfulfilledExpectationsException
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
@@ -29,7 +30,7 @@ abstract class DefinedLearning(
 
     protected val teachers: MutableList<NetworkTeacher> = mutableListOf()
 
-    protected val errorCollector = ErrorCollector()
+    protected val errorCollector: ErrorCollector = ErrorCollector()
     protected abstract val errorGoal: Double
     protected abstract val stepsLimit: Int
 
@@ -49,7 +50,7 @@ abstract class DefinedLearning(
     /**
      * Should load all necessary data for learning. It is called only once on start.
      */
-    @Throws(UnfulfilledExpectationsException::class)
+    @Throws(UnfulfilledExpectationsException::class, ParsingException::class)
     protected abstract fun setup()
 
     /**
