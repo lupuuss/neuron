@@ -40,7 +40,15 @@ infix fun ClosedFloatingPointRange<Double>.step(step: Double): Iterator<Double> 
         private val end = this@step.endInclusive
         private var next = this@step.start
 
-        override fun hasNext(): Boolean = next < end
+        override fun hasNext(): Boolean {
+            val hadNext = next < end
+
+            if (!hadNext) {
+                next = start
+            }
+
+            return hadNext
+        }
 
         override fun next(): Double = next.also { this.next = it + step }
 
