@@ -21,7 +21,7 @@ abstract class DefinedLearning(
 ) {
 
     enum class Type {
-        Exercise3, Transformation
+        Exercise3, Transformation, Approximation
     }
 
     protected var asyncRunner: Boolean = false
@@ -214,6 +214,8 @@ abstract class DefinedLearning(
 
         } else {
 
+            println("Networks unfreezed!")
+
             networks.addAll(restoredNetwork)
 
             for (network in networks) {
@@ -232,6 +234,7 @@ abstract class DefinedLearning(
         fun get(type: Type, config: Config): DefinedLearning = when (type) {
             Type.Exercise3 -> Exercise3(config)
             Type.Transformation -> Transformation(config)
+            Type.Approximation -> Approximation(config)
         }
     }
 }
