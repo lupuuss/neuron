@@ -45,7 +45,7 @@ abstract class NetworkTeacher(
                 sum += errors[j][i].let { it * it }
             }
 
-            errorVector.add(sum / errors.first().size)
+            errorVector.add(sum / (errors.first().size * 2))
         }
 
         return errorVector
