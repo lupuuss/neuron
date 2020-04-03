@@ -1,6 +1,7 @@
 package ml.defined
 
 import ml.defined.base.ClusterLearning
+import ml.defined.base.Config
 import ml.input.DataParser
 import ml.learn.NetworkTeacher
 import ml.spine.Activation

@@ -1,4 +1,4 @@
-package ml.defined
+package ml.defined.base
 
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter

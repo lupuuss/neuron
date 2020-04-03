@@ -1,8 +1,6 @@
 package ml.defined.base
 
 import kotlinx.coroutines.*
-import ml.ConsoleAnimation
-import ml.defined.Config
 import ml.learn.NetworkTeacher
 import ml.output.ClusterErrorCollector
 import ml.output.ConsoleLoader

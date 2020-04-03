@@ -12,7 +12,7 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.file
-import ml.defined.Config
+import ml.defined.base.Config
 import ml.defined.base.Learning
 import ml.input.AutoDataPicker
 import ml.learn.NetworkTeacher

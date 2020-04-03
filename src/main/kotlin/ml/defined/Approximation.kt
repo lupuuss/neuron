@@ -1,5 +1,6 @@
 package ml.defined
 
+import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
 import ml.input.DataParser
 import ml.defined.exceptions.UnfulfilledExpectationsException

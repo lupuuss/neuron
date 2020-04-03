@@ -5,9 +5,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import ml.ConsoleAnimation
-import ml.cycle
-import ml.defined.*
-import ml.input.ParsingException
 import ml.defined.exceptions.UnfulfilledExpectationsException
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
