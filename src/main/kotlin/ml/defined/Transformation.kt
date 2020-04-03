@@ -14,10 +14,10 @@ import kotlin.streams.toList
 
 class Transformation(config: Config) : DefinedLearning(config) {
 
-    override val errorGoal: Double = 0.001
-    override val stepsLimit: Int = 20_000
+    override val errorGoal: Double = 0.000001
+    override val stepsLimit: Int = 50_000
 
-    private val sharedTeacher = NetworkTeacher.get(config.teacherMode, 0.1, 0.1)
+    private val sharedTeacher = NetworkTeacher.get(config.teacherMode, 0.1, 0.0)
 
     override fun setup() {
         val parser = DataParser(config.separator, 4, 4)
@@ -92,30 +92,27 @@ class Transformation(config: Config) : DefinedLearning(config) {
 
             println("\t${network.name}: ")
 
-            for ((input, expected) in sharedTeacher.verificationSet) {
-                println("\t\t $input -> ${network.answer(input).map { it.round(3) }} | $expected")
+            for ((input, _) in sharedTeacher.verificationSet) {
+                println("\t\t $input -> ${network.answer(input).map { it.round(3) }}")
             }
         }
 
         if (restored) return
 
-        val errors = errorCollector.getAveragePlotableErrorMap().sortedWith(kotlin.Comparator { o1, o2 ->
-            when {
-                o1.first.name.last() != o2.first.name.last() -> {
-                    o1.first.name.last().compareTo(o2.first.name.last())
-                }
-                o1.first.name.contains("NoBias") -> {
-                    -1
-                }
-                else -> {
-                    1
-                }
-            }
+        val errors = errorCollector.getAveragePlotableErrorMap()
 
-        })
+        val biasErrors = errors.filter { it.first.name.contains("_Bias") }
+        val noBiasErrors = errors.filter { it.first.name.contains("_NoBias") }
 
-        val (firstNetwork, firstErrors) = errors.first()
-        val remToPlot = errors.stream().skip(1).toList().toMap()
+        plotsErrors(biasErrors)
+        plotsErrors(noBiasErrors)
+
+    }
+
+    private fun plotsErrors(data: List<Pair<Network, Map<Double, Double>>>) {
+
+        val (firstNetwork, firstErrors) = data.first()
+        val remToPlot = data.stream().skip(1).toList().toMap()
 
         firstErrors.quickPlotDisplay(firstNetwork.name) { _ ->
 
