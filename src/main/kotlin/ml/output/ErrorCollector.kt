@@ -4,7 +4,7 @@ import ml.spine.Network
 
 class ErrorCollector {
 
-    val errorMap: MutableMap<Network, MutableMap<Int, List<Double>>> = mutableMapOf()
+    private val errorMap: MutableMap<Network, MutableMap<Int, List<Double>>> = mutableMapOf()
 
     fun collect(network: Network, error: List<Double>, steps: Int) {
         errorMap.getOrPut(network, { mutableMapOf() })[steps] = error
