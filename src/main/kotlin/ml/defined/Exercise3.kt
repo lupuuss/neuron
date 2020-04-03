@@ -1,6 +1,6 @@
 package ml.defined
 
-import ml.DataParser
+import ml.input.DataParser
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter

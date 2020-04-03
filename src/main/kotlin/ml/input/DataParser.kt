@@ -1,4 +1,4 @@
-package ml
+package ml.input
 
 import java.lang.Exception
 import java.util.*

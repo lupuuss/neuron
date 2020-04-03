@@ -1,10 +1,9 @@
 package ml.defined
 
-import ml.DataParser
+import ml.input.DataParser
 import ml.defined.exceptions.UnfulfilledExpectationsException
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
-import ml.output.NetworkProgressPrinter
 import ml.quickPlotDisplay
 import ml.spine.Activation
 import ml.spine.Network
