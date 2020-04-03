@@ -11,6 +11,8 @@ class DataParser(
     private var expected: Int
 ) {
 
+    var lineTransformer: (String) -> String = { it }
+
     @Throws(ParsingException::class)
     fun parse(scanner: Scanner): List<Pair<List<Double>, List<Double>>> {
 
@@ -20,7 +22,9 @@ class DataParser(
 
             while (scanner.hasNextLine()) {
 
-                val line = scanner.nextLine()
+                val line = lineTransformer(scanner.nextLine())
+
+                if (line.isEmpty()) continue
 
                 val values = line.split(separator).map { it.toDouble() }
 
