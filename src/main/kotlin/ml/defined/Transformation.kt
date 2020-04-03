@@ -14,8 +14,8 @@ import kotlin.streams.toList
 
 class Transformation(config: Config) : DefinedLearning(config) {
 
-    override var errorGoal: Double = 0.001
-    override val stepsLimit: Int = 50_000
+    override val errorGoal: Double = 0.001
+    override val stepsLimit: Int = 20_000
 
     private val sharedTeacher = NetworkTeacher.get(config.teacherMode, 0.1, 0.1)
 
@@ -33,12 +33,12 @@ class Transformation(config: Config) : DefinedLearning(config) {
 
     override fun buildNetworks(): List<Network> {
 
-        val biased = (1..3).map {
+        val biased = (1..3).map { hiddenNeurons ->
             Network.Builder()
-                .name("${commonName}_Bias_$it")
+                .name("${commonName}_Bias_$hiddenNeurons")
                 .setDefaultActivation(Activation.Sigmoid)
                 .inputs(4)
-                .hiddenLayer(it, true)
+                .hiddenLayer(hiddenNeurons, true)
                 .outputLayer(4, true)
         }
 
@@ -99,11 +99,25 @@ class Transformation(config: Config) : DefinedLearning(config) {
 
         if (restored) return
 
-        val errors = errorCollector.getAveragePlotableErrorMap()
-        val firstErrors = errors.first()
+        val errors = errorCollector.getAveragePlotableErrorMap().sortedWith(kotlin.Comparator { o1, o2 ->
+            when {
+                o1.first.name.last() != o2.first.name.last() -> {
+                    o1.first.name.last().compareTo(o2.first.name.last())
+                }
+                o1.first.name.contains("NoBias") -> {
+                    -1
+                }
+                else -> {
+                    1
+                }
+            }
+
+        })
+
+        val (firstNetwork, firstErrors) = errors.first()
         val remToPlot = errors.stream().skip(1).toList().toMap()
 
-        firstErrors.second.quickPlotDisplay(firstErrors.first.name) { _ ->
+        firstErrors.quickPlotDisplay(firstNetwork.name) { _ ->
 
             styler.xAxisDecimalPattern = "###,###,###,###"
             styler.yAxisDecimalPattern = "0.00"
