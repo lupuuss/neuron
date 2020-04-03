@@ -103,29 +103,33 @@ class Transformation(config: Config) : NetworksLearning(config) {
 
         val errors = errorCollector.getAveragePlotableErrorMap()
 
-        val biasErrors = errors.filter { it.first.name.contains("_Bias") }
-        val noBiasErrors = errors.filter { it.first.name.contains("_NoBias") }
+        val biasErrors = errors.filter { it.first.name.contains("_Bias") }.sortedBy { it.first.name }
+        val noBiasErrors = errors.filter { it.first.name.contains("_NoBias") }.sortedBy { it.first.name }
 
-        plotsErrors(biasErrors)
-        plotsErrors(noBiasErrors)
+        plotsErrors(biasErrors, "Bias")
+        plotsErrors(noBiasErrors, "No bias")
 
     }
 
-    private fun plotsErrors(data: List<Pair<Network, Map<Double, Double>>>) {
+    private fun plotsErrors(data: List<Pair<Network, Map<Double, Double>>>, title: String) {
 
         val (firstNetwork, firstErrors) = data.first()
         val remToPlot = data.stream().skip(1).toList().toMap()
 
-        firstErrors.quickPlotDisplay(firstNetwork.name) { _ ->
+        firstErrors.quickPlotDisplay(generatePlotName(firstNetwork)) { _ ->
 
+            this.title = title
             styler.xAxisDecimalPattern = "###,###,###,###"
             styler.yAxisDecimalPattern = "0.00"
 
             remToPlot.forEach { (network, data) ->
 
-                addSeries(network.name, data.keys.toDoubleArray(), data.values.toDoubleArray())
-                seriesMap[network.name]!!.marker = None()
+                val plotName = generatePlotName(network)
+                addSeries(plotName, data.keys.toDoubleArray(), data.values.toDoubleArray())
+                seriesMap[plotName]!!.marker = None()
             }
         }
     }
+
+    private fun generatePlotName(network: Network) = "${network.name.last()} neurons"
 }

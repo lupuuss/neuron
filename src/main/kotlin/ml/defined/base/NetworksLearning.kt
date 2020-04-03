@@ -37,6 +37,22 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
         }
     }
 
+    protected fun baseUnfreezing(names: List<String>): List<Network> {
+        val unfreezed = mutableListOf<Network>()
+
+        for (name in names) {
+            NetworkFreezer.unfreezeFile(name)?.let { unfreezed.add(it) }
+        }
+
+        return if (unfreezed.size == names.size) {
+            unfreezed
+        } else {
+            emptyList()
+        }
+    }
+
+    protected fun baseUnfreezing(vararg values: String): List<Network> = baseUnfreezing(values.toList())
+
     /**
      * Should load neural networks from disk. It is called only once on start.
      */
