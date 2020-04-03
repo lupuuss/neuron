@@ -1,5 +1,6 @@
 package ml.defined
 
+import ml.defined.base.NetworksLearning
 import ml.input.DataParser
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
@@ -12,7 +13,7 @@ import java.util.*
 import java.util.stream.Stream
 import kotlin.streams.toList
 
-class Transformation(config: Config) : DefinedLearning(config) {
+class Transformation(config: Config) : NetworksLearning(config) {
 
     override val errorGoal: Double = 0.000001
     override val stepsLimit: Int = 50_000

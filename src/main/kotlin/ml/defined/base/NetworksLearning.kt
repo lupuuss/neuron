@@ -1,10 +1,12 @@
-package ml.defined
+package ml.defined.base
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import ml.ConsoleAnimation
 import ml.cycle
+import ml.defined.*
 import ml.input.ParsingException
 import ml.defined.exceptions.UnfulfilledExpectationsException
 import ml.freeze.NetworkFreezer
@@ -17,23 +19,13 @@ import ml.spine.Network
  * Implements standard learning process for multiple neural networks.
  */
 @Suppress("MemberVisibilityCanBePrivate")
-abstract class DefinedLearning(
-    protected val config: Config
-) {
-
-    enum class Type {
-        Exercise3, Transformation, Approximation, Iris
-    }
+abstract class NetworksLearning(config: Config) : Learning(config) {
 
     protected var asyncRunner: Boolean = false
 
     protected val networks: MutableList<Network> = mutableListOf()
 
-    protected val teachers: MutableList<NetworkTeacher> = mutableListOf()
-
     protected val errorCollector: ErrorCollector = ErrorCollector()
-    protected abstract val errorGoal: Double
-    protected abstract val stepsLimit: Int
 
     protected fun requiresProgressPrinter(): NetworkProgressPrinter {
 
@@ -49,79 +41,9 @@ abstract class DefinedLearning(
     }
 
     /**
-     * Should load all necessary data for learning. It is called only once on start.
-     */
-    @Throws(UnfulfilledExpectationsException::class, ParsingException::class)
-    protected abstract fun setup()
-
-    /**
      * Should build all neural networks that will be used. It is called only once on start.
      */
     protected abstract fun buildNetworks(): List<Network>
-
-    /**
-     * Should build all teachers that will be used. It is called only once on start.
-     * Amount of teachers must be the same as networks.
-     */
-    protected abstract fun buildTeachers(): List<NetworkTeacher>
-
-    /**
-     * Should load neural networks from disk. It is called only once on start.
-     */
-    protected abstract fun unfreezing(): List<Network>
-
-    /**
-     * It is called before learning process for each network. On this step network is unlearned.
-     * It might be not called if a neural network was unfreezed.
-     */
-    protected open fun beforeLearning(network: Network, teacher: NetworkTeacher) {}
-
-    /**
-     * Performs standard learning process for each network.
-     * It might be not called if a neural network was unfreezed.
-     */
-    private fun learningProcess(network: Network, teacher: NetworkTeacher): Pair<List<Double>, Int> {
-
-        var i = 0
-
-        var errorVector: List<Double>
-
-        do {
-
-            teacher.teach(network)
-            errorVector = teacher.verify(network)
-            i++
-            eachLearningStep(network, errorVector, i)
-
-        } while (!errorVector.stream().allMatch { it < errorGoal } && i < stepsLimit)
-        return errorVector to i
-    }
-
-    /**
-     * It's called after every step of learning.
-     */
-    protected open fun eachLearningStep(network: Network, errorVector: List<Double>, steps: Int) {}
-
-    /**
-     * It's called for each network after its learning process is done.
-     */
-    protected open fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?) {}
-
-    /**
-     * It's called when every network is learned.
-     */
-    protected open fun allNetworksReady(restored: Boolean) {}
-
-    private fun singleNetworkLog(network: Network, errors: List<Double>, steps: Int, startTime: Long) {
-
-        println(
-            "Network '${network.name}' learning time: ${System.currentTimeMillis() - startTime} ms" +
-                    "\n\tSteps: $steps" +
-                    "\n\tError: $errors" +
-                    "\n\tAvgError: ${errors.average()}" +
-                    if (steps == stepsLimit) "\n\t[Warning] Network reached steps limit!" else ""
-        )
-    }
 
     private fun syncRunner() {
 
@@ -156,7 +78,7 @@ abstract class DefinedLearning(
             }
         }.toMutableList()
 
-        val animation = cycle(".  ", ".. ", "...", " ..", "  .", " ..", "...", ".. ").iterator()
+        val animation = ConsoleAnimation.frames()
 
         runBlocking {
 
@@ -181,6 +103,17 @@ abstract class DefinedLearning(
             print("\r")
 
         }
+    }
+
+    private fun singleNetworkLog(network: Network, errors: List<Double>, steps: Int, startTime: Long) {
+
+        println(
+            "Network '${network.name}' learning time: ${System.currentTimeMillis() - startTime} ms" +
+                    "\n\tSteps: $steps" +
+                    "\n\tError: $errors" +
+                    "\n\tAvgError: ${errors.average()}" +
+                    if (steps == stepsLimit) "\n\t[Warning] Network reached steps limit!" else ""
+        )
     }
 
     /**
@@ -231,16 +164,5 @@ abstract class DefinedLearning(
         }
 
         allNetworksReady(restored)
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun get(type: Type, config: Config): DefinedLearning = when (type) {
-            Type.Exercise3 -> Exercise3(config)
-            Type.Transformation -> Transformation(config)
-            Type.Approximation -> Approximation(config)
-            Type.Iris -> Iris(config)
-        }
     }
 }

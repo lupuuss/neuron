@@ -1,9 +1,8 @@
 package ml.input
 
-import ml.defined.DefinedLearning
+import ml.defined.base.Learning
 import ml.defined.exceptions.DataNotFound
 import java.io.File
-import java.lang.IllegalStateException
 
 class AutoDataPicker(private val searchDir: File) {
 
@@ -18,17 +17,17 @@ class AutoDataPicker(private val searchDir: File) {
     }
 
     @Throws(DataNotFound::class)
-    fun pickData(taskType: DefinedLearning.Type): List<File> = when (taskType) {
+    fun pickData(taskType: Learning.Type): List<File> = when (taskType) {
 
-        DefinedLearning.Type.Exercise3 -> {
+        Learning.Type.Exercise3 -> {
             fileExistsAndReadableOrNull(searchDir, "in.txt")?.let { listOf(it) }
         }
 
-        DefinedLearning.Type.Transformation -> {
+        Learning.Type.Transformation -> {
             fileExistsAndReadableOrNull(searchDir, "trans_in.txt")?.let { listOf(it) }
         }
 
-        DefinedLearning.Type.Approximation -> {
+        Learning.Type.Approximation -> {
             val file1 = fileExistsAndReadableOrNull(searchDir, "approx_1.txt")
             val file2 = fileExistsAndReadableOrNull(searchDir, "approx_2.txt")
             val testFile = fileExistsAndReadableOrNull(searchDir, "approx_test.txt")
@@ -40,7 +39,7 @@ class AutoDataPicker(private val searchDir: File) {
             }
         }
 
-        DefinedLearning.Type.Iris -> {
+        Learning.Type.Iris -> {
             fileExistsAndReadableOrNull(searchDir, "iris.data")?.let { listOf(it) }
         }
     } ?: throw DataNotFound()

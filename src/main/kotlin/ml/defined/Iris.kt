@@ -1,5 +1,6 @@
 package ml.defined
 
+import ml.defined.base.NetworksLearning
 import ml.input.DataParser
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
@@ -8,7 +9,7 @@ import ml.spine.Activation
 import ml.spine.Network
 import java.util.*
 
-class Iris(config: Config) : DefinedLearning(config) {
+class Iris(config: Config) : NetworksLearning(config) {
     override val errorGoal: Double = 0.1
     override val stepsLimit: Int = 200_000
 

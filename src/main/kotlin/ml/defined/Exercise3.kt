@@ -1,5 +1,6 @@
 package ml.defined
 
+import ml.defined.base.NetworksLearning
 import ml.input.DataParser
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
@@ -15,7 +16,7 @@ import java.util.*
 
 class Exercise3(
     config: Config
-) : DefinedLearning(config) {
+) : NetworksLearning(config) {
 
     private var beforeLearningData: MutableMap<Double, Double> = mutableMapOf()
     private var afterLearningData: MutableMap<Double, Double> = mutableMapOf()

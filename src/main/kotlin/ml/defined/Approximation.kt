@@ -1,5 +1,6 @@
 package ml.defined
 
+import ml.defined.base.NetworksLearning
 import ml.input.DataParser
 import ml.defined.exceptions.UnfulfilledExpectationsException
 import ml.freeze.NetworkFreezer
@@ -13,7 +14,7 @@ import org.knowm.xchart.style.markers.None
 import java.awt.Color
 import java.util.*
 
-class Approximation(config: Config) : DefinedLearning(config) {
+class Approximation(config: Config) : NetworksLearning(config) {
 
     override val errorGoal: Double = 0.1
     override val stepsLimit: Int = 100_000

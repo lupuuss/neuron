@@ -13,7 +13,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.file
 import ml.defined.Config
-import ml.defined.DefinedLearning
+import ml.defined.base.Learning
 import ml.input.AutoDataPicker
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter
@@ -40,8 +40,8 @@ open class Main : CliktCommand(
 
 
     private val definedNetworks by option("--def", "-d", help = Help.definedNetworks)
-        .enum<DefinedLearning.Type>()
-        .default(DefinedLearning.Type.Exercise3)
+        .enum<Learning.Type>()
+        .default(Learning.Type.Exercise3)
 
     private val separator: String by option("--separator", "-s", help = Help.separator).default(";")
 
@@ -104,7 +104,7 @@ open class Main : CliktCommand(
 
         try {
 
-            DefinedLearning.get(definedNetworks, config).run()
+            Learning.get(definedNetworks, config).run()
 
         } catch (e: Exception) {
 
