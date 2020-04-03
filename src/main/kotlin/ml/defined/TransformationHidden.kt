@@ -2,12 +2,10 @@ package ml.defined
 
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
-import ml.input.DataParser
 import ml.learn.NetworkTeacher
 import ml.round
 import ml.spine.Activation
 import ml.spine.Network
-import java.util.*
 
 class TransformationHidden(config: Config) : NetworksLearning(config) {
 
@@ -17,7 +15,7 @@ class TransformationHidden(config: Config) : NetworksLearning(config) {
     private val sharedTeacher = NetworkTeacher.get(config.teacherMode, 0.1, 0.7)
 
     override fun setup() {
-        val data = DataParser(config.separator, 4, 4).parse(Scanner(config.inputs[0]))
+        val data = dataParser.parse(config.inputs[0], 4, 4)
         sharedTeacher.verificationSet = data
         sharedTeacher.trainingSet = data
     }

@@ -1,8 +1,7 @@
 package ml.defined.base
 
 import ml.defined.*
-import ml.defined.exceptions.UnfulfilledExpectationsException
-import ml.input.ParsingException
+import ml.input.DataParser
 import ml.learn.NetworkTeacher
 import ml.spine.Network
 
@@ -19,6 +18,7 @@ abstract class Learning(
     protected abstract val errorGoal: Double
     protected abstract val stepsLimit: Int
 
+    protected val dataParser = DataParser(config.separator)
     protected val teachers: MutableList<NetworkTeacher> = mutableListOf()
 
     /**

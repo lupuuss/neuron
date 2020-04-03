@@ -16,8 +16,7 @@ class Transformation100(config: Config) : ClusterLearning(config) {
     private lateinit var data: List<Pair<List<Double>, List<Double>>>
 
     override fun setup() {
-        val parser = DataParser(config.separator, 4, 4)
-        data = parser.parse(Scanner(config.inputs.first()))
+        data = dataParser.parse(config.inputs[0], 4, 4)
     }
 
     override fun buildTeachers(): List<NetworkTeacher> {

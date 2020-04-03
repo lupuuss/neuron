@@ -31,8 +31,7 @@ class Exercise3(
     private var progressPrinter: NetworkProgressPrinter? = null
 
     override fun setup() {
-        val parser = DataParser(config.separator, 1, 1)
-        data.addAll(parser.parse(Scanner(config.inputs.first())))
+        data.addAll(dataParser.parse(config.inputs[0], 1, 1))
     }
 
     override fun buildNetworks(): List<Network> = listOf(

@@ -23,13 +23,7 @@ class Iris(config: Config) : NetworksLearning(config) {
 
     override fun setup() {
 
-        val parser = DataParser(
-            ",",
-            4,
-            3
-        )
-
-        parser.lineTransformer = {
+        dataParser.lineTransformer = {
             it.replace("Iris-setosa", "1,0,0")
                 .replace("Iris-versicolor", "0,1,0")
                 .replace("Iris-virginica", "0,0,1")
@@ -56,7 +50,7 @@ class Iris(config: Config) : NetworksLearning(config) {
 
         hiddenNeurons = userInput.nextInt()
 
-        data = parser.parse(Scanner(config.inputs[0])).map {
+        data = dataParser.parse(config.inputs[0], 4, 3).map {
             val result = mutableListOf<Double>()
 
             for (i in it.first.indices) {

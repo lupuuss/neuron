@@ -2,7 +2,6 @@ package ml.defined
 
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
-import ml.input.DataParser
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.quickPlotDisplay
@@ -10,7 +9,6 @@ import ml.round
 import ml.spine.Activation
 import ml.spine.Network
 import org.knowm.xchart.style.markers.None
-import java.util.*
 import java.util.stream.Stream
 import kotlin.streams.toList
 
@@ -22,9 +20,8 @@ class Transformation(config: Config) : NetworksLearning(config) {
     private val sharedTeacher = NetworkTeacher.get(config.teacherMode, 0.1, 0.0)
 
     override fun setup() {
-        val parser = DataParser(config.separator, 4, 4)
-        val data = parser.parse(Scanner(config.inputs.first()))
 
+        val data = dataParser.parse(config.inputs[0], 4, 4)
         sharedTeacher.trainingSet = data
         sharedTeacher.verificationSet = data
 

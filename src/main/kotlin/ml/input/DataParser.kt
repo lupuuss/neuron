@@ -1,22 +1,24 @@
 package ml.input
 
+import ml.defined.base.ParsingException
+import java.io.File
 import java.lang.Exception
 import java.util.*
 
-class ParsingException(msg: String, cause: Throwable? = null) : Exception(msg, cause)
-
 class DataParser(
-    private var separator: String,
-    private var inputs: Int,
-    private var expected: Int
+    var separator: String,
+    var lineTransformer: (String) -> String = { it }
 ) {
 
-    var lineTransformer: (String) -> String = { it }
-
     @Throws(ParsingException::class)
-    fun parse(scanner: Scanner): List<Pair<List<Double>, List<Double>>> {
+    fun parse(
+        file: File,
+        inputs: Int,
+        expected: Int
+    ): List<Pair<List<Double>, List<Double>>> {
 
         val result = mutableListOf<Pair<List<Double>, List<Double>>>()
+        val scanner = Scanner(file)
 
         try {
 

@@ -1,7 +1,7 @@
 package ml.input
 
 import ml.defined.base.Learning
-import ml.defined.exceptions.DataNotFound
+import ml.defined.base.DataNotFound
 import java.io.File
 
 class AutoDataPicker(private val searchDir: File) {
@@ -43,4 +43,16 @@ class AutoDataPicker(private val searchDir: File) {
             fileExistsAndReadableOrNull(searchDir, "iris.data")?.let { listOf(it) }
         }
     } ?: throw DataNotFound()
+
+    fun pickSeparator(taskType: Learning.Type): String = when (taskType) {
+
+        Learning.Type.Exercise3 -> ";"
+
+        Learning.Type.Transformation,
+        Learning.Type.Transformation100,
+        Learning.Type.TransformationHidden,
+        Learning.Type.Approximation -> " "
+
+        Learning.Type.Iris -> ","
+    }
 }

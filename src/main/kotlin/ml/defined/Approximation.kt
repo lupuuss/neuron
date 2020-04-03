@@ -2,8 +2,7 @@ package ml.defined
 
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
-import ml.input.DataParser
-import ml.defined.exceptions.UnfulfilledExpectationsException
+import ml.defined.base.UnfulfilledExpectationsException
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.quickPlotDisplay
@@ -13,7 +12,6 @@ import ml.step
 import org.knowm.xchart.style.markers.Circle
 import org.knowm.xchart.style.markers.None
 import java.awt.Color
-import java.util.*
 
 class Approximation(config: Config) : NetworksLearning(config) {
 
@@ -36,10 +34,8 @@ class Approximation(config: Config) : NetworksLearning(config) {
         asyncRunner = true
         trainingDataName = config.inputs.first().nameWithoutExtension
 
-        val parser = DataParser(config.separator, 1, 1)
-
-        sharedTeacher.trainingSet = parser.parse(Scanner(config.inputs[0]))
-        sharedTeacher.verificationSet = parser.parse(Scanner(config.inputs[1]))
+        sharedTeacher.trainingSet = dataParser.parse(config.inputs[0], 1, 1)
+        sharedTeacher.verificationSet = dataParser.parse(config.inputs[1], 1, 1)
     }
 
     private fun generateName(n: Int) = "${commonName}_${trainingDataName}_$n"

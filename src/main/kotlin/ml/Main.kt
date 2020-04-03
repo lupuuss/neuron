@@ -43,7 +43,7 @@ open class Main : CliktCommand(
         .enum<Learning.Type>()
         .default(Learning.Type.Exercise3)
 
-    private val separator: String by option("--separator", "-s", help = Help.separator).default(";")
+    private val separator: String? by option("--separator", "-s", help = Help.separator)
 
     private val freeze by option("--freeze", "-f", help = Help.freeze).flag(default = false)
 
@@ -74,35 +74,26 @@ open class Main : CliktCommand(
         val mode =
             if (offline) NetworkTeacher.Mode.Offline else NetworkTeacher.Mode.Online
 
-        val pickedInput = try {
+        try {
 
             val picker = AutoDataPicker(File(".\\data"))
 
-            if (inputs.isEmpty()) {
+            val pickedInput = if (inputs.isEmpty()) {
                 picker.pickData(definedNetworks)
             } else {
                 inputs
             }
-        } catch (e: Exception) {
 
-            throw IncorrectArgumentValueCount(
-                this.registeredArguments().find { it.name == "inputs" }!!,
-                this.currentContext
+            val config = Config(
+                inputs = pickedInput,
+                alwaysFresh = !unfreeze,
+                freeze = freeze,
+                teacherMode = mode,
+                printMode = printMode,
+                printType = printType,
+                printFormatter = printFormatter,
+                separator = separator ?: picker.pickSeparator(definedNetworks)
             )
-        }
-
-        val config = Config(
-            inputs = pickedInput,
-            alwaysFresh = !unfreeze,
-            freeze = freeze,
-            teacherMode = mode,
-            printMode = printMode,
-            printType = printType,
-            printFormatter = printFormatter,
-            separator = separator
-        )
-
-        try {
 
             Learning.get(definedNetworks, config).run()
 
