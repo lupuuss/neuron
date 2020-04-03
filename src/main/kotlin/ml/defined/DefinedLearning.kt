@@ -21,7 +21,7 @@ abstract class DefinedLearning(
 ) {
 
     enum class Type {
-        Exercise3, Transformation, Approximation
+        Exercise3, Transformation, Approximation, Iris
     }
 
     protected var asyncRunner: Boolean = false
@@ -188,11 +188,11 @@ abstract class DefinedLearning(
 
         val restoredNetwork = unfreezing()
 
+        teachers.addAll(buildTeachers())
 
         val restored = if (config.alwaysFresh || restoredNetwork.isEmpty()) {
 
             networks.addAll(buildNetworks())
-            teachers.addAll(buildTeachers())
 
             val time = System.currentTimeMillis()
 
@@ -235,6 +235,7 @@ abstract class DefinedLearning(
             Type.Exercise3 -> Exercise3(config)
             Type.Transformation -> Transformation(config)
             Type.Approximation -> Approximation(config)
+            Type.Iris -> Iris(config)
         }
     }
 }
