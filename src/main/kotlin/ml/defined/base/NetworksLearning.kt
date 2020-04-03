@@ -41,6 +41,11 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
     }
 
     /**
+     * Should load neural networks from disk. It is called only once on start.
+     */
+    protected abstract fun unfreezing(): List<Network>
+
+    /**
      * Should build all neural networks that will be used. It is called only once on start.
      */
     protected abstract fun buildNetworks(): List<Network>
@@ -120,7 +125,7 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
      * Initializes whole learning process.
      */
     @Throws(UnfulfilledExpectationsException::class)
-    fun run() {
+    override fun run() {
 
         setup()
 

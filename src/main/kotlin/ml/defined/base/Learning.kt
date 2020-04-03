@@ -25,11 +25,6 @@ abstract class Learning(
     protected abstract fun setup()
 
     /**
-     * Should load neural networks from disk. It is called only once on start.
-     */
-    protected abstract fun unfreezing(): List<Network>
-
-    /**
      * Should build all teachers that will be used. It is called only once on start.
      * Amount of teachers must be the same as networks.
      */
@@ -76,6 +71,8 @@ abstract class Learning(
      * It's called when every network is learned.
      */
     protected open fun allNetworksReady(restored: Boolean) {}
+
+    abstract fun run()
 
     companion object {
 
