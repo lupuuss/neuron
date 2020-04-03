@@ -23,7 +23,7 @@ class AutoDataPicker(private val searchDir: File) {
             fileExistsAndReadableOrNull(searchDir, "in.txt")?.let { listOf(it) }
         }
 
-        Learning.Type.Transformation -> {
+        Learning.Type.Transformation, Learning.Type.Transformation100 -> {
             fileExistsAndReadableOrNull(searchDir, "trans_in.txt")?.let { listOf(it) }
         }
 

@@ -10,7 +10,7 @@ abstract class Learning(
     protected val config: Config
 ) {
     enum class Type {
-        Exercise3, Transformation, Approximation, Iris
+        Exercise3, Transformation, Approximation, Iris, Transformation100
     }
 
     protected abstract val errorGoal: Double
@@ -29,12 +29,6 @@ abstract class Learning(
      * Amount of teachers must be the same as networks.
      */
     protected abstract fun buildTeachers(): List<NetworkTeacher>
-
-    /**
-     * It is called before learning process for each network. On this step network is unlearned.
-     * It might be not called if a neural network was unfreezed.
-     */
-    protected open fun beforeLearning(network: Network, teacher: NetworkTeacher) {}
 
     /**
      * Performs standard learning process for each network.
@@ -63,11 +57,6 @@ abstract class Learning(
     protected open fun eachLearningStep(network: Network, errorVector: List<Double>, steps: Int) {}
 
     /**
-     * It's called for each network after its learning process is done.
-     */
-    protected open fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?) {}
-
-    /**
      * It's called when every network is learned.
      */
     protected open fun allNetworksReady(restored: Boolean) {}
@@ -77,17 +66,12 @@ abstract class Learning(
     companion object {
 
         @JvmStatic
-        fun get(type: Type, config: Config): NetworksLearning = when (type) {
-            Type.Exercise3 -> Exercise3(
-                config
-            )
-            Type.Transformation -> Transformation(
-                config
-            )
-            Type.Approximation -> Approximation(
-                config
-            )
+        fun get(type: Type, config: Config): Learning = when (type) {
+            Type.Exercise3 -> Exercise3(config)
+            Type.Transformation -> Transformation(config)
+            Type.Approximation -> Approximation(config)
             Type.Iris -> Iris(config)
+            Type.Transformation100 -> Transformation100(config)
         }
     }
 }

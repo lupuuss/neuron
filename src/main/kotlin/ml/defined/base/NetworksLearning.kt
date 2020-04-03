@@ -50,6 +50,18 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
      */
     protected abstract fun buildNetworks(): List<Network>
 
+    /**
+     * It is called before learning process for each network. On this step network is unlearned.
+     * It might be not called if a neural network was unfreezed.
+     */
+    protected open fun beforeLearning(network: Network, teacher: NetworkTeacher) {}
+
+    /**
+     * It's called for each network after its learning process is done.
+     */
+    protected open fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?) {}
+
+
     private fun syncRunner() {
 
         for ((index, network) in networks.withIndex()) {
