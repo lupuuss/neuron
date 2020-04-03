@@ -1,6 +1,7 @@
 package ml
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.IncorrectArgumentValueCount
 import com.github.ajalt.clikt.core.PrintMessage
 import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.output.CliktHelpFormatter
@@ -13,9 +14,12 @@ import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.file
 import ml.defined.Config
 import ml.defined.DefinedLearning
+import ml.defined.exceptions.DataNotFound
+import ml.input.AutoDataPicker
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter
 import ml.output.ProgressFormatter
+import java.io.File
 import java.lang.Exception
 
 open class Main : CliktCommand(
@@ -30,7 +34,7 @@ open class Main : CliktCommand(
 
     private val inputs by argument(help = Help.input)
         .file(mustExist = true, mustBeReadable = true)
-        .multiple(required = true)
+        .multiple(required = false)
 
     private val offline by option("--off", "--offline", help = Help.offline)
         .flag("--on", "--online", default = false)
@@ -71,8 +75,24 @@ open class Main : CliktCommand(
         val mode =
             if (offline) NetworkTeacher.Mode.Offline else NetworkTeacher.Mode.Online
 
+        val pickedInput = try {
+
+            val picker = AutoDataPicker(File(".\\data"))
+
+            if (inputs.isEmpty()) {
+                picker.pickData(definedNetworks)
+            } else {
+                inputs
+            }
+        } catch (e: Exception) {
+            throw IncorrectArgumentValueCount(
+                this.registeredArguments().find { it.name == "inputs" }!!,
+                this.currentContext
+            )
+        }
+
         val config = Config(
-            inputs = inputs,
+            inputs = pickedInput,
             alwaysFresh = !unfreeze,
             freeze = freeze,
             teacherMode = mode,
