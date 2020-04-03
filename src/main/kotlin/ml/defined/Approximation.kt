@@ -21,8 +21,8 @@ class Approximation(config: Config) : DefinedLearning(config) {
     private val commonName = "Approximation"
     private var trainingDataName = ""
 
-    private val alpha = 0.1
-    private val beta = 0.8
+    private val alpha = if (config.teacherMode == NetworkTeacher.Mode.Offline) 0.1 else 0.0005
+    private val beta = if (config.teacherMode == NetworkTeacher.Mode.Offline) 0.7 else 0.5
     private val sharedTeacher: NetworkTeacher = NetworkTeacher.get(config.teacherMode, alpha, beta)
 
     override fun setup() {
@@ -63,7 +63,7 @@ class Approximation(config: Config) : DefinedLearning(config) {
         listOf(5, 10, 19).forEach { neurons ->
             NetworkFreezer.unfreezeFile(generateName(neurons))?.let {
                 result.add(it)
-            } ?: println("${generateName(neurons)} could not be unfreezed!")
+            }
         }
 
         return result
