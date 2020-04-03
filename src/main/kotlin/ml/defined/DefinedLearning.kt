@@ -4,6 +4,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import ml.cycle
 import ml.input.ParsingException
 import ml.defined.exceptions.UnfulfilledExpectationsException
 import ml.freeze.NetworkFreezer
@@ -155,6 +156,8 @@ abstract class DefinedLearning(
             }
         }.toMutableList()
 
+        val animation = cycle(".  ", ".. ", "...", " ..", "  .", " ..", "...", ".. ").iterator()
+
         runBlocking {
 
             while (awaits.size != 0) {
@@ -168,12 +171,14 @@ abstract class DefinedLearning(
                     val (errorVector, steps, time) = result
 
                     afterLearning(network, errorVector, steps)
-
+                    print("\r")
                     singleNetworkLog(network, errorVector, steps, time)
                 }
-
-                delay(100)
+                print("\rLearning: ${animation.next()}")
+                delay(250)
             }
+
+            print("\r")
 
         }
     }
