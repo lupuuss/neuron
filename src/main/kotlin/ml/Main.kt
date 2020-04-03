@@ -14,7 +14,6 @@ import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.file
 import ml.defined.Config
 import ml.defined.DefinedLearning
-import ml.defined.exceptions.DataNotFound
 import ml.input.AutoDataPicker
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter
@@ -85,6 +84,7 @@ open class Main : CliktCommand(
                 inputs
             }
         } catch (e: Exception) {
+
             throw IncorrectArgumentValueCount(
                 this.registeredArguments().find { it.name == "inputs" }!!,
                 this.currentContext
@@ -102,8 +102,6 @@ open class Main : CliktCommand(
             separator = separator
         )
 
-        // For now just starts exercise 3 process.
-        // More details in DefinedLearning and Exercise3 classes
         try {
 
             DefinedLearning.get(definedNetworks, config).run()
