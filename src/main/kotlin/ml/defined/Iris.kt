@@ -2,7 +2,6 @@ package ml.defined
 
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
-import ml.input.DataParser
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter

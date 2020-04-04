@@ -6,11 +6,12 @@ import ml.output.ClusterErrorCollector
 import ml.output.ConsoleLoader
 import ml.spine.Network
 
+@Suppress("MemberVisibilityCanBePrivate")
 abstract class ClusterLearning(config: Config) : Learning(config) {
 
     protected val clusters: MutableList<List<Network>> = mutableListOf()
 
-    protected val clusterErrorCollector = ClusterErrorCollector()
+    protected val clusterErrorCollector: ClusterErrorCollector = ClusterErrorCollector()
 
     protected abstract fun buildClusters(): List<List<Network>>
 

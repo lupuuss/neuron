@@ -10,7 +10,8 @@ class ConsoleLoader(private val characters: Int) {
         progress = value
     }
 
-    private fun repeat(char: Char, times: Int): String = generateSequence { char }.take(times).joinToString(separator = "")
+    private fun repeat(char: Char, times: Int): String =
+        generateSequence { char }.take(times).joinToString(separator = "")
 
     private fun fixedSizePercentage(n: Int): String {
         val percentage = ((progress * 1000).roundToInt() / 10.0).toString()

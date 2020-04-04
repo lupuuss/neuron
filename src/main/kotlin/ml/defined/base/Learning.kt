@@ -18,7 +18,7 @@ abstract class Learning(
     protected abstract val errorGoal: Double
     protected abstract val stepsLimit: Int
 
-    protected val dataParser = DataParser(config.separator)
+    protected val dataParser: DataParser = DataParser(config.separator)
     protected val teachers: MutableList<NetworkTeacher> = mutableListOf()
 
     /**
@@ -62,7 +62,8 @@ abstract class Learning(
         teacher: NetworkTeacher,
         errorVector: List<Double>,
         steps: Int
-    ) {}
+    ) {
+    }
 
     /**
      * It's called when every network is learned.

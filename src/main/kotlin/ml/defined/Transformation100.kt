@@ -2,11 +2,9 @@ package ml.defined
 
 import ml.defined.base.ClusterLearning
 import ml.defined.base.Config
-import ml.input.DataParser
 import ml.learn.NetworkTeacher
 import ml.spine.Activation
 import ml.spine.Network
-import java.util.*
 
 class Transformation100(config: Config) : ClusterLearning(config) {
 
