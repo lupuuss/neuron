@@ -19,10 +19,6 @@ class AutoDataPicker(private val searchDir: File) {
     @Throws(DataNotFound::class)
     fun pickData(taskType: Learning.Type): List<File> = when (taskType) {
 
-        Learning.Type.Exercise3 -> {
-            fileExistsAndReadableOrNull(searchDir, "in.txt")?.let { listOf(it) }
-        }
-
         Learning.Type.Transformation, Learning.Type.Transformation100, Learning.Type.TransformationHidden -> {
             fileExistsAndReadableOrNull(searchDir, "trans_in.txt")?.let { listOf(it) }
         }
@@ -45,16 +41,7 @@ class AutoDataPicker(private val searchDir: File) {
     } ?: throw DataNotFound()
 
     fun pickSeparator(taskType: Learning.Type): String = when (taskType) {
-
-        Learning.Type.Exercise3 -> ";"
-
-        Learning.Type.Transformation,
-        Learning.Type.Transformation100,
-        Learning.Type.TransformationHidden,
-        Learning.Type.Approximation,
-        Learning.Type.Approximation100,
-        Learning.Type.ApproximationProgress -> " "
-
         Learning.Type.Iris -> ","
+        else -> " "
     }
 }

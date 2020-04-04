@@ -21,8 +21,6 @@ class Transformation(config: Config) : NetworksLearning(config) {
         val data = dataParser.parse(config.inputs[0], 4, 4)
         sharedTeacher.trainingSet = data
         sharedTeacher.verificationSet = data
-
-        asyncRunner = true
     }
 
     private val commonName = "Transformtion"

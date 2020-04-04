@@ -15,8 +15,6 @@ import ml.defined.base.Config
 import ml.defined.base.Learning
 import ml.input.AutoDataPicker
 import ml.learn.NetworkTeacher
-import ml.output.NetworkProgressPrinter
-import ml.output.ProgressFormatter
 import java.io.File
 import java.lang.Exception
 
@@ -38,33 +36,15 @@ open class Main : CliktCommand(
         .flag("--on", "--online", default = false)
 
 
-    private val definedNetworks by option("--def", "-d", help = Help.definedNetworks)
+    private val experimentName by option("--def", "-d", help = Help.experimentName)
         .enum<Learning.Type>()
-        .default(Learning.Type.Exercise3)
+        .default(Learning.Type.Transformation)
 
     private val separator: String? by option("--separator", "-s", help = Help.separator)
-
-    private val async by option("--print-async", help = Help.async).flag("--print-sync", default = false)
-
-    private val inPlace by option("--print-in-place", help = Help.inPlace).flag("--print-seq", default = false)
-
-    private val fullFormatter by option("--full", help = Help.formatter).flag("--error-only", default = false)
 
     private val stackTrace by option("--stack", help = Help.stack).flag(default = false)
 
     override fun run() {
-
-        val printFormatter: ProgressFormatter = if (fullFormatter) {
-            { errorStr, steps, metric -> "Error: $errorStr | $metric : $steps" }
-        } else {
-            { errorStr, _, _ -> errorStr ?: "null" }
-        }
-
-        val printMode =
-            if (async) NetworkProgressPrinter.Mode.Async else NetworkProgressPrinter.Mode.Sync
-
-        val printType =
-            if (inPlace) NetworkProgressPrinter.Type.InPlace else NetworkProgressPrinter.Type.Sequential
 
         val mode =
             if (offline) NetworkTeacher.Mode.Offline else NetworkTeacher.Mode.Online
@@ -74,7 +54,7 @@ open class Main : CliktCommand(
             val picker = AutoDataPicker(File(".\\data"))
 
             val pickedInput = if (inputs.isEmpty()) {
-                picker.pickData(definedNetworks)
+                picker.pickData(experimentName)
             } else {
                 inputs
             }
@@ -82,13 +62,10 @@ open class Main : CliktCommand(
             val config = Config(
                 inputs = pickedInput,
                 teacherMode = mode,
-                printMode = printMode,
-                printType = printType,
-                printFormatter = printFormatter,
-                separator = separator ?: picker.pickSeparator(definedNetworks)
+                separator = separator ?: picker.pickSeparator(experimentName)
             )
 
-            Learning.get(definedNetworks, config).run()
+            Learning.get(experimentName, config).run()
 
         } catch (e: Exception) {
 
@@ -109,18 +86,9 @@ object Help {
 
     const val offline: String = "Switches between online and offline learning"
 
-    const val definedNetworks: String = "Selects a set of neural networks."
+    const val experimentName: String = "Selects an experiment."
 
     const val separator: String = "Sets data separator."
-
-    const val async: String = "Switches between asynchronous and synchronous printing." +
-            " The first one may omit some results, but it doesn't block learning." +
-            " Synchronous, on the other hand, blocks learning but prints every result."
-    const val inPlace: String = "Switches between in place and sequential printing." +
-            " The first one prints every result updating a single line." +
-            " Sequential printing puts every result in a new line."
-
-    const val formatter: String = "Switches between full progress and only error printing."
 
     const val stack: String = "Prints stack trace when error occurs"
 }

@@ -38,8 +38,6 @@ class ApproximationProgress(config: Config) : NetworksLearning(config) {
             localTeachers[index].verificationSet = verification
             localTeachers[index].trainingSet = dataParser.parse(config.inputs[index], 1, 1)
         }
-
-        asyncRunner = true
     }
 
     override fun buildTeachers(): List<NetworkTeacher> = localTeachers

@@ -28,8 +28,6 @@ class Iris(config: Config) : NetworksLearning(config) {
 
     override fun setup() {
 
-        asyncRunner = true
-
         dataParser.lineTransformer = {
             it.replace("Iris-setosa", "1,0,0")
                 .replace("Iris-versicolor", "0,1,0")

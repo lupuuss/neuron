@@ -7,7 +7,6 @@ import kotlinx.coroutines.runBlocking
 import ml.learn.NetworkTeacher
 import ml.output.ConsoleLoader
 import ml.output.ErrorCollector
-import ml.output.NetworkProgressPrinter
 import ml.quickPlotDisplay
 import ml.spine.Network
 import org.knowm.xchart.XYChart
@@ -20,24 +19,9 @@ import kotlin.streams.toList
 @Suppress("MemberVisibilityCanBePrivate")
 abstract class NetworksLearning(config: Config) : Learning(config) {
 
-    protected var asyncRunner: Boolean = false
-
     protected val networks: MutableList<Network> = mutableListOf()
 
     protected val errorCollector: ErrorCollector = ErrorCollector()
-
-    protected fun requiresProgressPrinter(): NetworkProgressPrinter {
-
-        if (asyncRunner) {
-            println("[WARNING] Its not required to print progress while asynchronous learning!")
-        }
-
-        return NetworkProgressPrinter(System.out).apply {
-            formatter = config.printFormatter
-            mode = config.printMode
-            type = config.printType
-        }
-    }
 
     /**
      * Should build all neural networks that will be used. It is called only once on start.
@@ -86,22 +70,6 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
         errorVector: List<Double>,
         steps: Int
     ) {
-    }
-
-    private fun syncRunner() {
-
-        for ((index, network) in networks.withIndex()) {
-
-            beforeLearning(network, teachers[index])
-
-            val networkTime = System.currentTimeMillis()
-
-            val (errorVector, steps) = learningProcess(network, teachers[index])
-
-            afterLearning(network, teachers[index], errorVector, steps)
-
-            singleNetworkLog(network, errorVector, steps, networkTime)
-        }
     }
 
     private fun asyncRunner() {
@@ -198,7 +166,6 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
         return result
     }
 
-
     /**
      * Initializes whole learning process.
      */
@@ -212,11 +179,7 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
 
         val time = System.currentTimeMillis()
 
-        if (asyncRunner) {
-            asyncRunner()
-        } else {
-            syncRunner()
-        }
+        asyncRunner()
 
         println("Total elapsed time: ${System.currentTimeMillis() - time} ms")
 

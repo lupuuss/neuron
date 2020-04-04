@@ -9,7 +9,6 @@ abstract class Learning(
     protected val config: Config
 ) {
     enum class Type {
-        Exercise3,
         Transformation, Transformation100, TransformationHidden,
         Approximation, Approximation100, ApproximationProgress,
         Iris,
@@ -49,7 +48,6 @@ abstract class Learning(
 
         @JvmStatic
         fun get(type: Type, config: Config): Learning = when (type) {
-            Type.Exercise3 -> Exercise3(config)
             Type.Transformation -> Transformation(config)
             Type.Approximation -> Approximation(config)
             Type.Approximation100 -> Approximation100(config)

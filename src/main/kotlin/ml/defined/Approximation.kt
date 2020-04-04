@@ -34,8 +34,6 @@ class Approximation(config: Config) : NetworksLearning(config) {
             throw UnfulfilledExpectationsException("Approximation task requires training data (2 files) and verification data (1 file) ")
         }
 
-        asyncRunner = true
-
         val verificationData = dataParser.parse(config.inputs[2], 1, 1)
 
         sharedTeacher1.trainingSet = dataParser.parse(config.inputs[0], 1, 1)
