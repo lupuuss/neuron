@@ -1,12 +1,13 @@
 package ml.output
 
 import ml.learn.NetworkTeacher
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class ClusterErrorCollector {
 
-    private val errorsMap: MutableMap<NetworkTeacher, MutableList<Pair<List<Double>, Int>>> = mutableMapOf()
+    private val errorsMap: MutableMap<NetworkTeacher, MutableList<Pair<List<Double>, Int>>> = ConcurrentHashMap()
 
     fun putErrors(teacher: NetworkTeacher, errors: List<Double>, steps: Int) {
 

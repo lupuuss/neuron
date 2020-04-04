@@ -1,10 +1,11 @@
 package ml.output
 
 import ml.spine.Network
+import java.util.concurrent.ConcurrentHashMap
 
 class ErrorCollector {
 
-    private val errorMap: MutableMap<Network, MutableMap<Int, List<Double>>> = mutableMapOf()
+    private val errorMap: MutableMap<Network, MutableMap<Int, List<Double>>> = ConcurrentHashMap()
 
     fun collect(network: Network, error: List<Double>, steps: Int) {
         errorMap.getOrPut(network, { mutableMapOf() })[steps] = error
