@@ -1,12 +1,12 @@
 package ml.output
 
-import ml.ConsoleAnimation
+import ml.cycle
 import kotlin.math.roundToInt
 
 class ConsoleLoader(
     private val characters: Int,
-    var animation: Boolean = true,
-    private val mode: Mode
+    private val mode: Mode,
+    var animation: Boolean = true
 ) {
 
     enum class Mode {
@@ -15,7 +15,7 @@ class ConsoleLoader(
 
     private var current = 0
     private var max = 0
-    private val animationIter = ConsoleAnimation.frames()
+    private val animationIter = cycle(".  ", ".. ", "...", " ..", "  .", " ..", "...", ".. ").iterator()
 
     fun update(current: Int, max: Int) {
         this.current = current

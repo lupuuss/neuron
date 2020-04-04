@@ -4,7 +4,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import ml.ConsoleAnimation
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.ConsoleLoader
@@ -139,7 +138,7 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
             }
         }.toMutableList()
 
-        val loader = ConsoleLoader(0, true, ConsoleLoader.Mode.Fraction)
+        val loader = ConsoleLoader(0, ConsoleLoader.Mode.Fraction)
 
         runBlocking {
 

@@ -72,7 +72,3 @@ fun <T : Any> cycle(vararg values: T): Sequence<T> {
     var i = 0
     return generateSequence { values[i++ % values.size] }
 }
-
-object ConsoleAnimation {
-    fun frames(): Iterator<String> = cycle(".  ", ".. ", "...", " ..", "  .", " ..", "...", ".. ").iterator()
-}
