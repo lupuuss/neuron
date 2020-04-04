@@ -1,32 +1,60 @@
 package ml.output
 
+import ml.ConsoleAnimation
 import kotlin.math.roundToInt
 
-class ConsoleLoader(private val characters: Int) {
+class ConsoleLoader(
+    private val characters: Int,
+    var animation: Boolean = true,
+    private val mode: Mode
+) {
 
-    private var progress = 0.0
+    enum class Mode {
+        Percentage, Fraction
+    }
 
-    fun update(value: Double) {
-        progress = value
+    private var current = 0
+    private var max = 0
+    private val animationIter = ConsoleAnimation.frames()
+
+    fun update(current: Int, max: Int) {
+        this.current = current
+        this.max = max
     }
 
     private fun repeat(char: Char, times: Int): String =
         generateSequence { char }.take(times).joinToString(separator = "")
 
-    private fun fixedSizePercentage(n: Int): String {
+    private fun fixedSizePercentage(progress: Double, n: Int): String {
         val percentage = ((progress * 1000).roundToInt() / 10.0).toString()
         val size = percentage.length
 
-        return repeat(' ', n - size) + percentage
+        return repeat(' ', n - size) + percentage + "%"
     }
 
     fun print() {
-        val progress = (characters.toDouble() * progress).roundToInt()
-        val spaces = characters - progress
-        print("\r[${repeat('=', progress)}>${repeat(' ', spaces)}] ${fixedSizePercentage(5)}%")
+        var progressString = "\rLearning:"
+        val progress = current.toDouble() / max.toDouble()
+
+        if (characters != 0) {
+            val barProgress = (characters.toDouble() * progress).roundToInt()
+            val spaces = characters - barProgress
+            progressString += " [${repeat('=', barProgress)}>${repeat(' ', spaces)}]"
+        }
+
+        if (animation) {
+            progressString += " (${animationIter.next()})"
+        }
+
+        progressString += when (mode) {
+            Mode.Percentage -> " " + fixedSizePercentage(progress, 5)
+            Mode.Fraction -> " [$current/$max]"
+        }
+
+        print(progressString)
     }
 
     fun close() {
-        println()
+        print("\r")
     }
 }

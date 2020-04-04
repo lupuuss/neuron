@@ -7,6 +7,7 @@ import kotlinx.coroutines.runBlocking
 import ml.ConsoleAnimation
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
+import ml.output.ConsoleLoader
 import ml.output.ErrorCollector
 import ml.output.NetworkProgressPrinter
 import ml.quickPlotDisplay
@@ -138,7 +139,7 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
             }
         }.toMutableList()
 
-        val animation = ConsoleAnimation.frames()
+        val loader = ConsoleLoader(0, true, ConsoleLoader.Mode.Fraction)
 
         runBlocking {
 
@@ -161,12 +162,13 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
 
                 val progress = all - awaits.size
 
-                print("\rLearning: ${animation.next()} [$progress/$all]")
+                loader.update(progress, all)
+                loader.print()
+
                 delay(250)
             }
 
-            print("\r")
-
+            loader.close()
         }
     }
 

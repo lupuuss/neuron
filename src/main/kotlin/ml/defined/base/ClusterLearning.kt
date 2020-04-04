@@ -64,7 +64,7 @@ abstract class ClusterLearning(config: Config) : Learning(config) {
 
         val clustersCounters = teachers.map { it to 0 }.toMap().toMutableMap()
         val all = awaits.size
-        val loader = ConsoleLoader(50)
+        val loader = ConsoleLoader(50, true, ConsoleLoader.Mode.Percentage)
 
         runBlocking {
             while (awaits.size != 0) {
@@ -88,7 +88,7 @@ abstract class ClusterLearning(config: Config) : Learning(config) {
                     afterLearningCluster(it.key, clusters[teachers.indexOf(it.key)])
                 }
 
-                loader.update((all - awaits.size).toDouble() / all.toDouble())
+                loader.update(all - awaits.size, all)
                 loader.print()
 
                 delay(300)
