@@ -183,13 +183,13 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
     }
 
     protected fun plotMultiple(
-        data: List<Pair<String, Map<Double, Double>>>,
+        data: Map<String, Map<Double, Double>>,
         title: String,
         chartEdit: (XYChart.() -> Unit)? = null
     ) {
 
-        val (firstName, firstErrors) = data.first()
-        val remToPlot = data.stream().skip(1).toList().toMap()
+        val (firstName, firstErrors) = data.entries.first()
+        val remToPlot = data.toList().stream().skip(1).toList().toMap()
 
         firstErrors.quickPlotDisplay(firstName) { _ ->
 

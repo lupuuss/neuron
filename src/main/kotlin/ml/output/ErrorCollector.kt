@@ -16,13 +16,13 @@ class ErrorCollector {
         namedMap.getOrPut(name, { mutableMapOf() })[steps] = error
     }
 
-    fun getNetworksPlotableErrorMap(): List<Pair<Network, Map<Double, Double>>> =
+    fun getNetworksPlotableErrorMap(): Map<Network, Map<Double, Double>> =
         errorMap.map { (network, errors) ->
             network to errors.map { (steps, errorVec) -> steps.toDouble() to errorVec.average() }.toMap()
-        }
+        }.toMap()
 
-    fun getNamedPlotableErrorMap(): List<Pair<String, Map<Double, Double>>> =
+    fun getNamedPlotableErrorMap(): Map<String, Map<Double, Double>> =
         namedMap.map { (name, errors) ->
             name to errors.map { (steps, errorVec) -> steps.toDouble() to errorVec.average() }.toMap()
-        }
+        }.toMap()
 }

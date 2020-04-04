@@ -6,6 +6,7 @@ import ml.defined.base.UnfulfilledExpectationsException
 import ml.learn.NetworkTeacher
 import ml.spine.Activation
 import ml.spine.Network
+import ml.step
 import java.util.stream.Stream
 import kotlin.streams.asStream
 import kotlin.streams.toList
@@ -24,6 +25,8 @@ class Approximation(config: Config) : NetworksLearning(config) {
     private val sharedTeacher2: NetworkTeacher = NetworkTeacher.get(config.teacherMode, alpha, beta)
 
     private val markedToErrorCollecting = mutableListOf<Network>()
+
+    private fun getRange() = -2.0..3.0 step 0.1
 
     override fun setup() {
 
@@ -109,41 +112,55 @@ class Approximation(config: Config) : NetworksLearning(config) {
 
     override fun allNetworksReady(restored: Boolean) {
 
+        val result1Networks = networks.filter { it.name.contains("result_1") }
+        val result2Networks = networks.filter { it.name.contains("result_2") }
+
+
         if (restored) return
 
-        val errors = errorCollector.getNetworksPlotableErrorMap().map { it.first.name to it.second }
+        val errors = errorCollector.getNetworksPlotableErrorMap().map { it.key.name to it.value }.toMap()
         val trainingError = errorCollector.getNamedPlotableErrorMap()
 
-        plotMultiple(preparePlotDataForFile(1, errors, trainingError), "File 1") {
-            styler.xAxisDecimalPattern = "###,###,###,###"
-            styler.yAxisDecimalPattern = "0.00"
-            styler.yAxisMax = 300.0
+        for (i in 1..2) {
+            plotMultiple(preparePlotDataForFile(i, errors, trainingError), "File $i") {
+                styler.xAxisDecimalPattern = "###,###,###,###"
+                styler.yAxisDecimalPattern = "0.00"
+                styler.yAxisMax = 300.0
+            }
         }
-        plotMultiple(preparePlotDataForFile(2, errors, trainingError), "File 2") {
-            styler.xAxisDecimalPattern = "###,###,###,###"
-            styler.yAxisDecimalPattern = "0.00"
-            styler.yAxisMax = 300.0
-        }
+
     }
 
     private fun preparePlotDataForFile(
         fileN: Int,
-        verSet: List<Pair<String, Map<Double, Double>>>,
-        trainingSet: List<Pair<String, Map<Double, Double>>>
-    ): List<Pair<String, Map<Double, Double>>> {
+        verSet: Map<String, Map<Double, Double>>,
+        trainingSet: Map<String, Map<Double, Double>>
+    ): Map<String, Map<Double, Double>> {
 
         val fileVerPlotData = verSet
-            .filter { it.first.contains("error_$fileN") }
-            .map { it.first.substringAfter("error_${fileN}_") + " neurons (verification set)" to it.second }
+            .filter { it.key.contains("error_$fileN") }
+            .map { it.key.substringAfter("error_${fileN}_") + " neurons (verification set)" to it.value }
             .sortedBy { it.first.substringBefore(" ").toDouble() }
+            .toMap()
 
         val fileTrainingPlotData = trainingSet
-            .filter { it.first.contains("error_$fileN") }
+            .filter { it.key.contains("error_$fileN") }
             .map {
-                val n = it.first.substringAfter("error_${fileN}_").substringBefore("_training")
-                "$n neurons (training set)" to it.second
+                val n = it.key.substringAfter("error_${fileN}_").substringBefore("_training")
+                "$n neurons (training set)" to it.value
             }.sortedBy { it.first.substringBefore(" ").toDouble() }
 
-        return fileVerPlotData + fileTrainingPlotData
+        return (fileVerPlotData + fileTrainingPlotData).toMap()
+    }
+
+    private fun plotNetworks(networks: List<Network>, fileN: Int) {
+        val plots: MutableMap<String, Map<Double, Double>> = mutableMapOf()
+
+        for (network in networks) {
+            val name = network.name.substringAfter("result_${fileN}_") + " neurons"
+            plots[name] = networkPlotDataXY(network, getRange())
+        }
+
+        plotMultiple(plots, "")
     }
 }

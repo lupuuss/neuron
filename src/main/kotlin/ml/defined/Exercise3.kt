@@ -86,7 +86,7 @@ class Exercise3(
     override fun allNetworksReady(restored: Boolean) {
 
         val type = config.teacherMode.toString().toLowerCase()
-        val errorChange = errorCollector.getNetworksPlotableErrorMap().first().second
+        val errorChange = errorCollector.getNetworksPlotableErrorMap().entries.first().value
 
         if (!restored) {
             errorChange.quickPlotDisplay("Error change") { _ ->

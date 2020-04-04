@@ -107,7 +107,7 @@ class ApproximationProgress(config: Config) : NetworksLearning(config) {
     ) {
 
 
-        plotMultiple(results.map { (steps, plot) -> "$steps iterations" to plot }, "File $fileN results") {
+        plotMultiple(results.map { (steps, plot) -> "$steps iterations" to plot }.toMap(), "File $fileN results") {
             styler.yAxisMax = 60.0
 
             addSeries("training data", trainingData)
