@@ -75,7 +75,7 @@ class Exercise3(
         errorCollector.collect(network, errorVector, steps)
     }
 
-    override fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?) {
+    override fun afterLearning(network: Network, teacher: NetworkTeacher?, errorVector: List<Double>?, steps: Int?) {
 
         progressPrinter?.close()
         progressPrinter = null

@@ -4,23 +4,32 @@ import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
-import ml.output.NetworkProgressPrinter
 import ml.spine.Activation
 import ml.spine.Network
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.roundToInt
 
 class Iris(config: Config) : NetworksLearning(config) {
     override val errorGoal: Double = 0.1
-    override val stepsLimit: Int = 200_000
+    override val stepsLimit: Int = 6_000
 
     private lateinit var data: List<Pair<List<Double>, List<Double>>>
 
-    private var progressPrinter: NetworkProgressPrinter? = null
-
     private lateinit var fieldMask: List<Boolean>
-    private var hiddenNeurons: Int = 0
+    private lateinit var fieldMaskString: String
+
+    private val localTeachers = listOf(
+        NetworkTeacher.get(config.teacherMode, 0.2, 0.1),
+        NetworkTeacher.get(config.teacherMode, 0.2, 0.1)
+    )
+
+    private val classificationErrorTraining: MutableMap<Network, MutableMap<Int, Double>> = ConcurrentHashMap()
+    private val classificationErrorVerification: MutableMap<Network, MutableMap<Int, Double>> = ConcurrentHashMap()
 
     override fun setup() {
+
+        asyncRunner = true
 
         dataParser.lineTransformer = {
             it.replace("Iris-setosa", "1,0,0")
@@ -37,17 +46,8 @@ class Iris(config: Config) : NetworksLearning(config) {
             println("Invalid mask!")
         }
 
-        fieldMask = userInput.nextLine().map { it == '1' }
-
-        println(fieldMask.count { it })
-
-        println("Neurons: ")
-
-        while (!userInput.hasNextInt()) {
-            println("Integer is required!")
-        }
-
-        hiddenNeurons = userInput.nextInt()
+        fieldMaskString = userInput.nextLine()
+        fieldMask = fieldMaskString.map { it == '1' }
 
         data = dataParser.parse(config.inputs[0], 4, 3).map {
             val result = mutableListOf<Double>()
@@ -63,60 +63,98 @@ class Iris(config: Config) : NetworksLearning(config) {
 
     }
 
-    override fun buildNetworks(): List<Network> = listOf(
-        Network.Builder()
-            .name("Iris_${fieldMask.count { it }}_$hiddenNeurons")
-            .inputs(fieldMask.count { it })
-            .setDefaultActivation(Activation.Sigmoid)
-            .hiddenLayer(hiddenNeurons, true)
-            .outputLayer(3, true)
-    )
+    override fun buildNetworks(): List<Network> {
 
-    override fun buildTeachers(): List<NetworkTeacher> = listOf(
-        NetworkTeacher.get(config.teacherMode, 0.0001, 0.1).apply {
+        val allNetworks = mutableListOf<Network>()
+
+        for (i in listOf(50, 80)) {
+
+            allNetworks.addAll(
+                listOf(1, 5, 9, 13, 17).map { hiddenNeurons ->
+                    Network.Builder()
+                        .name("Iris_${fieldMaskString}_${i}_$hiddenNeurons")
+                        .inputs(fieldMask.count { it })
+                        .setDefaultActivation(Activation.Sigmoid)
+                        .hiddenLayer(hiddenNeurons, true)
+                        .outputLayer(3, true)
+                }
+            )
+        }
+
+        return allNetworks
+    }
+
+    override fun buildTeachers(): List<NetworkTeacher> {
+        localTeachers[0].apply {
             trainingSet = data.filterIndexed { index, _ -> index % 2 != 0 }
             verificationSet = data.filterIndexed { index, _ -> index % 2 == 0 }
         }
-    )
+
+        localTeachers[1].apply {
+            trainingSet = data.filterIndexed { index, _ -> index % 5 != 0 }
+            verificationSet = data.filterIndexed { index, _ -> index % 5 == 0 }
+        }
+
+        return generateSequence { localTeachers[0] }.take(5).toList() +
+                generateSequence { localTeachers[1] }.take(5).toList()
+    }
 
     override fun unfreezing(): List<Network> = listOf(NetworkFreezer.unfreezeFile("Iris")!!)
 
-    override fun beforeLearning(network: Network, teacher: NetworkTeacher) {
-        progressPrinter = NetworkProgressPrinter(System.out)
-        progressPrinter?.apply {
-            type = config.printType
-            mode = config.printMode
-            formatter = config.printFormatter
-            stepMetric = teacher.metric
+    private fun calcClassificationLevel(network: Network, data: List<Pair<List<Double>, List<Double>>>): Double {
+        var good = 0
+        for ((input, expected) in data) {
+
+            val answer = network.answer(input).map { it.roundToInt().toDouble() }
+
+            if (answer == expected) {
+                good++
+            }
         }
+
+        return (good.toDouble() / data.size.toDouble()) * 100
+    }
+
+    private fun saveClassificationLevel(network: Network, teacher: NetworkTeacher, steps: Int) {
+        classificationErrorTraining
+            .getOrPut(network, { mutableMapOf() })[steps] = calcClassificationLevel(network, teacher.trainingSet)
+
+        classificationErrorVerification
+            .getOrPut(network, { mutableMapOf() })[steps] = calcClassificationLevel(network, teacher.verificationSet)
+    }
+
+    override fun beforeLearning(network: Network, teacher: NetworkTeacher) {
+        saveClassificationLevel(network, teacher, 0)
     }
 
     override fun eachLearningStep(network: Network, teacher: NetworkTeacher, errorVector: List<Double>, steps: Int) {
-        progressPrinter?.updateData(errorVector, steps)
+        saveClassificationLevel(network, teacher, steps)
     }
 
-    override fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?) {
-        progressPrinter?.close()
+    override fun afterLearning(network: Network, teacher: NetworkTeacher?, errorVector: List<Double>?, steps: Int?) {
+
+        if (teacher != null && steps != null) {
+            saveClassificationLevel(network, teacher, steps)
+        }
     }
 
     override fun allNetworksReady(restored: Boolean) {
 
-        var bad = 0
+        plotMultiple(
+            classificationErrorTraining
+                .map { errorEntry ->
+                    errorEntry.key.name to errorEntry.value.map { it.key.toDouble() to it.value }.toMap()
+                }.toMap(),
+            "XD"
+        )
 
-        data.forEach { (input, expected) ->
-            val answer = networks.first().answer(input)
-            val v = answer.map { if (it == answer.max()) 1.0 else 0.0 }
-
-            if (v != expected) {
-                println(answer)
-                println(v)
-                println(expected)
-                println()
-                bad++
-            }
-        }
-
-        println("$bad ${data.size}")
+        plotMultiple(
+            classificationErrorVerification
+                .map { errorEntry ->
+                    errorEntry.key.name to errorEntry.value.map { it.key.toDouble() to it.value }.toMap()
+                }.toMap(),
+            "XD"
+        )
     }
 
 }

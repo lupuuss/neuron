@@ -79,7 +79,7 @@ class ApproximationProgress(config: Config) : NetworksLearning(config) {
         }
     }
 
-    override fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?) {
+    override fun afterLearning(network: Network, teacher: NetworkTeacher?, errorVector: List<Double>?, steps: Int?) {
 
         pickPlotData(network, steps ?: 0)
     }

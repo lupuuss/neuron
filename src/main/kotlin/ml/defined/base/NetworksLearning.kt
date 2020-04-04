@@ -103,7 +103,13 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
     /**
      * It's called for each network after its learning process is done.
      */
-    protected open fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?) {}
+    protected open fun afterLearning(
+        network: Network,
+        teacher: NetworkTeacher?,
+        errorVector: List<Double>?,
+        steps: Int?
+    ) {
+    }
 
     private fun syncRunner() {
 
@@ -115,7 +121,7 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
 
             val (errorVector, steps) = learningProcess(network, teachers[index])
 
-            afterLearning(network, errorVector, steps)
+            afterLearning(network, teachers[index], errorVector, steps)
 
             singleNetworkLog(network, errorVector, steps, networkTime)
         }
@@ -134,7 +140,7 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
                 val time = System.currentTimeMillis()
                 val (errorVector, steps) = learningProcess(network, teacher)
 
-                network to Triple(errorVector, steps, time)
+                network to Result(teacher, steps, errorVector, time)
             }
         }.toMutableList()
 
@@ -152,11 +158,10 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
                 finished.forEach {
 
                     val (network, result) = it.await()
-                    val (errorVector, steps, time) = result
 
-                    afterLearning(network, errorVector, steps)
+                    afterLearning(network, result.teacher, result.errorVector, result.steps)
                     print("\r")
-                    singleNetworkLog(network, errorVector, steps, time)
+                    singleNetworkLog(network, result.errorVector, result.steps, result.time)
                 }
 
                 val progress = all - awaits.size
@@ -258,7 +263,7 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
             networks.addAll(restoredNetwork)
 
             for (network in networks) {
-                afterLearning(network, null, null)
+                afterLearning(network, null, null, null)
             }
 
             true
@@ -267,3 +272,10 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
         allNetworksReady(restored)
     }
 }
+
+private data class Result(
+    val teacher: NetworkTeacher,
+    val steps: Int,
+    val errorVector: List<Double>,
+    val time: Long
+)
