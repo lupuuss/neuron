@@ -17,6 +17,23 @@ abstract class ClusterLearning(config: Config) : Learning(config) {
 
     protected open fun beforeLearningCluster(teacher: NetworkTeacher, cluster: List<Network>) {}
 
+    override fun learningProcess(network: Network, teacher: NetworkTeacher): Pair<List<Double>, Int> {
+
+        var i = 0
+
+        var errorVector: List<Double>
+
+        do {
+
+            teacher.teach(network)
+            errorVector = teacher.verify(network)
+            i++
+
+        } while (!errorVector.stream().allMatch { it < errorGoal } && i < stepsLimit)
+
+        return errorVector to i
+    }
+
     protected open fun afterLearningCluster(teacher: NetworkTeacher, cluster: List<Network>) {}
 
     override fun run() {

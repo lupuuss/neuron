@@ -72,11 +72,38 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
      */
     protected open fun beforeLearning(network: Network, teacher: NetworkTeacher) {}
 
+    override fun learningProcess(network: Network, teacher: NetworkTeacher): Pair<List<Double>, Int> {
+
+        var i = 0
+
+        var errorVector: List<Double>
+
+        do {
+
+            teacher.teach(network)
+            errorVector = teacher.verify(network)
+            i++
+            eachLearningStep(network, teacher, errorVector, i)
+
+        } while (!errorVector.stream().allMatch { it < errorGoal } && i < stepsLimit)
+        return errorVector to i
+    }
+
+    /**
+     * It's called after every step of learning.
+     */
+    protected open fun eachLearningStep(
+        network: Network,
+        teacher: NetworkTeacher,
+        errorVector: List<Double>,
+        steps: Int
+    ) {
+    }
+
     /**
      * It's called for each network after its learning process is done.
      */
     protected open fun afterLearning(network: Network, errorVector: List<Double>?, steps: Int?) {}
-
 
     private fun syncRunner() {
 

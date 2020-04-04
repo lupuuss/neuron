@@ -35,35 +35,8 @@ abstract class Learning(
 
     /**
      * Performs standard learning process for each network.
-     * It might be not called if a neural network was unfreezed.
      */
-    protected fun learningProcess(network: Network, teacher: NetworkTeacher): Pair<List<Double>, Int> {
-
-        var i = 0
-
-        var errorVector: List<Double>
-
-        do {
-
-            teacher.teach(network)
-            errorVector = teacher.verify(network)
-            i++
-            eachLearningStep(network, teacher, errorVector, i)
-
-        } while (!errorVector.stream().allMatch { it < errorGoal } && i < stepsLimit)
-        return errorVector to i
-    }
-
-    /**
-     * It's called after every step of learning.
-     */
-    protected open fun eachLearningStep(
-        network: Network,
-        teacher: NetworkTeacher,
-        errorVector: List<Double>,
-        steps: Int
-    ) {
-    }
+    protected abstract fun learningProcess(network: Network, teacher: NetworkTeacher): Pair<List<Double>, Int>
 
     /**
      * It's called when every network is learned.
