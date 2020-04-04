@@ -26,17 +26,21 @@ class Approximation100(config: Config) : ClusterLearning(config) {
     }
 
     override fun buildTeachers(): List<NetworkTeacher> {
+        var i = 1
         val teachers1 = generateSequence {
             NetworkTeacher.get(config.teacherMode, 0.01, 0.8).apply {
                 trainingSet = training1
                 verificationSet = verification
+                name = "File_1_${i++}"
             }
         }.take(20).toList()
 
+        i = 1
         val teachers2 = generateSequence {
             NetworkTeacher.get(config.teacherMode, 0.01, 0.8).apply {
                 trainingSet = training2
                 verificationSet = verification
+                name = "File_2_${i++}"
             }
         }.take(20).toList()
 
@@ -79,7 +83,7 @@ class Approximation100(config: Config) : ClusterLearning(config) {
 
         for (teacher in teachers) {
             trainingErrorMap[teacher]!!.let {
-                print("Training > Squared: ${it.round(3)} Root: ${sqrt(it).round(3)}")
+                print("${teacher.name} = Training > Squared: ${it.round(3)} Root: ${sqrt(it).round(3)}")
             }
             clusterErrorCollector.meanData(teacher).let { (squared, root, iter) ->
                 println(" || Verification > Squared: $squared Root: $root Iters: $iter")

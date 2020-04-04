@@ -9,6 +9,8 @@ abstract class NetworkTeacher(
     var beta: Double
 ) {
 
+    var name: String? = null
+
     init {
         if (beta !in 0.0..1.0) {
             throw IllegalArgumentException("Beta must have value in range [0; 1]!")
