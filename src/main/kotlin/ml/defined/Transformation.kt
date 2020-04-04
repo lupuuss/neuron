@@ -98,13 +98,26 @@ class Transformation(config: Config) : NetworksLearning(config) {
 
         val errors = errorCollector.getNetworksPlotableErrorMap()
 
-        val biasErrors = errors.filter { it.first.name.contains("_Bias") }.sortedBy { it.first.name }
-        val noBiasErrors = errors.filter { it.first.name.contains("_NoBias") }.sortedBy { it.first.name }
+        val biasErrors = errors
+            .map { it.first.name to it.second }
+            .filter { it.first.contains("_Bias") }
+            .map { it.first.last() + " neurons" to it.second }
+            .sortedBy { it.first }
 
-        val plotNameGen = { network: Network -> "${network.name.last()} neurons" }
+        val noBiasErrors = errors
+            .map { it.first.name to it.second }
+            .filter { it.first.contains("_NoBias") }
+            .map { it.first.last() + " neurons" to it.second }
+            .sortedBy { it.first }
 
-        plotsErrors(biasErrors, "Bias", plotNameGen)
-        plotsErrors(noBiasErrors, "No bias", plotNameGen)
+        plotMultiple(biasErrors, "Bias") {
+            styler.xAxisDecimalPattern = "###,###,###,###"
+            styler.yAxisDecimalPattern = "0.00"
+        }
+        plotMultiple(noBiasErrors, "No bias") {
+            styler.xAxisDecimalPattern = "###,###,###,###"
+            styler.yAxisDecimalPattern = "0.00"
+        }
 
     }
 }

@@ -53,7 +53,7 @@ abstract class NetworkTeacher(
 
     fun verify(network: Network): List<Double> = verify(network, verificationSet)
 
-    fun verifyTest(network: Network): List<Double> = verify(network, trainingSet)
+    fun verifyTraining(network: Network): List<Double> = verify(network, trainingSet)
 
     companion object {
 

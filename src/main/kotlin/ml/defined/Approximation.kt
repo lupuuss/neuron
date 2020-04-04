@@ -1,13 +1,11 @@
 package ml.defined
 
-import ml.addSeries
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
 import ml.defined.base.UnfulfilledExpectationsException
 import ml.learn.NetworkTeacher
 import ml.spine.Activation
 import ml.spine.Network
-import org.knowm.xchart.style.markers.None
 import java.util.stream.Stream
 import kotlin.streams.asStream
 import kotlin.streams.toList
@@ -86,7 +84,7 @@ class Approximation(config: Config) : NetworksLearning(config) {
 
         if (markedToErrorCollecting.contains(network)) {
             errorCollector.collect(network, errorVector, steps)
-            errorCollector.collect("${network.name}_test", teacher.verifyTest(network), steps)
+            errorCollector.collect("${network.name}_training", teacher.verifyTraining(network), steps)
         }
     }
 
@@ -122,77 +120,41 @@ class Approximation(config: Config) : NetworksLearning(config) {
 
     override fun allNetworksReady(restored: Boolean) {
 
-/*
-        val range = -3.0..4.0 step 0.1
-        val firstPlot = networkPlotDataXY(networks.first(), range)
-
-        firstPlot.quickPlotDisplay(networks.first().name) { _ ->
-
-            title = "$commonName | File: ${config.inputs[0].name} | Learning coefficient: $alpha | Momentum: $beta"
-
-            for (network in networks.stream().skip(1)) {
-
-                val plot = networkPlotDataXY(network, range)
-
-                addSeries(network.name, plot.keys.toDoubleArray(), plot.values.toDoubleArray())
-                seriesMap[network.name]?.marker = None()
-            }
-
-            addSeries(
-                "Verification data",
-                sharedTeacher1.verificationSet.map { it.first.first() }.toDoubleArray(),
-                sharedTeacher1.verificationSet.map { it.second.first() }.toDoubleArray()
-            )
-            seriesMap["Verification data"]?.apply {
-                lineColor = Color(0, 0, 0, 0)
-                marker = Circle()
-            }
-
-            addSeries(
-                "Training data",
-                sharedTeacher1.trainingSet.map { it.first.first() }.toDoubleArray(),
-                sharedTeacher1.trainingSet.map { it.second.first() }.toDoubleArray()
-            )
-            seriesMap["Training data"]?.apply {
-                lineColor = Color(0, 0, 0, 0)
-                marker = Circle()
-            }
-        }
-*/
-
         if (restored) return
 
-        val errors = errorCollector.getNetworksPlotableErrorMap()
+        val errors = errorCollector.getNetworksPlotableErrorMap().map { it.first.name to it.second }
         val trainingError = errorCollector.getNamedPlotableErrorMap()
 
-        plotsErrors(
-            errors.filter { it.first.name.contains("error_1") },
-            "Errors for file 1",
-            { it.name.last() + " neurons" }
-        ) {
-            styler.yAxisMax = 400.0
-            trainingError
-                .filter { it.first.contains("error_1") }
-                .forEach { (name, data) ->
-
-                    this.addSeries(name, data)
-                    this.seriesMap[name]!!.marker = None()
-                }
+        plotMultiple(preparePlotDataForFile(1, errors, trainingError), "File 1") {
+            styler.xAxisDecimalPattern = "###,###,###,###"
+            styler.yAxisDecimalPattern = "0.00"
+            styler.yAxisMax = 300.0
         }
-
-        plotsErrors(
-            errors.filter { it.first.name.contains("error_2") },
-            "Errors for file 2",
-            { it.name.last() + " neurons" }
-        ) {
-            styler.yAxisMax = 400.0
-            trainingError
-                .filter { it.first.contains("error_2") }
-                .forEach { (name, data) ->
-
-                    this.addSeries(name, data)
-                    this.seriesMap[name]!!.marker = None()
-                }
+        plotMultiple(preparePlotDataForFile(2, errors, trainingError), "File 2") {
+            styler.xAxisDecimalPattern = "###,###,###,###"
+            styler.yAxisDecimalPattern = "0.00"
+            styler.yAxisMax = 300.0
         }
+    }
+
+    private fun preparePlotDataForFile(
+        fileN: Int,
+        verSet: List<Pair<String, Map<Double, Double>>>,
+        trainingSet: List<Pair<String, Map<Double, Double>>>
+    ): List<Pair<String, Map<Double, Double>>> {
+
+        val fileVerPlotData = verSet
+            .filter { it.first.contains("error_$fileN") }
+            .map { it.first.substringAfter("error_${fileN}_") + " neurons (verification set)" to it.second }
+            .sortedBy { it.first.substringBefore(" ").toDouble() }
+
+        val fileTrainingPlotData = trainingSet
+            .filter { it.first.contains("error_$fileN") }
+            .map {
+                val n = it.first.substringAfter("error_${fileN}_").substringBefore("_training")
+                "$n neurons (training set)" to it.second
+            }.sortedBy { it.first.substringBefore(" ").toDouble() }
+
+        return fileVerPlotData + fileTrainingPlotData
     }
 }

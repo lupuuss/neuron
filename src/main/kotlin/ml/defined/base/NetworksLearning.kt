@@ -154,27 +154,23 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
         )
     }
 
-    protected fun plotsErrors(
-        data: List<Pair<Network, Map<Double, Double>>>,
+    protected fun plotMultiple(
+        data: List<Pair<String, Map<Double, Double>>>,
         title: String,
-        nameGen: (Network) -> String,
         chartEdit: (XYChart.() -> Unit)? = null
     ) {
 
-        val (firstNetwork, firstErrors) = data.first()
+        val (firstName, firstErrors) = data.first()
         val remToPlot = data.stream().skip(1).toList().toMap()
 
-        firstErrors.quickPlotDisplay(nameGen(firstNetwork)) { _ ->
+        firstErrors.quickPlotDisplay(firstName) { _ ->
 
             this.title = title
-            styler.xAxisDecimalPattern = "###,###,###,###"
-            styler.yAxisDecimalPattern = "0.00"
 
-            remToPlot.forEach { (network, data) ->
+            remToPlot.forEach { (name, data) ->
 
-                val plotName = nameGen(network)
-                addSeries(plotName, data.keys.toDoubleArray(), data.values.toDoubleArray())
-                seriesMap[plotName]!!.marker = None()
+                addSeries(name, data.keys.toDoubleArray(), data.values.toDoubleArray())
+                seriesMap[name]!!.marker = None()
             }
 
             chartEdit?.invoke(this)
