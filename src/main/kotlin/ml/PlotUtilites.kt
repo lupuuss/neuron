@@ -64,6 +64,10 @@ fun Map<Double, Double>.quickPlotDisplay(seriesName: String, plotManipulation: X
     this.quickPlotDisplay(seriesName) { _ -> plotManipulation(this) }
 }
 
+fun XYChart.addSeries(title: String, map: Map<Double, Double>) {
+    this.addSeries(title, map.keys.toDoubleArray(), map.values.toDoubleArray())
+}
+
 fun Map<Double, Double>.quickPlotSave(seriesName: String, path: String, plotManipulation: XYChart.() -> Unit) {
 
     this.quickPlot(seriesName).also(plotManipulation).saveAs(path)
