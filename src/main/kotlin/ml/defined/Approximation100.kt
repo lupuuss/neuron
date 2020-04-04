@@ -3,19 +3,21 @@ package ml.defined
 import ml.defined.base.ClusterLearning
 import ml.defined.base.Config
 import ml.learn.NetworkTeacher
-import ml.output.ClusterErrorCollector
+import ml.round
 import ml.spine.Activation
 import ml.spine.Network
+import kotlin.math.sqrt
 
 class Approximation100(config: Config) : ClusterLearning(config) {
 
     override val errorGoal: Double = 0.001
-    override val stepsLimit: Int = 10_000
+    override val stepsLimit: Int = 50_000
 
     private lateinit var training1: List<Pair<List<Double>, List<Double>>>
     private lateinit var training2: List<Pair<List<Double>, List<Double>>>
     private lateinit var verification: List<Pair<List<Double>, List<Double>>>
 
+    private val trainingErrorMap: MutableMap<NetworkTeacher, Double> = mutableMapOf()
 
     override fun setup() {
         training1 = dataParser.parse(config.inputs[0], 1, 1)
@@ -29,14 +31,14 @@ class Approximation100(config: Config) : ClusterLearning(config) {
                 trainingSet = training1
                 verificationSet = verification
             }
-        }.take(10).toList()
+        }.take(20).toList()
 
         val teachers2 = generateSequence {
             NetworkTeacher.get(config.teacherMode, 0.01, 0.8).apply {
                 trainingSet = training2
                 verificationSet = verification
             }
-        }.take(10).toList()
+        }.take(20).toList()
 
         return teachers1 + teachers2
     }
@@ -47,7 +49,7 @@ class Approximation100(config: Config) : ClusterLearning(config) {
 
         for (fileIndex in 1..2) {
 
-            for (neurons in 11..20) {
+            for (neurons in 1..20) {
 
                 val cluster = mutableListOf<Network>()
 
@@ -70,6 +72,18 @@ class Approximation100(config: Config) : ClusterLearning(config) {
     }
 
     override fun afterLearningCluster(teacher: NetworkTeacher, cluster: List<Network>) {
-        println(cluster.joinToString { it.name })
+        trainingErrorMap[teacher] = cluster.map { teacher.verifyTraining(it).average() }.average()
+    }
+
+    override fun allNetworksReady(restored: Boolean) {
+
+        for (teacher in teachers) {
+            trainingErrorMap[teacher]!!.let {
+                print("Training > Squared: ${it.round(3)} Root: ${sqrt(it).round(3)}")
+            }
+            clusterErrorCollector.meanData(teacher).let { (squared, root, iter) ->
+                println(" || Verification > Squared: $squared Root: $root Iters: $iter")
+            }
+        }
     }
 }
