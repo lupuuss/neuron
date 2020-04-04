@@ -37,9 +37,7 @@ class TransformationHidden(config: Config) : NetworksLearning(config) {
             .outputLayer(4, false)
     )
 
-    override fun unfreezing(): List<Network> = baseUnfreezing("HiddenTransformationBias", "HiddenTransformationNoBias")
-
-    override fun allNetworksReady(restored: Boolean) {
+    override fun allNetworksReady() {
 
         networks.forEach { network ->
 

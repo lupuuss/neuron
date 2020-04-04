@@ -97,6 +97,6 @@ abstract class ClusterLearning(config: Config) : Learning(config) {
 
         loader.close()
 
-        allNetworksReady(false)
+        allNetworksReady()
     }
 }

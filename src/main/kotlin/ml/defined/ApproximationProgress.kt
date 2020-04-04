@@ -57,8 +57,6 @@ class ApproximationProgress(config: Config) : NetworksLearning(config) {
             .outputLayer(1, true, Activation.Identity)
     )
 
-    override fun unfreezing(): List<Network> = baseUnfreezing("Approximation_set_1", "Approximation_set_2")
-
     private fun pickPlotData(network: Network, steps: Int) {
 
         if (network.name.contains("set_1")) {
@@ -79,12 +77,12 @@ class ApproximationProgress(config: Config) : NetworksLearning(config) {
         }
     }
 
-    override fun afterLearning(network: Network, teacher: NetworkTeacher?, errorVector: List<Double>?, steps: Int?) {
+    override fun afterLearning(network: Network, teacher: NetworkTeacher, errorVector: List<Double>, steps: Int) {
 
-        pickPlotData(network, steps ?: 0)
+        pickPlotData(network, steps)
     }
 
-    override fun allNetworksReady(restored: Boolean) {
+    override fun allNetworksReady() {
 
         val verificationData = localTeachers[0].verificationSet.map { it.first.first() to it.second.first() }.toMap()
 

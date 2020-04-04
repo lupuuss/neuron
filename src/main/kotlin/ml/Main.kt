@@ -44,10 +44,6 @@ open class Main : CliktCommand(
 
     private val separator: String? by option("--separator", "-s", help = Help.separator)
 
-    private val freeze by option("--freeze", "-f", help = Help.freeze).flag(default = false)
-
-    private val unfreeze by option("--unfreeze", "-u", help = Help.unfreeze).flag(default = false)
-
     private val async by option("--print-async", help = Help.async).flag("--print-sync", default = false)
 
     private val inPlace by option("--print-in-place", help = Help.inPlace).flag("--print-seq", default = false)
@@ -85,8 +81,6 @@ open class Main : CliktCommand(
 
             val config = Config(
                 inputs = pickedInput,
-                alwaysFresh = !unfreeze,
-                freeze = freeze,
                 teacherMode = mode,
                 printMode = printMode,
                 printType = printType,
@@ -118,10 +112,6 @@ object Help {
     const val definedNetworks: String = "Selects a set of neural networks."
 
     const val separator: String = "Sets data separator."
-
-    const val freeze: String = "If set neural networks will be freezed after program end."
-
-    const val unfreeze: String = "If set, neural networks will be unfreezed if available instead of learning."
 
     const val async: String = "Switches between asynchronous and synchronous printing." +
             " The first one may omit some results, but it doesn't block learning." +

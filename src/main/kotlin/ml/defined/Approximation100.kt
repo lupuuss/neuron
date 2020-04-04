@@ -79,7 +79,7 @@ class Approximation100(config: Config) : ClusterLearning(config) {
         trainingErrorMap[teacher] = cluster.map { teacher.verifyTraining(it).average() }.average()
     }
 
-    override fun allNetworksReady(restored: Boolean) {
+    override fun allNetworksReady() {
 
         for (teacher in teachers) {
             trainingErrorMap[teacher]!!.let {

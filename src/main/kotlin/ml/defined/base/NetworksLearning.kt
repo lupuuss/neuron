@@ -4,7 +4,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.ConsoleLoader
 import ml.output.ErrorCollector
@@ -40,27 +39,6 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
         }
     }
 
-    protected fun baseUnfreezing(names: List<String>): List<Network> {
-        val unfreezed = mutableListOf<Network>()
-
-        for (name in names) {
-            NetworkFreezer.unfreezeFile(name)?.let { unfreezed.add(it) }
-        }
-
-        return if (unfreezed.size == names.size) {
-            unfreezed
-        } else {
-            emptyList()
-        }
-    }
-
-    protected fun baseUnfreezing(vararg values: String): List<Network> = baseUnfreezing(values.toList())
-
-    /**
-     * Should load neural networks from disk. It is called only once on start.
-     */
-    protected abstract fun unfreezing(): List<Network>
-
     /**
      * Should build all neural networks that will be used. It is called only once on start.
      */
@@ -68,7 +46,6 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
 
     /**
      * It is called before learning process for each network. On this step network is unlearned.
-     * It might be not called if a neural network was unfreezed.
      */
     protected open fun beforeLearning(network: Network, teacher: NetworkTeacher) {}
 
@@ -105,9 +82,9 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
      */
     protected open fun afterLearning(
         network: Network,
-        teacher: NetworkTeacher?,
-        errorVector: List<Double>?,
-        steps: Int?
+        teacher: NetworkTeacher,
+        errorVector: List<Double>,
+        steps: Int
     ) {
     }
 
@@ -230,46 +207,20 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
 
         setup()
 
-        val restoredNetwork = unfreezing()
-
         teachers.addAll(buildTeachers())
+        networks.addAll(buildNetworks())
 
-        val restored = if (config.alwaysFresh || restoredNetwork.isEmpty()) {
+        val time = System.currentTimeMillis()
 
-            networks.addAll(buildNetworks())
-
-            val time = System.currentTimeMillis()
-
-            if (asyncRunner) {
-                asyncRunner()
-            } else {
-                syncRunner()
-            }
-
-            println("Total elapsed time: ${System.currentTimeMillis() - time} ms")
-
-            if (config.freeze) {
-                networks.forEach {
-                    NetworkFreezer.freeze(it, false)
-                }
-            }
-
-            false
-
+        if (asyncRunner) {
+            asyncRunner()
         } else {
-
-            println("Networks unfreezed!")
-
-            networks.addAll(restoredNetwork)
-
-            for (network in networks) {
-                afterLearning(network, null, null, null)
-            }
-
-            true
+            syncRunner()
         }
 
-        allNetworksReady(restored)
+        println("Total elapsed time: ${System.currentTimeMillis() - time} ms")
+
+        allNetworksReady()
     }
 }
 

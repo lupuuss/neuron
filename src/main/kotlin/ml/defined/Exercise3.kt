@@ -2,7 +2,6 @@ package ml.defined
 
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
-import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter
 import ml.quickPlotDisplay
@@ -48,10 +47,6 @@ class Exercise3(
         }
     )
 
-    override fun unfreezing(): MutableList<Network> {
-        return NetworkFreezer.unfreezeFile("exercise3")?.let { mutableListOf(it) } ?: mutableListOf()
-    }
-
     private fun getDataPlotXY(network: Network, range: Iterator<Double>): MutableMap<Double, Double> {
 
         val plotData = mutableMapOf<Double, Double>()
@@ -75,7 +70,7 @@ class Exercise3(
         errorCollector.collect(network, errorVector, steps)
     }
 
-    override fun afterLearning(network: Network, teacher: NetworkTeacher?, errorVector: List<Double>?, steps: Int?) {
+    override fun afterLearning(network: Network, teacher: NetworkTeacher, errorVector: List<Double>, steps: Int) {
 
         progressPrinter?.close()
         progressPrinter = null
@@ -83,21 +78,20 @@ class Exercise3(
         afterLearningData = getDataPlotXY(network, -1.0..3.0 step 0.1)
     }
 
-    override fun allNetworksReady(restored: Boolean) {
+    override fun allNetworksReady() {
 
         val type = config.teacherMode.toString().toLowerCase()
         val errorChange = errorCollector.getNetworksPlotableErrorMap().entries.first().value
 
-        if (!restored) {
-            errorChange.quickPlotDisplay("Error change") { _ ->
-                title = "Quality for $type. Momentum = $beta Alpha = $alpha."
-                xAxisTitle = "Iterations"
-                yAxisTitle = "Error value"
-                styler.yAxisDecimalPattern = "0.000"
-                styler.xAxisDecimalPattern = "###,###,###,###"
 
-                saveAs("error_$type.png")
-            }
+        errorChange.quickPlotDisplay("Error change") { _ ->
+            title = "Quality for $type. Momentum = $beta Alpha = $alpha."
+            xAxisTitle = "Iterations"
+            yAxisTitle = "Error value"
+            styler.yAxisDecimalPattern = "0.000"
+            styler.xAxisDecimalPattern = "###,###,###,###"
+
+            saveAs("error_$type.png")
         }
 
         beforeLearningData.quickPlotDisplay("Before learning") { _ ->

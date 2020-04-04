@@ -2,7 +2,6 @@ package ml.defined
 
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
-import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.round
 import ml.spine.Activation
@@ -53,36 +52,11 @@ class Transformation(config: Config) : NetworksLearning(config) {
 
     override fun buildTeachers(): List<NetworkTeacher> = generateSequence { sharedTeacher }.take(6).toList()
 
-    override fun unfreezing(): List<Network> {
-
-        val unfreezedNetworks = mutableListOf<Network>()
-
-        for (i in 1..3) {
-
-            NetworkFreezer.unfreezeFile("${commonName}_Bias_$i")?.let {
-                unfreezedNetworks.add(it)
-            }
-        }
-
-        for (i in 1..3) {
-
-            NetworkFreezer.unfreezeFile("${commonName}_NoBias_$i")?.let {
-                unfreezedNetworks.add(it)
-            }
-        }
-
-        return if (unfreezedNetworks.size != 6) {
-            emptyList()
-        } else {
-            unfreezedNetworks
-        }
-    }
-
     override fun eachLearningStep(network: Network, teacher: NetworkTeacher, errorVector: List<Double>, steps: Int) {
         errorCollector.collect(network, errorVector, steps)
     }
 
-    override fun allNetworksReady(restored: Boolean) {
+    override fun allNetworksReady() {
 
         println("Networks answers: ")
         for (network in networks) {
@@ -93,8 +67,6 @@ class Transformation(config: Config) : NetworksLearning(config) {
                 println("\t\t $input -> ${network.answer(input).map { it.round(3) }}")
             }
         }
-
-        if (restored) return
 
         val errors = errorCollector.getNetworksPlotableErrorMap()
 

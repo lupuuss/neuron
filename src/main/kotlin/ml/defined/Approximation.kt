@@ -91,34 +91,14 @@ class Approximation(config: Config) : NetworksLearning(config) {
         }
     }
 
-    override fun unfreezing(): List<Network> {
-        val names = mutableListOf<String>()
-        for (trainingSetIndex in 1..2) {
 
-            val networks1 = listOf(1, 5, 9, 14, 17).map { neurons ->
-                generateName(neurons, "result", trainingSetIndex.toString())
-            }
-
-            val networks2 = listOf(1, 5, 19).map { neurons ->
-                generateName(neurons, "error", trainingSetIndex.toString())
-            }
-
-            names.addAll(networks1)
-            names.addAll(networks2)
-        }
-
-        return baseUnfreezing(names)
-    }
-
-    override fun allNetworksReady(restored: Boolean) {
+    override fun allNetworksReady() {
 
         val result1Networks = networks.filter { it.name.contains("result_1") }
         val result2Networks = networks.filter { it.name.contains("result_2") }
 
         plotNetworks(result1Networks, 1)
         plotNetworks(result2Networks, 2)
-
-        if (restored) return
 
         val errors = errorCollector.getNetworksPlotableErrorMap().map { it.key.name to it.value }.toMap()
         val trainingError = errorCollector.getNamedPlotableErrorMap()

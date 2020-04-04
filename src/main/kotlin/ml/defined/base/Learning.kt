@@ -41,7 +41,7 @@ abstract class Learning(
     /**
      * It's called when every network is learned.
      */
-    protected open fun allNetworksReady(restored: Boolean) {}
+    protected open fun allNetworksReady() {}
 
     abstract fun run()
 

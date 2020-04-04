@@ -53,7 +53,7 @@ class Transformation100(config: Config) : ClusterLearning(config) {
 
     }
 
-    override fun allNetworksReady(restored: Boolean) {
+    override fun allNetworksReady() {
         for (teacher in teachers) {
             println("${teacher.alpha} ${teacher.beta} ${clusterErrorCollector.meanData(teacher)}")
         }

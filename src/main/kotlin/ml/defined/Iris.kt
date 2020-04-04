@@ -2,7 +2,6 @@ package ml.defined
 
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
-import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.spine.Activation
 import ml.spine.Network
@@ -99,8 +98,6 @@ class Iris(config: Config) : NetworksLearning(config) {
                 generateSequence { localTeachers[1] }.take(5).toList()
     }
 
-    override fun unfreezing(): List<Network> = listOf(NetworkFreezer.unfreezeFile("Iris")!!)
-
     private fun calcClassificationLevel(network: Network, data: List<Pair<List<Double>, List<Double>>>): Double {
         var good = 0
         for ((input, expected) in data) {
@@ -131,14 +128,11 @@ class Iris(config: Config) : NetworksLearning(config) {
         saveClassificationLevel(network, teacher, steps)
     }
 
-    override fun afterLearning(network: Network, teacher: NetworkTeacher?, errorVector: List<Double>?, steps: Int?) {
-
-        if (teacher != null && steps != null) {
-            saveClassificationLevel(network, teacher, steps)
-        }
+    override fun afterLearning(network: Network, teacher: NetworkTeacher, errorVector: List<Double>, steps: Int) {
+        saveClassificationLevel(network, teacher, steps)
     }
 
-    override fun allNetworksReady(restored: Boolean) {
+    override fun allNetworksReady() {
 
         plotMultiple(
             classificationErrorTraining
