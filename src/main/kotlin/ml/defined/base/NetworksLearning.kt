@@ -205,6 +205,18 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
         }
     }
 
+    protected fun networkPlotDataXY(network: Network, range: Iterator<Double>): Map<Double, Double> {
+
+        val result = mutableMapOf<Double, Double>()
+
+        for (x in range) {
+            result[x] = network.answer(listOf(x)).first()
+        }
+
+        return result
+    }
+
+
     /**
      * Initializes whole learning process.
      */

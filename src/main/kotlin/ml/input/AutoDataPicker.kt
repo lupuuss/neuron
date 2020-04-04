@@ -27,7 +27,7 @@ class AutoDataPicker(private val searchDir: File) {
             fileExistsAndReadableOrNull(searchDir, "trans_in.txt")?.let { listOf(it) }
         }
 
-        Learning.Type.Approximation, Learning.Type.Approximation100 -> {
+        Learning.Type.Approximation, Learning.Type.Approximation100, Learning.Type.ApproximationProgress -> {
             val file1 = fileExistsAndReadableOrNull(searchDir, "approx_1.txt")
             val file2 = fileExistsAndReadableOrNull(searchDir, "approx_2.txt")
             val testFile = fileExistsAndReadableOrNull(searchDir, "approx_test.txt")
@@ -52,7 +52,8 @@ class AutoDataPicker(private val searchDir: File) {
         Learning.Type.Transformation100,
         Learning.Type.TransformationHidden,
         Learning.Type.Approximation,
-        Learning.Type.Approximation100 -> " "
+        Learning.Type.Approximation100,
+        Learning.Type.ApproximationProgress -> " "
 
         Learning.Type.Iris -> ","
     }

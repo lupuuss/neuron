@@ -11,7 +11,7 @@ abstract class Learning(
     enum class Type {
         Exercise3,
         Transformation, Transformation100, TransformationHidden,
-        Approximation, Approximation100,
+        Approximation, Approximation100, ApproximationProgress,
         Iris,
     }
 
@@ -53,6 +53,7 @@ abstract class Learning(
             Type.Transformation -> Transformation(config)
             Type.Approximation -> Approximation(config)
             Type.Approximation100 -> Approximation100(config)
+            Type.ApproximationProgress -> ApproximationProgress(config)
             Type.Iris -> Iris(config)
             Type.Transformation100 -> Transformation100(config)
             Type.TransformationHidden -> TransformationHidden(config)

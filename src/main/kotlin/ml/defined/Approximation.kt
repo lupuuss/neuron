@@ -107,17 +107,6 @@ class Approximation(config: Config) : NetworksLearning(config) {
         return baseUnfreezing(names)
     }
 
-    private fun networkPlotDataXY(network: Network, range: Iterator<Double>): Map<Double, Double> {
-
-        val result = mutableMapOf<Double, Double>()
-
-        for (x in range) {
-            result[x] = network.answer(listOf(x)).first()
-        }
-
-        return result
-    }
-
     override fun allNetworksReady(restored: Boolean) {
 
         if (restored) return
