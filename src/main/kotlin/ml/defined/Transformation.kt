@@ -78,7 +78,7 @@ class Transformation(config: Config) : NetworksLearning(config) {
         }
     }
 
-    override fun eachLearningStep(network: Network, errorVector: List<Double>, steps: Int) {
+    override fun eachLearningStep(network: Network, teacher: NetworkTeacher, errorVector: List<Double>, steps: Int) {
         errorCollector.collect(network, errorVector, steps)
     }
 
@@ -96,7 +96,7 @@ class Transformation(config: Config) : NetworksLearning(config) {
 
         if (restored) return
 
-        val errors = errorCollector.getAveragePlotableErrorMap()
+        val errors = errorCollector.getNetworksPlotableErrorMap()
 
         val biasErrors = errors.filter { it.first.name.contains("_Bias") }.sortedBy { it.first.name }
         val noBiasErrors = errors.filter { it.first.name.contains("_NoBias") }.sortedBy { it.first.name }

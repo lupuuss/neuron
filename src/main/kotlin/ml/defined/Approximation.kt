@@ -1,17 +1,16 @@
 package ml.defined
 
+import ml.addSeries
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
 import ml.defined.base.UnfulfilledExpectationsException
-import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
-import ml.quickPlotDisplay
 import ml.spine.Activation
 import ml.spine.Network
-import ml.step
-import org.knowm.xchart.style.markers.Circle
 import org.knowm.xchart.style.markers.None
-import java.awt.Color
+import java.util.stream.Stream
+import kotlin.streams.asStream
+import kotlin.streams.toList
 
 class Approximation(config: Config) : NetworksLearning(config) {
 
@@ -19,52 +18,95 @@ class Approximation(config: Config) : NetworksLearning(config) {
     override val stepsLimit: Int = 100_000
 
     private val commonName = "Approximation"
-    private var trainingDataName = ""
 
-    private val alpha = if (config.teacherMode == NetworkTeacher.Mode.Offline) 0.1 else 0.0005
-    private val beta = if (config.teacherMode == NetworkTeacher.Mode.Offline) 0.7 else 0.5
-    private val sharedTeacher: NetworkTeacher = NetworkTeacher.get(config.teacherMode, alpha, beta)
+    private val alpha = if (config.teacherMode == NetworkTeacher.Mode.Offline) 0.01 else 0.0005
+    private val beta = if (config.teacherMode == NetworkTeacher.Mode.Offline) 0.9 else 0.5
+
+    private val sharedTeacher1: NetworkTeacher = NetworkTeacher.get(config.teacherMode, alpha, beta)
+    private val sharedTeacher2: NetworkTeacher = NetworkTeacher.get(config.teacherMode, alpha, beta)
+
+    private val markedToErrorCollecting = mutableListOf<Network>()
 
     override fun setup() {
 
-        if (config.inputs.size != 2) {
-            throw UnfulfilledExpectationsException("Approximation task requires training data and verification data (2 files)")
+        if (config.inputs.size != 3) {
+            throw UnfulfilledExpectationsException("Approximation task requires training data (2 files) and verification data (1 file) ")
         }
 
         asyncRunner = true
-        trainingDataName = config.inputs.first().nameWithoutExtension
 
-        sharedTeacher.trainingSet = dataParser.parse(config.inputs[0], 1, 1)
-        sharedTeacher.verificationSet = dataParser.parse(config.inputs[1], 1, 1)
+        val verificationData = dataParser.parse(config.inputs[2], 1, 1)
+
+        sharedTeacher1.trainingSet = dataParser.parse(config.inputs[0], 1, 1)
+        sharedTeacher1.verificationSet = verificationData
+
+        sharedTeacher2.trainingSet = dataParser.parse(config.inputs[1], 1, 1)
+        sharedTeacher2.verificationSet = verificationData
     }
 
-    private fun generateName(n: Int) = "${commonName}_${trainingDataName}_$n"
+    private fun generateName(n: Int, prefix: String, trainingDataName: String) =
+        "${commonName}_${prefix}_${trainingDataName}_$n"
 
-    override fun buildNetworks(): List<Network> = listOf(5, 10, 19).map {
-        Network.Builder()
-            .name(generateName(it))
-            .inputs(1)
-            .hiddenLayer(it, true, Activation.Sigmoid)
-            .outputLayer(1, true, Activation.Identity)
-    }
+    override fun buildNetworks(): List<Network> {
+        val allNetworks = mutableListOf<Network>()
 
-    override fun eachLearningStep(network: Network, errorVector: List<Double>, steps: Int) {
-        errorCollector.collect(network, errorVector, steps)
-    }
+        for (trainingSetIndex in 1..2) {
 
-    override fun buildTeachers(): List<NetworkTeacher> = generateSequence { sharedTeacher }.take(6).toList()
-
-    override fun unfreezing(): List<Network> {
-
-        val result = mutableListOf<Network>()
-
-        listOf(5, 10, 19).forEach { neurons ->
-            NetworkFreezer.unfreezeFile(generateName(neurons))?.let {
-                result.add(it)
+            val networks1 = listOf(1, 5, 9, 14, 17).map { neurons ->
+                Network.Builder()
+                    .name(generateName(neurons, "result", trainingSetIndex.toString()))
+                    .inputs(1)
+                    .hiddenLayer(neurons, true, Activation.Sigmoid)
+                    .outputLayer(1, true, Activation.Identity)
             }
+
+            val networks2 = listOf(1, 5, 19).map { neurons ->
+                Network.Builder()
+                    .name(generateName(neurons, "error", trainingSetIndex.toString()))
+                    .inputs(1)
+                    .hiddenLayer(neurons, true, Activation.Sigmoid)
+                    .outputLayer(1, true, Activation.Identity)
+            }
+
+            markedToErrorCollecting.addAll(networks2)
+
+            allNetworks.addAll(networks1)
+            allNetworks.addAll(networks2)
         }
 
-        return result
+        return allNetworks
+    }
+
+    override fun buildTeachers(): List<NetworkTeacher> = Stream.concat(
+        generateSequence { sharedTeacher1 }.take(8).asStream(),
+        generateSequence { sharedTeacher2 }.take(8).asStream()
+    ).toList()
+
+    override fun eachLearningStep(network: Network, teacher: NetworkTeacher, errorVector: List<Double>, steps: Int) {
+
+        if (markedToErrorCollecting.contains(network)) {
+            errorCollector.collect(network, errorVector, steps)
+            errorCollector.collect("${network.name}_test", teacher.verifyTest(network), steps)
+        }
+    }
+
+    override fun unfreezing(): List<Network> {
+        val names = mutableListOf<String>()
+        for (trainingSetIndex in 1..2) {
+
+            val networks1 = listOf(1, 5, 9, 14, 17).map { neurons ->
+                generateName(neurons, "result", trainingSetIndex.toString())
+            }
+
+            val networks2 = listOf(1, 5, 19).map { neurons ->
+                generateName(neurons, "error", trainingSetIndex.toString())
+            }
+
+            names.addAll(networks1)
+            names.addAll(networks2)
+        }
+
+        return baseUnfreezing(names)
     }
 
     private fun networkPlotDataXY(network: Network, range: Iterator<Double>): Map<Double, Double> {
@@ -80,6 +122,7 @@ class Approximation(config: Config) : NetworksLearning(config) {
 
     override fun allNetworksReady(restored: Boolean) {
 
+/*
         val range = -3.0..4.0 step 0.1
         val firstPlot = networkPlotDataXY(networks.first(), range)
 
@@ -97,8 +140,8 @@ class Approximation(config: Config) : NetworksLearning(config) {
 
             addSeries(
                 "Verification data",
-                sharedTeacher.verificationSet.map { it.first.first() }.toDoubleArray(),
-                sharedTeacher.verificationSet.map { it.second.first() }.toDoubleArray()
+                sharedTeacher1.verificationSet.map { it.first.first() }.toDoubleArray(),
+                sharedTeacher1.verificationSet.map { it.second.first() }.toDoubleArray()
             )
             seriesMap["Verification data"]?.apply {
                 lineColor = Color(0, 0, 0, 0)
@@ -107,30 +150,49 @@ class Approximation(config: Config) : NetworksLearning(config) {
 
             addSeries(
                 "Training data",
-                sharedTeacher.trainingSet.map { it.first.first() }.toDoubleArray(),
-                sharedTeacher.trainingSet.map { it.second.first() }.toDoubleArray()
+                sharedTeacher1.trainingSet.map { it.first.first() }.toDoubleArray(),
+                sharedTeacher1.trainingSet.map { it.second.first() }.toDoubleArray()
             )
             seriesMap["Training data"]?.apply {
                 lineColor = Color(0, 0, 0, 0)
                 marker = Circle()
             }
         }
+*/
 
-        if (restored) {
-            return
+        if (restored) return
+
+        val errors = errorCollector.getNetworksPlotableErrorMap()
+        val trainingError = errorCollector.getNamedPlotableErrorMap()
+
+        plotsErrors(
+            errors.filter { it.first.name.contains("error_1") },
+            "Errors for file 1",
+            { it.name.last() + " neurons" }
+        ) {
+            styler.yAxisMax = 400.0
+            trainingError
+                .filter { it.first.contains("error_1") }
+                .forEach { (name, data) ->
+
+                    this.addSeries(name, data)
+                    this.seriesMap[name]!!.marker = None()
+                }
         }
 
-        val (firstNetwork, firstPlotData) = errorCollector.getAveragePlotableErrorMap().first()
+        plotsErrors(
+            errors.filter { it.first.name.contains("error_2") },
+            "Errors for file 2",
+            { it.name.last() + " neurons" }
+        ) {
+            styler.yAxisMax = 400.0
+            trainingError
+                .filter { it.first.contains("error_2") }
+                .forEach { (name, data) ->
 
-        firstPlotData.quickPlotDisplay(firstNetwork.name) { _ ->
-
-            for ((network, data) in errorCollector.getAveragePlotableErrorMap().stream().skip(1)) {
-
-                addSeries(network.name, data.keys.toDoubleArray(), data.values.toDoubleArray())
-                seriesMap[network.name]?.marker = None()
-            }
-
-            this.styler.yAxisMax = 100.0
+                    this.addSeries(name, data)
+                    this.seriesMap[name]!!.marker = None()
+                }
         }
     }
 }

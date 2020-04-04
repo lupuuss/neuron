@@ -48,7 +48,7 @@ abstract class Learning(
             teacher.teach(network)
             errorVector = teacher.verify(network)
             i++
-            eachLearningStep(network, errorVector, i)
+            eachLearningStep(network, teacher, errorVector, i)
 
         } while (!errorVector.stream().allMatch { it < errorGoal } && i < stepsLimit)
         return errorVector to i
@@ -57,7 +57,12 @@ abstract class Learning(
     /**
      * It's called after every step of learning.
      */
-    protected open fun eachLearningStep(network: Network, errorVector: List<Double>, steps: Int) {}
+    protected open fun eachLearningStep(
+        network: Network,
+        teacher: NetworkTeacher,
+        errorVector: List<Double>,
+        steps: Int
+    ) {}
 
     /**
      * It's called when every network is learned.

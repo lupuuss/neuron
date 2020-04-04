@@ -2,7 +2,6 @@ package ml.defined
 
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
-import ml.input.DataParser
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.NetworkProgressPrinter
@@ -13,7 +12,6 @@ import ml.spine.Network
 import ml.step
 import org.knowm.xchart.style.markers.None
 import java.awt.Color
-import java.util.*
 
 class Exercise3(
     config: Config
@@ -72,11 +70,7 @@ class Exercise3(
         }
     }
 
-    override fun eachLearningStep(
-        network: Network,
-        errorVector: List<Double>,
-        steps: Int
-    ) {
+    override fun eachLearningStep(network: Network, teacher: NetworkTeacher, errorVector: List<Double>, steps: Int) {
         progressPrinter?.updateData(errorVector, steps)
         errorCollector.collect(network, errorVector, steps)
     }
@@ -92,7 +86,7 @@ class Exercise3(
     override fun allNetworksReady(restored: Boolean) {
 
         val type = config.teacherMode.toString().toLowerCase()
-        val errorChange = errorCollector.getAveragePlotableErrorMap().first().second
+        val errorChange = errorCollector.getNetworksPlotableErrorMap().first().second
 
         if (!restored) {
             errorChange.quickPlotDisplay("Error change") { _ ->

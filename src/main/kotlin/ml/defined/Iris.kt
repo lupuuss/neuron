@@ -92,7 +92,7 @@ class Iris(config: Config) : NetworksLearning(config) {
         }
     }
 
-    override fun eachLearningStep(network: Network, errorVector: List<Double>, steps: Int) {
+    override fun eachLearningStep(network: Network, teacher: NetworkTeacher, errorVector: List<Double>, steps: Int) {
         progressPrinter?.updateData(errorVector, steps)
     }
 

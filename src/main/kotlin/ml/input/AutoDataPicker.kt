@@ -32,8 +32,8 @@ class AutoDataPicker(private val searchDir: File) {
             val file2 = fileExistsAndReadableOrNull(searchDir, "approx_2.txt")
             val testFile = fileExistsAndReadableOrNull(searchDir, "approx_test.txt")
 
-            if (testFile != null && (file1 != null || file2 != null)) {
-                listOf(file1 ?: file2!!, testFile)
+            if (testFile != null && file1 != null && file2 != null) {
+                listOf(file1, file2, testFile)
             } else {
                 null
             }

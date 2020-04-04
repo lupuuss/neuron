@@ -26,7 +26,7 @@ abstract class NetworkTeacher(
 
     abstract fun teach(network: Network)
 
-    fun verify(network: Network): List<Double> {
+    private fun verify(network: Network, verificationSet: List<Pair<List<Double>, List<Double>>>): List<Double> {
 
         val errors = mutableListOf<List<Double>>()
 
@@ -50,6 +50,10 @@ abstract class NetworkTeacher(
 
         return errorVector
     }
+
+    fun verify(network: Network): List<Double> = verify(network, verificationSet)
+
+    fun verifyTest(network: Network): List<Double> = verify(network, trainingSet)
 
     companion object {
 
