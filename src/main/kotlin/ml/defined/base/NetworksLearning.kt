@@ -9,7 +9,11 @@ import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
 import ml.output.ErrorCollector
 import ml.output.NetworkProgressPrinter
+import ml.quickPlotDisplay
 import ml.spine.Network
+import org.knowm.xchart.XYChart
+import org.knowm.xchart.style.markers.None
+import kotlin.streams.toList
 
 /**
  * Implements standard learning process for multiple neural networks.
@@ -111,6 +115,8 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
 
         runBlocking {
 
+            val all = awaits.size
+
             while (awaits.size != 0) {
 
                 val finished = awaits.filter { it.isCompleted }
@@ -125,7 +131,10 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
                     print("\r")
                     singleNetworkLog(network, errorVector, steps, time)
                 }
-                print("\rLearning: ${animation.next()}")
+
+                val progress = all - awaits.size
+
+                print("\rLearning: ${animation.next()} [$progress/$all]")
                 delay(250)
             }
 
@@ -143,6 +152,33 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
                     "\n\tAvgError: ${errors.average()}" +
                     if (steps == stepsLimit) "\n\t[Warning] Network reached steps limit!" else ""
         )
+    }
+
+    protected fun plotsErrors(
+        data: List<Pair<Network, Map<Double, Double>>>,
+        title: String,
+        nameGen: (Network) -> String,
+        chartEdit: (XYChart.() -> Unit)? = null
+    ) {
+
+        val (firstNetwork, firstErrors) = data.first()
+        val remToPlot = data.stream().skip(1).toList().toMap()
+
+        firstErrors.quickPlotDisplay(nameGen(firstNetwork)) { _ ->
+
+            this.title = title
+            styler.xAxisDecimalPattern = "###,###,###,###"
+            styler.yAxisDecimalPattern = "0.00"
+
+            remToPlot.forEach { (network, data) ->
+
+                val plotName = nameGen(network)
+                addSeries(plotName, data.keys.toDoubleArray(), data.values.toDoubleArray())
+                seriesMap[plotName]!!.marker = None()
+            }
+
+            chartEdit?.invoke(this)
+        }
     }
 
     /**
@@ -169,7 +205,7 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
                 syncRunner()
             }
 
-            println("Total elapsed time: ${System.currentTimeMillis() - time}")
+            println("Total elapsed time: ${System.currentTimeMillis() - time} ms")
 
             if (config.freeze) {
                 networks.forEach {

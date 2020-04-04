@@ -4,11 +4,9 @@ import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
 import ml.freeze.NetworkFreezer
 import ml.learn.NetworkTeacher
-import ml.quickPlotDisplay
 import ml.round
 import ml.spine.Activation
 import ml.spine.Network
-import org.knowm.xchart.style.markers.None
 import java.util.stream.Stream
 import kotlin.streams.toList
 
@@ -103,30 +101,10 @@ class Transformation(config: Config) : NetworksLearning(config) {
         val biasErrors = errors.filter { it.first.name.contains("_Bias") }.sortedBy { it.first.name }
         val noBiasErrors = errors.filter { it.first.name.contains("_NoBias") }.sortedBy { it.first.name }
 
-        plotsErrors(biasErrors, "Bias")
-        plotsErrors(noBiasErrors, "No bias")
+        val plotNameGen = { network: Network -> "${network.name.last()} neurons" }
+
+        plotsErrors(biasErrors, "Bias", plotNameGen)
+        plotsErrors(noBiasErrors, "No bias", plotNameGen)
 
     }
-
-    private fun plotsErrors(data: List<Pair<Network, Map<Double, Double>>>, title: String) {
-
-        val (firstNetwork, firstErrors) = data.first()
-        val remToPlot = data.stream().skip(1).toList().toMap()
-
-        firstErrors.quickPlotDisplay(generatePlotName(firstNetwork)) { _ ->
-
-            this.title = title
-            styler.xAxisDecimalPattern = "###,###,###,###"
-            styler.yAxisDecimalPattern = "0.00"
-
-            remToPlot.forEach { (network, data) ->
-
-                val plotName = generatePlotName(network)
-                addSeries(plotName, data.keys.toDoubleArray(), data.values.toDoubleArray())
-                seriesMap[plotName]!!.marker = None()
-            }
-        }
-    }
-
-    private fun generatePlotName(network: Network) = "${network.name.last()} neurons"
 }
