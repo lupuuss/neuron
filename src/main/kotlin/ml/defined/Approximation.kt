@@ -115,6 +115,8 @@ class Approximation(config: Config) : NetworksLearning(config) {
         val result1Networks = networks.filter { it.name.contains("result_1") }
         val result2Networks = networks.filter { it.name.contains("result_2") }
 
+        plotNetworks(result1Networks, 1)
+        plotNetworks(result2Networks, 2)
 
         if (restored) return
 
@@ -161,6 +163,6 @@ class Approximation(config: Config) : NetworksLearning(config) {
             plots[name] = networkPlotDataXY(network, getRange())
         }
 
-        plotMultiple(plots, "")
+        plotMultiple(plots, "File $fileN results")
     }
 }
