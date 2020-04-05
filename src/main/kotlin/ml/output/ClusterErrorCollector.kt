@@ -1,6 +1,7 @@
 package ml.output
 
 import ml.learn.NetworkTeacher
+import ml.standardDeviation
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -16,11 +17,10 @@ class ClusterErrorCollector {
 
     fun meanData(teacher: NetworkTeacher): MeanData {
         val iters = errorsMap[teacher]!!.map { it.second }.average().roundToInt()
-        val squaredErrorAvg = errorsMap[teacher]!!.map { it.first.average() }.average()
-        val variation = errorsMap[teacher]!!.map {
-            (it.first.average() - squaredErrorAvg).let { it * it }
-        }.sum() / errorsMap.size
-        val standardDeviation = sqrt(variation)
+        val errors = errorsMap[teacher]!!.map { it.first.average() }
+
+        val squaredErrorAvg = errors.average()
+        val standardDeviation = errors.standardDeviation(squaredErrorAvg)
 
         return MeanData(
             squaredErrorAvg,

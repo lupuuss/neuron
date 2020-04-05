@@ -24,7 +24,7 @@ class Transformation(config: Config) : NetworksLearning(config) {
         sharedTeacher.verificationSet = data
     }
 
-    private val commonName = "Transformtion"
+    private val commonName = "Transformation"
 
     override fun buildNetworks(): List<Network> {
 
@@ -46,7 +46,7 @@ class Transformation(config: Config) : NetworksLearning(config) {
                 .outputLayer(4, false)
         }
 
-        return Stream.concat(biased.stream(), noBias.stream()).toList()
+        return biased + noBias
     }
 
     override fun buildTeachers(): List<NetworkTeacher> = generateSequence { sharedTeacher }.take(6).toList()

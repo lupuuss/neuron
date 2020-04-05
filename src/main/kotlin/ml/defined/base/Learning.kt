@@ -11,7 +11,7 @@ abstract class Learning(
     enum class Type {
         Transformation, Transformation100, TransformationHidden,
         Approximation, Approximation100, ApproximationProgress,
-        Iris,
+        Iris, Iris100
     }
 
     protected abstract val errorGoal: Double
@@ -53,6 +53,7 @@ abstract class Learning(
             Type.Approximation100 -> Approximation100(config)
             Type.ApproximationProgress -> ApproximationProgress(config)
             Type.Iris -> Iris(config)
+            Type.Iris100 -> Iris100(config)
             Type.Transformation100 -> Transformation100(config)
             Type.TransformationHidden -> TransformationHidden(config)
         }

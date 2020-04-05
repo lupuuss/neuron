@@ -36,13 +36,13 @@ class AutoDataPicker(private val searchDir: File) {
             }
         }
 
-        Learning.Type.Iris -> {
+        Learning.Type.Iris, Learning.Type.Iris100 -> {
             fileExistsAndReadableOrNull(searchDir, "iris.data")?.let { listOf(it) }
         }
     } ?: throw DataNotFound()
 
     fun pickSeparator(taskType: Learning.Type): String = when (taskType) {
-        Learning.Type.Iris -> ","
+        Learning.Type.Iris, Learning.Type.Iris100 -> ","
         else -> " "
     }
 }

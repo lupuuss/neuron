@@ -5,6 +5,7 @@ package ml
 import java.lang.IllegalArgumentException
 import kotlin.math.pow
 import kotlin.math.round
+import kotlin.math.sqrt
 
 fun Pair<DoubleArray, DoubleArray>.meanSquaredError(): Double {
     if (first.size != second.size) {
@@ -70,4 +71,10 @@ fun Double.round(n: Int): Double = 10.0.pow(n).let { round(this * it) / it }
 fun <T : Any> cycle(vararg values: T): Sequence<T> {
     var i = 0
     return generateSequence { values[i++ % values.size] }
+}
+
+fun List<Double>.standardDeviation(average: Double? = null): Double {
+    val avg = average ?: this.average()
+    val sum = this.map { value -> (value - avg).let { it * it } }.sum()
+    return sqrt(sum / this.size)
 }

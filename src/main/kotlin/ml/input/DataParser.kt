@@ -46,4 +46,12 @@ class DataParser(
             )
         }
     }
+
+    companion object {
+        val irisTransformer: (String) -> String = { it: String ->
+            it.replace("Iris-setosa", "1,0,0")
+                .replace("Iris-versicolor", "0,1,0")
+                .replace("Iris-virginica", "0,0,1")
+        }
+    }
 }

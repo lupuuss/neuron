@@ -8,6 +8,7 @@ import ml.learn.NetworkTeacher
 import ml.round
 import ml.spine.Activation
 import ml.spine.Network
+import ml.standardDeviation
 import kotlin.math.sqrt
 
 class Approximation100(config: Config) : ClusterLearning(config) {
@@ -89,7 +90,7 @@ class Approximation100(config: Config) : ClusterLearning(config) {
         val errors = cluster.map { teacher.verifyTraining(it).average() }
         val avg = errors.average()
         trainingErrorMap[teacher] = avg
-        trainingSD[teacher] = sqrt(errors.map { (it - avg).let { it * it } }.sum() / errors.size)
+        trainingSD[teacher] = errors.standardDeviation(avg)
     }
 
     override fun allNetworksReady() {
@@ -97,10 +98,10 @@ class Approximation100(config: Config) : ClusterLearning(config) {
         for (teacher in teachers) {
 
             print("${teacher.name} = Training Error: ${trainingErrorMap[teacher]!!.round(3)}")
-            print(" SD: ${trainingSD[teacher]!!.round(3)}")
+            print("+- ${trainingSD[teacher]!!.round(3)}")
 
             clusterErrorCollector.meanData(teacher).let { (squared, sd, iter) ->
-                println(" || Verification > Error: $squared SD: $sd Iters: $iter")
+                println(" | Verification Error: $squared +- $sd Iters: $iter")
             }
         }
     }

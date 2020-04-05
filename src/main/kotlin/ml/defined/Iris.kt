@@ -2,7 +2,9 @@ package ml.defined
 
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
+import ml.input.DataParser
 import ml.learn.NetworkTeacher
+import ml.output.Classification
 import ml.plotMultiple
 import ml.spine.Activation
 import ml.spine.Network
@@ -20,8 +22,8 @@ class Iris(config: Config) : NetworksLearning(config) {
     private lateinit var fieldMaskString: String
 
     private val teacherMode = NetworkTeacher.Mode.Offline
-    private val alpha = 0.01
-    private val beta = 0.1
+    private val alpha = 0.03
+    private val beta = 0.5
 
     private val localTeachers = listOf(
         NetworkTeacher.get(teacherMode, alpha, beta),
@@ -33,12 +35,7 @@ class Iris(config: Config) : NetworksLearning(config) {
 
     override fun setup() {
 
-        dataParser.lineTransformer = {
-            it.replace("Iris-setosa", "1,0,0")
-                .replace("Iris-versicolor", "0,1,0")
-                .replace("Iris-virginica", "0,0,1")
-        }
-
+        dataParser.lineTransformer = DataParser.irisTransformer
 
         println("Fields mask: ")
         val userInput = Scanner(System.`in`)
@@ -101,26 +98,12 @@ class Iris(config: Config) : NetworksLearning(config) {
                 generateSequence { localTeachers[1] }.take(5).toList()
     }
 
-    private fun calcClassificationLevel(network: Network, data: List<Pair<List<Double>, List<Double>>>): Double {
-        var good = 0
-        for ((input, expected) in data) {
-
-            val answer = network.answer(input).map { it.roundToInt().toDouble() }
-
-            if (answer == expected) {
-                good++
-            }
-        }
-
-        return (good.toDouble() / data.size.toDouble()) * 100
-    }
-
     private fun saveClassificationLevel(network: Network, teacher: NetworkTeacher, steps: Int) {
         classificationErrorTraining
-            .getOrPut(network, { mutableMapOf() })[steps] = calcClassificationLevel(network, teacher.trainingSet)
+            .getOrPut(network, { mutableMapOf() })[steps] = Classification.calcLevel(network, teacher.trainingSet)
 
         classificationErrorVerification
-            .getOrPut(network, { mutableMapOf() })[steps] = calcClassificationLevel(network, teacher.verificationSet)
+            .getOrPut(network, { mutableMapOf() })[steps] = Classification.calcLevel(network, teacher.verificationSet)
     }
 
     override fun beforeLearning(network: Network, teacher: NetworkTeacher) {
@@ -136,6 +119,14 @@ class Iris(config: Config) : NetworksLearning(config) {
     }
 
     override fun allNetworksReady() {
+
+        classificationErrorTraining.map { it.key to it.value.entries.last() }.forEach {
+            println("${it.first.name} ${it.second.value}%")
+        }
+        println()
+        classificationErrorVerification.map { it.key to it.value.entries.last() }.forEach {
+            println("${it.first.name} ${it.second.value}%")
+        }
 
         for ((_, percentage) in listOf(50, 80).withIndex()) {
 
