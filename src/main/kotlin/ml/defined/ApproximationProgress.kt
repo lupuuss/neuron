@@ -28,7 +28,7 @@ class ApproximationProgress(config: Config) : ApproximationBase(config) {
     private val plotData: List<MutableMap<Int, Map<Double, Double>>> = listOf(mutableMapOf(), mutableMapOf())
     private val plotSteps = listOf(100, 300, 10_000, 30_000)
 
-    private fun getRange() = -4.0..3.0 step 0.1
+    private fun getRange() = -3.0..4.0 step 0.1
 
     override fun buildTeachers(): List<NetworkTeacher> {
 
@@ -105,7 +105,7 @@ class ApproximationProgress(config: Config) : ApproximationBase(config) {
 
 
         plotMultiple(results.map { (steps, plot) -> "$steps iterations" to plot }.toMap(), "File $fileN results") {
-            styler.yAxisMax = 60.0
+            styler.yAxisMax = 80.0
 
             addSeries("training data", trainingData)
             addSeries("verification data", verificationData)
