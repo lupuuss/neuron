@@ -95,13 +95,9 @@ class Approximation100(config: Config) : ClusterLearning(config) {
     override fun allNetworksReady() {
 
         for (teacher in teachers) {
-            trainingErrorMap[teacher]!!.let {
-                print("${teacher.name} = Training Error: ${it.round(3)}")
-            }
-            trainingSD[teacher]!!.let {
-                print(" SD: ${it.round(3)}")
-            }
 
+            print("${teacher.name} = Training Error: ${trainingErrorMap[teacher]!!.round(3)}")
+            print(" SD: ${trainingSD[teacher]!!.round(3)}")
 
             clusterErrorCollector.meanData(teacher).let { (squared, sd, iter) ->
                 println(" || Verification > Error: $squared SD: $sd Iters: $iter")
