@@ -23,6 +23,7 @@ class Approximation100(config: Config) : ClusterLearning(config) {
     private lateinit var verification: LearnData
 
     private val trainingErrorMap: MutableMap<NetworkTeacher, Double> = mutableMapOf()
+    private val trainingSD: MutableMap<NetworkTeacher, Double> = mutableMapOf()
 
     override fun setup() {
 
@@ -85,17 +86,25 @@ class Approximation100(config: Config) : ClusterLearning(config) {
     }
 
     override fun afterLearningCluster(teacher: NetworkTeacher, cluster: List<Network>) {
-        trainingErrorMap[teacher] = cluster.map { teacher.verifyTraining(it).average() }.average()
+        val errors = cluster.map { teacher.verifyTraining(it).average() }
+        val avg = errors.average()
+        trainingErrorMap[teacher] = avg
+        trainingSD[teacher] = sqrt(errors.map { (it - avg).let { it * it } }.sum() / errors.size)
     }
 
     override fun allNetworksReady() {
 
         for (teacher in teachers) {
             trainingErrorMap[teacher]!!.let {
-                print("${teacher.name} = Training > Squared: ${it.round(3)} Root: ${sqrt(it).round(3)}")
+                print("${teacher.name} = Training Error: ${it.round(3)}")
             }
-            clusterErrorCollector.meanData(teacher).let { (squared, root, iter) ->
-                println(" || Verification > Squared: $squared Root: $root Iters: $iter")
+            trainingSD[teacher]!!.let {
+                print(" SD: ${it.round(3)}")
+            }
+
+
+            clusterErrorCollector.meanData(teacher).let { (squared, sd, iter) ->
+                println(" || Verification > Error: $squared SD: $sd Iters: $iter")
             }
         }
     }

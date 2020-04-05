@@ -2,17 +2,15 @@ package ml.defined
 
 import ml.defined.base.ApproximationBase
 import ml.defined.base.Config
-import ml.defined.base.NetworksLearning
-import ml.defined.base.UnfulfilledExpectationsException
 import ml.learn.NetworkTeacher
 import ml.networkPlotDataXY
 import ml.plotMultiple
 import ml.spine.Activation
 import ml.spine.Network
 import ml.step
-import java.util.stream.Stream
-import kotlin.streams.asStream
-import kotlin.streams.toList
+import org.knowm.xchart.style.markers.Circle
+import java.awt.Color
+
 
 class Approximation(config: Config) : ApproximationBase(config) {
 
@@ -30,7 +28,7 @@ class Approximation(config: Config) : ApproximationBase(config) {
 
     private val markedToErrorCollecting = mutableListOf<Network>()
 
-    private fun getRange() = -2.0..3.0 step 0.1
+    private fun getRange() = -2.0..4.0 step 0.1
 
     private fun generateName(n: Int, prefix: String, trainingDataName: String) =
         "${commonName}_${prefix}_${trainingDataName}_$n"
@@ -97,10 +95,12 @@ class Approximation(config: Config) : ApproximationBase(config) {
         val trainingError = errorCollector.getNamedPlotableErrorMap()
 
         for (i in 1..2) {
-            plotMultiple(preparePlotDataForFile(i, errors, trainingError), "File $i") {
+            plotMultiple(preparePlotDataForFile(i, errors, trainingError), "Error changes for file $i") {
                 styler.xAxisDecimalPattern = "###,###,###,###"
-                styler.yAxisDecimalPattern = "0.00"
+                styler.yAxisDecimalPattern = "0"
                 styler.yAxisMax = 300.0
+                yAxisTitle = "Error value"
+                xAxisTitle = "Iterations"
             }
         }
 
@@ -136,6 +136,32 @@ class Approximation(config: Config) : ApproximationBase(config) {
             plots[name] = networkPlotDataXY(network, getRange())
         }
 
-        plotMultiple(plots, "File $fileN results")
+        plots["training data"] = sharedTeachers[fileN - 1]
+            .trainingSet
+            .map { it.first.average() to it.second.average() }
+            .toMap()
+        plots["verification data"] = sharedTeachers[fileN - 1]
+            .verificationSet
+            .map { it.first.average() to it.second.average() }
+            .toMap()
+
+        plotMultiple(plots, "Function plots for file $fileN") {
+            yAxisTitle = "f(x)"
+            xAxisTitle = "x"
+            styler.xAxisDecimalPattern = "0.00"
+            styler.yAxisDecimalPattern = "0"
+
+            seriesMap["training data"]?.apply {
+                marker = Circle()
+                markerColor = Color.RED
+                lineColor = Color(0, 0, 0, 0)
+            }
+
+            seriesMap["verification data"]?.apply {
+                marker = Circle()
+                markerColor = Color.GREEN
+                lineColor = Color(0, 0, 0, 0)
+            }
+        }
     }
 }

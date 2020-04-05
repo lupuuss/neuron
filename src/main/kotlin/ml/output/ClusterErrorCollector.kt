@@ -16,12 +16,15 @@ class ClusterErrorCollector {
 
     fun meanData(teacher: NetworkTeacher): MeanData {
         val iters = errorsMap[teacher]!!.map { it.second }.average().roundToInt()
-        val squaredError = errorsMap[teacher]!!.map { it.first.average() }.average()
-        val rootSquareError = errorsMap[teacher]!!.map { it.first.average() }.map { sqrt(it) }.average()
+        val squaredErrorAvg = errorsMap[teacher]!!.map { it.first.average() }.average()
+        val variation = errorsMap[teacher]!!.map {
+            (it.first.average() - squaredErrorAvg).let { it * it }
+        }.sum() / errorsMap.size
+        val standardDeviation = sqrt(variation)
 
         return MeanData(
-            squaredError,
-            rootSquareError,
+            squaredErrorAvg,
+            standardDeviation,
             iters
         )
     }
@@ -29,6 +32,6 @@ class ClusterErrorCollector {
 
 data class MeanData(
     val squaredError: Double,
-    val rootSquareError: Double,
+    val standardDeviation: Double,
     val iterations: Int
 )

@@ -56,7 +56,7 @@ class Transformation100(config: Config) : ClusterLearning(config) {
     override fun allNetworksReady() {
         for (teacher in teachers) {
             val meanData = clusterErrorCollector.meanData(teacher)
-            println("${teacher.alpha} ${teacher.beta} ${meanData.squaredError} ${meanData.rootSquareError.round(4)} ${meanData.iterations}")
+            println("${teacher.alpha} ${teacher.beta} ${meanData.squaredError} ${meanData.standardDeviation.round(4)} ${meanData.iterations}")
         }
     }
 }
