@@ -6,9 +6,9 @@ import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.output.CliktHelpFormatter
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.multiple
-import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.file
 import ml.defined.base.Config
@@ -33,7 +33,7 @@ open class Main : CliktCommand(
 
     private val experimentName by option("--def", "-d", help = Help.experimentName)
         .enum<Learning.Type>()
-        .default(Learning.Type.Transformation)
+        .required()
 
     private val separator: String? by option("--separator", "-s", help = Help.separator)
 
