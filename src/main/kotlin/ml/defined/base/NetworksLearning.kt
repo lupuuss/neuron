@@ -7,11 +7,8 @@ import kotlinx.coroutines.runBlocking
 import ml.learn.NetworkTeacher
 import ml.output.ConsoleLoader
 import ml.output.ErrorCollector
-import ml.quickPlotDisplay
 import ml.spine.Network
-import org.knowm.xchart.XYChart
-import org.knowm.xchart.style.markers.None
-import kotlin.streams.toList
+
 
 /**
  * Implements standard learning process for multiple neural networks.
@@ -130,40 +127,6 @@ abstract class NetworksLearning(config: Config) : Learning(config) {
                     "\n\tAvgError: ${errors.average()}" +
                     if (steps == stepsLimit) "\n\t[Warning] Network reached steps limit!" else ""
         )
-    }
-
-    protected fun plotMultiple(
-        data: Map<String, Map<Double, Double>>,
-        title: String,
-        chartEdit: (XYChart.() -> Unit)? = null
-    ) {
-
-        val (firstName, firstErrors) = data.entries.first()
-        val remToPlot = data.toList().stream().skip(1).toList().toMap()
-
-        firstErrors.quickPlotDisplay(firstName) { _ ->
-
-            this.title = title
-
-            remToPlot.forEach { (name, data) ->
-
-                addSeries(name, data.keys.toDoubleArray(), data.values.toDoubleArray())
-                seriesMap[name]!!.marker = None()
-            }
-
-            chartEdit?.invoke(this)
-        }
-    }
-
-    protected fun networkPlotDataXY(network: Network, range: Iterator<Double>): Map<Double, Double> {
-
-        val result = mutableMapOf<Double, Double>()
-
-        for (x in range) {
-            result[x] = network.answer(listOf(x)).first()
-        }
-
-        return result
     }
 
     /**

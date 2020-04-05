@@ -6,6 +6,8 @@ import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
 import ml.defined.base.UnfulfilledExpectationsException
 import ml.learn.NetworkTeacher
+import ml.networkPlotDataXY
+import ml.plotMultiple
 import ml.spine.Activation
 import ml.spine.Network
 import ml.step
@@ -31,7 +33,7 @@ class ApproximationProgress(config: Config) : ApproximationBase(config) {
     override fun buildTeachers(): List<NetworkTeacher> {
 
         for (i in localTeachers.indices) {
-            
+
             localTeachers[i].apply {
                 verificationSet = verification
                 trainingSet = training[i]

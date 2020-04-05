@@ -3,6 +3,7 @@ package ml.defined
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
 import ml.learn.NetworkTeacher
+import ml.plotMultiple
 import ml.round
 import ml.spine.Activation
 import ml.spine.Network

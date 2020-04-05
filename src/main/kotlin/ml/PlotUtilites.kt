@@ -2,9 +2,11 @@
 
 package ml
 
+import ml.spine.Network
 import org.knowm.xchart.*
 import org.knowm.xchart.style.markers.None
 import java.lang.Exception
+import kotlin.streams.toList
 
 object QuickPlotSettings {
     var width: Int = 800
@@ -71,4 +73,38 @@ fun XYChart.addSeries(title: String, map: Map<Double, Double>) {
 fun Map<Double, Double>.quickPlotSave(seriesName: String, path: String, plotManipulation: XYChart.() -> Unit) {
 
     this.quickPlot(seriesName).also(plotManipulation).saveAs(path)
+}
+
+fun plotMultiple(
+    data: Map<String, Map<Double, Double>>,
+    title: String,
+    chartEdit: (XYChart.() -> Unit)? = null
+) {
+
+    val (firstName, firstErrors) = data.entries.first()
+    val remToPlot = data.toList().stream().skip(1).toList().toMap()
+
+    firstErrors.quickPlotDisplay(firstName) { _ ->
+
+        this.title = title
+
+        remToPlot.forEach { (name, data) ->
+
+            addSeries(name, data.keys.toDoubleArray(), data.values.toDoubleArray())
+            seriesMap[name]!!.marker = None()
+        }
+
+        chartEdit?.invoke(this)
+    }
+}
+
+fun networkPlotDataXY(network: Network, range: Iterator<Double>): Map<Double, Double> {
+
+    val result = mutableMapOf<Double, Double>()
+
+    for (x in range) {
+        result[x] = network.answer(listOf(x)).first()
+    }
+
+    return result
 }

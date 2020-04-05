@@ -5,6 +5,8 @@ import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
 import ml.defined.base.UnfulfilledExpectationsException
 import ml.learn.NetworkTeacher
+import ml.networkPlotDataXY
+import ml.plotMultiple
 import ml.spine.Activation
 import ml.spine.Network
 import ml.step
@@ -82,7 +84,6 @@ class Approximation(config: Config) : ApproximationBase(config) {
             errorCollector.collect("${network.name}_training", teacher.verifyTraining(network), steps)
         }
     }
-
 
     override fun allNetworksReady() {
 
