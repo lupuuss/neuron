@@ -14,7 +14,6 @@ open class Layer(
 
     val size: Int = neurons.size
 
-    @Transient
     lateinit var lastOutput: List<Neuron.Out>
         private set
 

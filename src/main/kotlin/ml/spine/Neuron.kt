@@ -15,12 +15,10 @@ class Neuron(
 
     val weights: MutableList<Double> = MutableList(inputs) { Random.nextDouble(-1.0, 1.0) }
 
-    @Transient
     var previousWeights: List<Double> = weights.toList() // copy of weights
 
     var bias: Double = if (hasBias) Random.nextDouble(-1.0, 1.0) else 0.0
 
-    @Transient
     var previousBias: Double = bias // copy of bias
 
     fun activate(input: List<Double>): Out {
