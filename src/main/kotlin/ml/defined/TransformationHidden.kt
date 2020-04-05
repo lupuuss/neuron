@@ -9,7 +9,7 @@ import ml.spine.Network
 
 class TransformationHidden(config: Config) : NetworksLearning(config) {
 
-    override val errorGoal: Double = 0.07
+    override val errorGoal: Double = 0.0001
     override val stepsLimit: Int = 1_000_000
 
     private val sharedTeacher = NetworkTeacher.get(NetworkTeacher.Mode.Online, 0.1, 0.7)

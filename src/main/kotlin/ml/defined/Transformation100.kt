@@ -4,6 +4,7 @@ import ml.defined.base.ClusterLearning
 import ml.defined.base.Config
 import ml.input.LearnData
 import ml.learn.NetworkTeacher
+import ml.round
 import ml.spine.Activation
 import ml.spine.Network
 
@@ -23,7 +24,7 @@ class Transformation100(config: Config) : ClusterLearning(config) {
     override fun buildTeachers(): List<NetworkTeacher> {
 
         val teachers = mutableListOf<NetworkTeacher>()
-        val coefficients = listOf(0.2, 0.4, 0.6)
+        val coefficients = listOf(0.2, 0.4, 0.6, 0.95)
 
         for (alpha in coefficients) {
 
@@ -54,7 +55,8 @@ class Transformation100(config: Config) : ClusterLearning(config) {
 
     override fun allNetworksReady() {
         for (teacher in teachers) {
-            println("${teacher.alpha} ${teacher.beta} ${clusterErrorCollector.meanData(teacher)}")
+            val meanData = clusterErrorCollector.meanData(teacher)
+            println("${teacher.alpha} ${teacher.beta} ${meanData.squaredError} ${meanData.rootSquareError.round(4)} ${meanData.iterations}")
         }
     }
 }
