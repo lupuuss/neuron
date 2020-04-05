@@ -12,15 +12,15 @@ import kotlin.math.roundToInt
 
 class Iris(config: Config) : NetworksLearning(config) {
     override val errorGoal: Double = 0.1
-    override val stepsLimit: Int = 6_000
+    override val stepsLimit: Int = 30_000
 
     private lateinit var data: List<Pair<List<Double>, List<Double>>>
 
     private lateinit var fieldMask: List<Boolean>
     private lateinit var fieldMaskString: String
 
-    private val teacherMode = NetworkTeacher.Mode.Online
-    private val alpha = 0.2
+    private val teacherMode = NetworkTeacher.Mode.Offline
+    private val alpha = 0.01
     private val beta = 0.1
 
     private val localTeachers = listOf(
@@ -137,21 +137,39 @@ class Iris(config: Config) : NetworksLearning(config) {
 
     override fun allNetworksReady() {
 
-        plotMultiple(
-            classificationErrorTraining
-                .map { errorEntry ->
-                    errorEntry.key.name to errorEntry.value.map { it.key.toDouble() to it.value }.toMap()
-                }.toMap(),
-            "XD"
-        )
+        for ((_, percentage) in listOf(50, 80).withIndex()) {
 
-        plotMultiple(
-            classificationErrorVerification
-                .map { errorEntry ->
-                    errorEntry.key.name to errorEntry.value.map { it.key.toDouble() to it.value }.toMap()
-                }.toMap(),
-            "XD"
-        )
+            val plotData = mutableMapOf<String, Map<Double, Double>>()
+
+            val prefix = "_${percentage}_"
+
+            plotData.putAll(
+                classificationErrorVerification
+                    .filter { it.key.name.contains(prefix) }
+                    .map { entry ->
+                        val name = entry.key.name.substringAfter(prefix) + " neurons (verification)"
+                        val mappedValue = entry.value.map { it.key.toDouble() to it.value }.toMap()
+                        name to mappedValue
+                    }
+                    .sortedBy { it.first.substringBefore(" ").toDouble() }
+                    .toMap()
+            )
+
+
+            plotData.putAll(
+                classificationErrorTraining
+                    .filter { it.key.name.contains(prefix) }
+                    .map { entry ->
+                        val name = entry.key.name.substringAfter(prefix) + " neurons (training)"
+                        val mappedValue = entry.value.map { it.key.toDouble() to it.value }.toMap()
+                        name to mappedValue
+                    }
+                    .sortedBy { it.first.substringBefore(" ").toDouble() }
+                    .toMap()
+            )
+
+            plotMultiple(plotData, "Training data $percentage% | Fields mask: $fieldMaskString")
+        }
     }
 
 }
