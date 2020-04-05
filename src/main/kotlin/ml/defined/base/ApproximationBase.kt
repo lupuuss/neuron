@@ -5,9 +5,9 @@ import ml.learn.NetworkTeacher
 
 abstract class ApproximationBase(config: Config) : NetworksLearning(config) {
 
-    protected val alpha = 0.01
-    protected val beta = 0.9
-    protected val teacherMode = NetworkTeacher.Mode.Offline
+    protected val alpha: Double = 0.01
+    protected val beta: Double = 0.9
+    protected val teacherMode: NetworkTeacher.Mode = NetworkTeacher.Mode.Offline
 
 
     protected lateinit var training: List<LearnData>

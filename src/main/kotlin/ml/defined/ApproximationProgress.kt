@@ -3,8 +3,6 @@ package ml.defined
 import ml.addSeries
 import ml.defined.base.ApproximationBase
 import ml.defined.base.Config
-import ml.defined.base.NetworksLearning
-import ml.defined.base.UnfulfilledExpectationsException
 import ml.learn.NetworkTeacher
 import ml.networkPlotDataXY
 import ml.plotMultiple

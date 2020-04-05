@@ -10,7 +10,6 @@ import ml.spine.Activation
 import ml.spine.Network
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.math.roundToInt
 
 class Iris(config: Config) : NetworksLearning(config) {
     override val errorGoal: Double = 0.1
@@ -128,7 +127,7 @@ class Iris(config: Config) : NetworksLearning(config) {
             println("${it.first.name} ${it.second.value}%")
         }
 
-        for ((_, percentage) in listOf(50, 80).withIndex()) {
+        for (percentage in listOf(50, 80)) {
 
             val plotData = mutableMapOf<String, Map<Double, Double>>()
 

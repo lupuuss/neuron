@@ -4,7 +4,6 @@ import ml.learn.NetworkTeacher
 import ml.standardDeviation
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.roundToInt
-import kotlin.math.sqrt
 
 class ClusterErrorCollector {
 

@@ -9,7 +9,6 @@ import ml.round
 import ml.spine.Activation
 import ml.spine.Network
 import ml.standardDeviation
-import kotlin.math.sqrt
 
 class Approximation100(config: Config) : ClusterLearning(config) {
 
