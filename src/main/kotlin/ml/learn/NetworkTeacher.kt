@@ -1,6 +1,7 @@
 package ml.learn
 
 import ml.difference
+import ml.input.LearnData
 import ml.spine.Network
 import java.lang.IllegalArgumentException
 
@@ -21,14 +22,14 @@ abstract class NetworkTeacher(
         Online, Offline
     }
 
-    var trainingSet: List<Pair<List<Double>, List<Double>>> = emptyList()
-    var verificationSet: List<Pair<List<Double>, List<Double>>> = emptyList()
+    var trainingSet: LearnData = emptyList()
+    var verificationSet: LearnData = emptyList()
 
     abstract val metric: String
 
     abstract fun teach(network: Network)
 
-    private fun verify(network: Network, verificationSet: List<Pair<List<Double>, List<Double>>>): List<Double> {
+    private fun verify(network: Network, verificationSet: LearnData): List<Double> {
 
         val errors = mutableListOf<List<Double>>()
 
