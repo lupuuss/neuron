@@ -86,8 +86,7 @@ class Iris100(config: Config) : ClusterLearning(config) {
     override fun allNetworksReady() {
 
         classificationLevelMapVerification.forEach { (key, value) ->
-
-            println("${key.name} $value%")
+            println("${key.name} ${value.first}% +- ${value.second}")
         }
 
         classificationLevelMapTraining.forEach { (key, value) ->
