@@ -67,7 +67,6 @@ infix fun List<Double>.difference(expected: List<Double>): List<Double> {
 
 fun Double.round(n: Int): Double = 10.0.pow(n).let { round(this * it) / it }
 
-
 fun <T : Any> cycle(vararg values: T): Sequence<T> {
     var i = 0
     return generateSequence { values[i++ % values.size] }

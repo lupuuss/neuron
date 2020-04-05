@@ -1,5 +1,6 @@
 package ml.defined
 
+import ml.defined.base.ApproximationBase
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
 import ml.defined.base.UnfulfilledExpectationsException
@@ -11,40 +12,38 @@ import java.util.stream.Stream
 import kotlin.streams.asStream
 import kotlin.streams.toList
 
-class Approximation(config: Config) : NetworksLearning(config) {
+class Approximation(config: Config) : ApproximationBase(config) {
 
     override val errorGoal: Double = 0.1
     override val stepsLimit: Int = 100_000
 
     private val commonName = "Approximation"
 
-    private val alpha = if (config.teacherMode == NetworkTeacher.Mode.Offline) 0.01 else 0.0005
-    private val beta = if (config.teacherMode == NetworkTeacher.Mode.Offline) 0.9 else 0.5
+    // Separate teacher for each learning data file.
 
-    private val sharedTeacher1: NetworkTeacher = NetworkTeacher.get(config.teacherMode, alpha, beta)
-    private val sharedTeacher2: NetworkTeacher = NetworkTeacher.get(config.teacherMode, alpha, beta)
+    private val sharedTeachers: List<NetworkTeacher> = listOf(
+        NetworkTeacher.get(teacherMode, alpha, beta),
+        NetworkTeacher.get(teacherMode, alpha, beta)
+    )
 
     private val markedToErrorCollecting = mutableListOf<Network>()
 
     private fun getRange() = -2.0..3.0 step 0.1
 
-    override fun setup() {
-
-        if (config.inputs.size != 3) {
-            throw UnfulfilledExpectationsException("Approximation task requires training data (2 files) and verification data (1 file) ")
-        }
-
-        val verificationData = dataParser.parse(config.inputs[2], 1, 1)
-
-        sharedTeacher1.trainingSet = dataParser.parse(config.inputs[0], 1, 1)
-        sharedTeacher1.verificationSet = verificationData
-
-        sharedTeacher2.trainingSet = dataParser.parse(config.inputs[1], 1, 1)
-        sharedTeacher2.verificationSet = verificationData
-    }
-
     private fun generateName(n: Int, prefix: String, trainingDataName: String) =
         "${commonName}_${prefix}_${trainingDataName}_$n"
+
+
+    override fun buildTeachers(): List<NetworkTeacher> {
+
+        for (i in sharedTeachers.indices) {
+            sharedTeachers[i].verificationSet = verification
+            sharedTeachers[i].trainingSet = training[i]
+        }
+
+        return generateSequence { sharedTeachers[0] }.take(8).toList() +
+                generateSequence { sharedTeachers[1] }.take(8).toList()
+    }
 
     override fun buildNetworks(): List<Network> {
         val allNetworks = mutableListOf<Network>()
@@ -75,11 +74,6 @@ class Approximation(config: Config) : NetworksLearning(config) {
 
         return allNetworks
     }
-
-    override fun buildTeachers(): List<NetworkTeacher> = Stream.concat(
-        generateSequence { sharedTeacher1 }.take(8).asStream(),
-        generateSequence { sharedTeacher2 }.take(8).asStream()
-    ).toList()
 
     override fun eachLearningStep(network: Network, teacher: NetworkTeacher, errorVector: List<Double>, steps: Int) {
 

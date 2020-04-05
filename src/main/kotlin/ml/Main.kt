@@ -14,7 +14,6 @@ import com.github.ajalt.clikt.parameters.types.file
 import ml.defined.base.Config
 import ml.defined.base.Learning
 import ml.input.AutoDataPicker
-import ml.learn.NetworkTeacher
 import java.io.File
 import java.lang.Exception
 
@@ -32,10 +31,6 @@ open class Main : CliktCommand(
         .file(mustExist = true, mustBeReadable = true)
         .multiple(required = false)
 
-    private val offline by option("--off", "--offline", help = Help.offline)
-        .flag("--on", "--online", default = false)
-
-
     private val experimentName by option("--def", "-d", help = Help.experimentName)
         .enum<Learning.Type>()
         .default(Learning.Type.Transformation)
@@ -46,8 +41,6 @@ open class Main : CliktCommand(
 
     override fun run() {
 
-        val mode =
-            if (offline) NetworkTeacher.Mode.Offline else NetworkTeacher.Mode.Online
 
         try {
 
@@ -61,7 +54,6 @@ open class Main : CliktCommand(
 
             val config = Config(
                 inputs = pickedInput,
-                teacherMode = mode,
                 separator = separator ?: picker.pickSeparator(experimentName)
             )
 
@@ -83,8 +75,6 @@ fun main(args: Array<String>): Unit = Main().main(args)
 object Help {
 
     const val input: String = "Destinations of training data files."
-
-    const val offline: String = "Switches between online and offline learning"
 
     const val experimentName: String = "Selects an experiment."
 

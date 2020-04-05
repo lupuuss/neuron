@@ -5,6 +5,8 @@ import java.io.File
 import java.lang.Exception
 import java.util.*
 
+typealias LearnData = List<Pair<List<Double>, List<Double>>>
+
 class DataParser(
     var separator: String,
     var lineTransformer: (String) -> String = { it }
@@ -15,7 +17,7 @@ class DataParser(
         file: File,
         inputs: Int,
         expected: Int
-    ): List<Pair<List<Double>, List<Double>>> {
+    ): LearnData {
 
         val result = mutableListOf<Pair<List<Double>, List<Double>>>()
         val scanner = Scanner(file)

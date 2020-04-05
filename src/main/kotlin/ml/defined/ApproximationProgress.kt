@@ -1,6 +1,7 @@
 package ml.defined
 
 import ml.addSeries
+import ml.defined.base.ApproximationBase
 import ml.defined.base.Config
 import ml.defined.base.NetworksLearning
 import ml.defined.base.UnfulfilledExpectationsException
@@ -11,14 +12,15 @@ import ml.step
 import org.knowm.xchart.style.markers.Circle
 import java.awt.Color
 
-class ApproximationProgress(config: Config) : NetworksLearning(config) {
+class ApproximationProgress(config: Config) : ApproximationBase(config) {
 
     override val errorGoal: Double = 0.01
     override val stepsLimit: Int = 70_000
 
+    // Separate teacher for each learning data file.
     private val localTeachers = listOf(
-        NetworkTeacher.get(config.teacherMode, 0.01, 0.8),
-        NetworkTeacher.get(config.teacherMode, 0.01, 0.8)
+        NetworkTeacher.get(teacherMode, alpha, beta),
+        NetworkTeacher.get(teacherMode, alpha, beta)
     )
 
     private val plotData: List<MutableMap<Int, Map<Double, Double>>> = listOf(mutableMapOf(), mutableMapOf())
@@ -26,21 +28,18 @@ class ApproximationProgress(config: Config) : NetworksLearning(config) {
 
     private fun getRange() = -4.0..3.0 step 0.1
 
-    override fun setup() {
+    override fun buildTeachers(): List<NetworkTeacher> {
 
-        if (config.inputs.size != 3) {
-            throw UnfulfilledExpectationsException("Approximation task requires training data (2 files) and verification data (1 file) ")
+        for (i in localTeachers.indices) {
+            
+            localTeachers[i].apply {
+                verificationSet = verification
+                trainingSet = training[i]
+            }
         }
 
-        val verification = dataParser.parse(config.inputs[2], 1, 1)
-
-        for (index in localTeachers.indices) {
-            localTeachers[index].verificationSet = verification
-            localTeachers[index].trainingSet = dataParser.parse(config.inputs[index], 1, 1)
-        }
+        return localTeachers
     }
-
-    override fun buildTeachers(): List<NetworkTeacher> = localTeachers
 
     override fun buildNetworks(): List<Network> = listOf(
         Network.Builder()
@@ -82,7 +81,7 @@ class ApproximationProgress(config: Config) : NetworksLearning(config) {
 
     override fun allNetworksReady() {
 
-        val verificationData = localTeachers[0].verificationSet.map { it.first.first() to it.second.first() }.toMap()
+        val verificationData = verification.map { it.first.first() to it.second.first() }.toMap()
 
         for (i in localTeachers.indices) {
 

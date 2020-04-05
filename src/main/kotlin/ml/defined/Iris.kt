@@ -18,9 +18,13 @@ class Iris(config: Config) : NetworksLearning(config) {
     private lateinit var fieldMask: List<Boolean>
     private lateinit var fieldMaskString: String
 
+    private val teacherMode = NetworkTeacher.Mode.Online
+    private val alpha = 0.2
+    private val beta = 0.1
+
     private val localTeachers = listOf(
-        NetworkTeacher.get(config.teacherMode, 0.2, 0.1),
-        NetworkTeacher.get(config.teacherMode, 0.2, 0.1)
+        NetworkTeacher.get(teacherMode, alpha, beta),
+        NetworkTeacher.get(teacherMode, alpha, beta)
     )
 
     private val classificationErrorTraining: MutableMap<Network, MutableMap<Int, Double>> = ConcurrentHashMap()

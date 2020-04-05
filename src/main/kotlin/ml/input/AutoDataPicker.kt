@@ -2,6 +2,7 @@ package ml.input
 
 import ml.defined.base.Learning
 import ml.defined.base.DataNotFound
+import ml.learn.NetworkTeacher
 import java.io.File
 
 class AutoDataPicker(private val searchDir: File) {

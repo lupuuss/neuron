@@ -2,6 +2,7 @@ package ml.defined
 
 import ml.defined.base.ClusterLearning
 import ml.defined.base.Config
+import ml.input.LearnData
 import ml.learn.NetworkTeacher
 import ml.spine.Activation
 import ml.spine.Network
@@ -11,7 +12,9 @@ class Transformation100(config: Config) : ClusterLearning(config) {
     override val errorGoal: Double = 0.001
     override val stepsLimit: Int = 1_000_000
 
-    private lateinit var data: List<Pair<List<Double>, List<Double>>>
+    private val teacherMode = NetworkTeacher.Mode.Online
+
+    private lateinit var data: LearnData
 
     override fun setup() {
         data = dataParser.parse(config.inputs[0], 4, 4)
@@ -26,7 +29,7 @@ class Transformation100(config: Config) : ClusterLearning(config) {
 
             for (beta in coefficients) {
                 teachers.add(
-                    NetworkTeacher.get(config.teacherMode, alpha, beta).apply {
+                    NetworkTeacher.get(teacherMode, alpha, beta).apply {
                         trainingSet = data
                         verificationSet = data
                     }
@@ -47,10 +50,6 @@ class Transformation100(config: Config) : ClusterLearning(config) {
                 .hiddenLayer(2, true)
                 .outputLayer(4, true)
         }.take(100).toList()
-    }
-
-    override fun afterLearningCluster(teacher: NetworkTeacher, cluster: List<Network>) {
-
     }
 
     override fun allNetworksReady() {

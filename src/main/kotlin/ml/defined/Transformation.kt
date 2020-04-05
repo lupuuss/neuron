@@ -14,7 +14,7 @@ class Transformation(config: Config) : NetworksLearning(config) {
     override val errorGoal: Double = 0.000001
     override val stepsLimit: Int = 50_000
 
-    private val sharedTeacher = NetworkTeacher.get(config.teacherMode, 0.1, 0.0)
+    private val sharedTeacher = NetworkTeacher.get(NetworkTeacher.Mode.Online, 0.1, 0.0)
 
     override fun setup() {
 
